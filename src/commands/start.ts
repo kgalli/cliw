@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Start extends BaseCommand {
-  static description = 'Start services in daemon mode'
+  static description = '(re)creates and starts services in daemon mode'
 
   static flags = {
     ...BaseCommand.servicesEnvironmentsFlags,

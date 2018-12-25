@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Run extends BaseCommand {
-  static description = 'Run a one-off command on a service'
+  static description = 'run a one-off command on a service'
 
   static flags = {
     ...BaseCommand.serviceEnvironmentsFlags,

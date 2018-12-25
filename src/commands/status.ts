@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Status extends BaseCommand {
-  static description = 'Builds, (re)creates, starts, and attaches to containers for a service'
+  static description = 'show service run status'
 
   static flags = {
     ...BaseCommand.servicesEnvironmentsFlags,

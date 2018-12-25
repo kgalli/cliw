@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Exec extends BaseCommand {
-  static description = 'Execute a command in a running container'
+  static description = 'execute a command in a running container'
 
   static flags = {
     ...BaseCommand.serviceEnvironmentsFlags,

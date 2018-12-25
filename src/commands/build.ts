@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Build extends BaseCommand {
-  static description = 'Build or rebuild services'
+  static description = 'build or rebuild services'
 
   static flags = {
     ...BaseCommand.servicesEnvironmentsFlags,

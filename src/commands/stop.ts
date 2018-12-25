@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Stop extends BaseCommand {
-  static description = 'Stop services running in daemon mode'
+  static description = 'stop services running in daemon mode'
 
   static flags = {
     ...BaseCommand.servicesEnvironmentsFlags,

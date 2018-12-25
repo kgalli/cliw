@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../base'
 
 export default class Up extends BaseCommand {
-  static description = 'Builds, (re)creates, starts, and attaches to containers for a service'
+  static description = 'builds, (re)creates, starts, and attaches to containers for a service'
 
   static flags = {
     ...BaseCommand.servicesEnvironmentsFlags,
