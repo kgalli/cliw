@@ -1,18 +1,29 @@
 import {Command, flags} from '@oclif/command'
+import {cli} from 'cli-ux'
+import {homedir} from 'os'
 
+import InitConfigRepo from './init-config-repo'
+import {MainConfig, MainConfigRepo} from './main-config-repo'
 import BashShell from './wrapper/bash'
 import DockerComposeWrapper from './wrapper/docker-compose'
 
-const mainConfig = {
-  workDir: '~/dev',
-  mainConfig: '~/config/orchestrator',
-  projectName: 'orchestrator',
-  networkName: 'orchestrator',
-  environments: ['development', 'staging', 'production'],
-  defaultEnvironment: 'development',
-  internalServices: ['web', 'api'],
-  externalServices: ['db'],
-  services: ['web', 'api', 'db']
+const INIT_CONFIG_FILENAME = '.orchestrator-init-config.json'
+const INIT_CONFIG_LOCATION = `${homedir()}/${INIT_CONFIG_FILENAME}`
+const CLI_NAME = 'orchestrator'
+const MAIN_CONFIG_TEMPLATE_LOCATION = `${__dirname}/main-config-template.json`
+
+function mainConfig(): MainConfig {
+  try {
+    const initConfigRepo = new InitConfigRepo(CLI_NAME, INIT_CONFIG_FILENAME, INIT_CONFIG_LOCATION)
+    const initConfig = initConfigRepo.exists() ? initConfigRepo.load() : {mainConfigLocation: MAIN_CONFIG_TEMPLATE_LOCATION}
+    const mainConfigRepo = new MainConfigRepo(initConfig.mainConfigLocation)
+    const mainConfig = mainConfigRepo.load()
+
+    return mainConfig
+  } catch (e) {
+    console.error(e.message)
+    return process.exit(1)
+  }
 }
 
 export default abstract class extends Command {
@@ -22,14 +33,14 @@ export default abstract class extends Command {
       description: 'specify the service',
       multiple: true,
       required: true,
-      options: mainConfig.services,
+      options: mainConfig().services,
       //default: mainConfig.internalServices
     }),
     environment: flags.string({
       char: 'e',
       required: true,
-      options: mainConfig.environments,
-      default: mainConfig.defaultEnvironment
+      options: mainConfig().environments,
+      default: mainConfig().defaultEnvironment
     })
   }
 
@@ -39,24 +50,37 @@ export default abstract class extends Command {
       description: 'specify the service',
       multiple: false,
       required: true,
-      options: mainConfig.services
+      options: mainConfig().services
     }),
     environment: flags.string({
       char: 'e',
       required: true,
-      options: mainConfig.environments,
-      default: mainConfig.defaultEnvironment
+      options: mainConfig().environments,
+      default: mainConfig().defaultEnvironment
     })
   }
 
-  mainConfig() {
-    return mainConfig
+  dockerCompose() {
+    return new DockerComposeWrapper(mainConfig(), this.shell())
   }
 
-  dockerCompose() {
-    const mainConfig = this.mainConfig()
-    const shellWrapper = new BashShell()
+  shell() {
+    return new BashShell()
+  }
 
-    return new DockerComposeWrapper(mainConfig, shellWrapper)
+  async init() {
+    const initConfigRepo = new InitConfigRepo(CLI_NAME, INIT_CONFIG_FILENAME, INIT_CONFIG_LOCATION)
+
+    try {
+      if (initConfigRepo.exists() === false) {
+        const mainConfigLocation = await cli.prompt('Please enter the location of you <main-config>.json file')
+        const initConfig = {mainConfigLocation}
+
+        initConfigRepo.save(initConfig)
+        process.exit(0)
+      }
+    } catch (e) {
+      this.error(e.message, e)
+    }
   }
 }

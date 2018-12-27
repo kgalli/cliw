@@ -1,0 +1,10 @@
+{
+  "workDir": "~/dev",
+  "projectName": "orchestrator",
+  "networkName": "orchestrator",
+  "environments": ["development", "staging", "production"],
+  "defaultEnvironment": "development",
+  "internalServices": ["web", "api"],
+  "externalServices": ["db"],
+  "services": ["web", "api", "db"]
+}

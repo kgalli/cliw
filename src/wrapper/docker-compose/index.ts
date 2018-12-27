@@ -3,12 +3,14 @@
 //import Bash from './bash-wrapper'
 import {isEmpty} from 'lodash'
 
+import DockerComposeConfig from './config'
+
 export default class DockerComposeWrapper {
   shellWrapper: any
-  mainConfig: any
+  config: DockerComposeConfig
 
-  constructor(mainConfig: any, shellWrapper: any) {
-    this.mainConfig = mainConfig
+  constructor(config: any, shellWrapper: any) {
+    this.config = config
     this.shellWrapper = shellWrapper
   }
 
@@ -82,11 +84,19 @@ export default class DockerComposeWrapper {
     this.dockerComposeExec(pullCmd, environment)
   }
 
+  constructDockerComposeCmd(projectName: string, configFile: string, cmd: string) {
+    return `docker-compose -p ${projectName} -f ${configFile} ${cmd}`
+  }
   dockerComposeExec(cmd: string, environment: string) {
-    const dockerComposeYaml = environment
-    const dcCmd = `docker-compose ${cmd}`.replace('  ', ' ')
+    const workDir = this.config.workDir
+    const configFile = `${workDir}/docker-compose.${environment}.yaml`
+    const projectName = this.config.projectName
 
-    //writeFileSync('./docker-compose.yaml', dockerComposeYaml)
-    this.shellWrapper.run(dcCmd, environment)
+    let dcCmd = cmd.replace('  ', ' ')
+
+    dcCmd = this.constructDockerComposeCmd(projectName, configFile, dcCmd)
+
+    //this.config.writeConfig(configFile, environment)
+    this.shellWrapper.run(dcCmd)
   }
 }
