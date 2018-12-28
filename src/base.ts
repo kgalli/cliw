@@ -1,26 +1,23 @@
 import {Command, flags} from '@oclif/command'
-import {cli} from 'cli-ux'
-import {homedir} from 'os'
+import chalk from 'chalk'
 
 import InitConfigRepo from './init-config-repo'
 import {MainConfig, MainConfigRepo} from './main-config-repo'
 import BashShell from './wrapper/bash'
 import DockerComposeWrapper from './wrapper/docker-compose'
 
-const INIT_CONFIG_FILENAME = '.orchestrator-init-config.json'
-const INIT_CONFIG_LOCATION = `${homedir()}/${INIT_CONFIG_FILENAME}`
-const CLI_NAME = 'orchestrator'
 const MAIN_CONFIG_TEMPLATE_LOCATION = `${__dirname}/main-config-template.json`
 
 function mainConfig(): MainConfig {
   try {
-    const initConfigRepo = new InitConfigRepo(CLI_NAME, INIT_CONFIG_FILENAME, INIT_CONFIG_LOCATION)
+    const initConfigRepo = new InitConfigRepo()
     const initConfig = initConfigRepo.exists() ? initConfigRepo.load() : {mainConfigLocation: MAIN_CONFIG_TEMPLATE_LOCATION}
     const mainConfigRepo = new MainConfigRepo(initConfig.mainConfigLocation)
     const mainConfig = mainConfigRepo.load()
 
     return mainConfig
   } catch (e) {
+    // tslint:disable-next-line no-console
     console.error(e.message)
     return process.exit(1)
   }
@@ -69,14 +66,12 @@ export default abstract class extends Command {
   }
 
   async init() {
-    const initConfigRepo = new InitConfigRepo(CLI_NAME, INIT_CONFIG_FILENAME, INIT_CONFIG_LOCATION)
+    const initConfigRepo = new InitConfigRepo()
 
     try {
-      if (initConfigRepo.exists() === false) {
-        const mainConfigLocation = await cli.prompt('Please enter the location of you <main-config>.json file')
-        const initConfig = {mainConfigLocation}
+      if (initConfigRepo.exists() === false && this.id !== 'init') {
+        this.error(`Location of <main-config>.json not found. Please see '${chalk.yellow(this.config.name + ' init --help')}' for help.`)
 
-        initConfigRepo.save(initConfig)
         process.exit(0)
       }
     } catch (e) {

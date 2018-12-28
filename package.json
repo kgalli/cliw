@@ -10,6 +10,7 @@
   "dependencies": {
     "@oclif/command": "^1.5.8",
     "@oclif/config": "^1.10.3",
+    "chalk": "^2.4.1",
     "cli-ux": "^5.0.0",
     "inquirer": "^6.2.1",
     "lodash": "^4.17.11",
@@ -21,6 +22,7 @@
     "@oclif/test": "^1.2.2",
     "@oclif/tslint": "^3.1.1",
     "@types/chai": "^4.1.7",
+    "@types/chalk": "^2.2.0",
     "@types/inquirer": "0.0.43",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.18",

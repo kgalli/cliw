@@ -1,4 +1,8 @@
 import {existsSync, readFileSync, writeFileSync} from 'fs'
+import {homedir} from 'os'
+
+const INIT_CONFIG_FILENAME = '.orchestrator-init-config.json'
+const INIT_CONFIG_LOCATION = `${homedir()}/${INIT_CONFIG_FILENAME}`
 
 export interface InitConfig {
   mainConfigLocation: string
@@ -14,29 +18,35 @@ export interface InitConfig {
  * InitConfig and to set one as default.
  */
 export default class InitConfigRepo {
-  initConfigFilename: string
-  initConfigLocation: string
-  cliName: string
+  set initConfigFilename(value: string) {
+    this._initConfigFilename = value
+  }
 
-  constructor(cliName: string, initConfigFilename: string, initConfigLocation: string) {
-    this.initConfigFilename = initConfigFilename
-    this.initConfigLocation = initConfigLocation
-    this.cliName = cliName
+  set initConfigLocation(value: string) {
+    this._initConfigLocation = value
+  }
+
+  private _initConfigFilename: string
+  private _initConfigLocation: string
+
+  constructor() {
+    this._initConfigFilename = INIT_CONFIG_FILENAME
+    this._initConfigLocation = INIT_CONFIG_LOCATION
   }
 
   exists() {
-    return existsSync(this.initConfigLocation)
+    return existsSync(this._initConfigLocation)
   }
 
   load(): InitConfig {
-    if (existsSync(this.initConfigLocation)) {
-      return JSON.parse(readFileSync(this.initConfigLocation).toString())
+    if (existsSync(this._initConfigLocation)) {
+      return JSON.parse(readFileSync(this._initConfigLocation).toString())
     }
 
-    throw Error(`InitConfig at '${this.initConfigLocation}' does not exist`)
+    throw Error(`InitConfig at '${this._initConfigLocation}' does not exist`)
   }
 
   save(initConfig: InitConfig) {
-    return writeFileSync(this.initConfigLocation, JSON.stringify(initConfig))
+    return writeFileSync(this._initConfigLocation, JSON.stringify(initConfig))
   }
 }
