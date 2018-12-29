@@ -30,8 +30,8 @@ export default abstract class extends Command {
       description: 'specify the service',
       multiple: true,
       required: true,
-      options: mainConfig().services,
-      //default: mainConfig.internalServices
+      options: mainConfig().services.map(s => s.name),
+      //default: mainConfig().services.map(s => s.name)
     }),
     environment: flags.string({
       char: 'e',
@@ -47,7 +47,7 @@ export default abstract class extends Command {
       description: 'specify the service',
       multiple: false,
       required: true,
-      options: mainConfig().services
+      options: mainConfig().services.map(s => s.name)
     }),
     environment: flags.string({
       char: 'e',

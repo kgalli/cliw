@@ -1,10 +1,8 @@
 {
   "workDir": "",
-  "projectName": "",
-  "networkName": "",
-  "environments": [],
-  "defaultEnvironment": "",
-  "internalServices": [],
-  "externalServices": [],
+  "projectName": "orchestrator-default-template",
+  "networkName": "orchestrator-default-template",
+  "environments": ["development"],
+  "defaultEnvironment": "development",
   "services": []
 }

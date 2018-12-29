@@ -1,10 +1,49 @@
 {
-  "workDir": "~/dev",
+  "workDir": "/Users/kgalli/dev",
   "projectName": "orchestrator",
   "networkName": "orchestrator",
-  "environments": ["development", "staging", "production"],
+  "environments": [
+    "development",
+    "test"
+  ],
   "defaultEnvironment": "development",
-  "internalServices": ["web", "api"],
-  "externalServices": ["db"],
-  "services": ["web", "api", "db"]
+  "services": [
+    {
+      "name": "demo",
+      "repositoryUrl": "github.com/kgalli/demo",
+      "source": "internal",
+      "environments": {
+        "default": {
+          "ports": [
+            "3000:3000"
+          ],
+          "runType": {
+            "source": {
+              "volumes": [
+                "./demo:/usr/src/app"
+              ],
+              "build": {
+                "context": "./demo",
+                "dockerfile": "Dockerfile"
+              }
+            },
+            "image": "kgalli/demo:0.0.1"
+          },
+          "environment": {
+            "API_URL": "https://demo.example.com"
+          }
+        },
+        "development": {
+          "environment": {
+            "API_URL": "http://localhost:3000"
+          }
+        },
+        "test": {
+          "ports": [
+            "3010:3000"
+          ]
+        }
+      }
+    }
+  ]
 }

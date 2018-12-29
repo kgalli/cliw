@@ -7,7 +7,7 @@ export default class Start extends BaseCommand {
 
   static flags = {
     ...BaseCommand.servicesEnvironmentsFlags,
-    help: flags.help({char: 'h'}),
+    help: flags.help({char: 'h'})
   }
 
   async run() {
