@@ -1,10 +1,21 @@
 import {expect, test} from '@oclif/test'
 
+import {env, expectedStdOutForCmd, mainConfig} from '../test-helper'
+
 describe('start', () => {
   test
+    .env(env)
+    //.stdout({print: true})
     .stdout()
-    .command(['start', '--service', 'api'])
-    .it('runs start --service api', ctx => {
-      expect(ctx.stdout).to.contain('docker-compose up --no-start api\ndocker-compose start api')
+    .command(['start', '--services', 'api'])
+    .it('invokes start with known service', ctx => {
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('start', mainConfig.defaultEnvironment, ['api']))
     })
+
+  test
+    .env(env)
+    .stdout()
+    .command(['start', '--services', 'demoTest'])
+    .catch(err => expect(err.message).to.match(/Expected service demoTest to be one of:/))
+    .it('does not invoke start with unknown service')
 })

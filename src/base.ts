@@ -1,18 +1,30 @@
-import {Command, flags} from '@oclif/command'
+import {Command} from '@oclif/command'
 import chalk from 'chalk'
+import {isEmpty} from 'lodash'
 
-import InitConfigRepo from './init-config-repo'
-import {MainConfig, MainConfigRepo} from './main-config-repo'
+import InitConfigRepo from './config/init-config-repo'
+import {MainConfig, MainConfigRepo} from './config/main-config-repo'
 import BashShell from './wrapper/bash'
 import DockerComposeWrapper from './wrapper/docker-compose'
 
-const MAIN_CONFIG_TEMPLATE_LOCATION = `${__dirname}/main-config-template.json`
+const MAIN_CONFIG_TEMPLATE_LOCATION = `${__dirname}/config/main-config-template.json`
 
 function mainConfig(): MainConfig {
   try {
-    const initConfigRepo = new InitConfigRepo()
-    const initConfig = initConfigRepo.exists() ? initConfigRepo.load() : {mainConfigLocation: MAIN_CONFIG_TEMPLATE_LOCATION}
-    const mainConfigRepo = new MainConfigRepo(initConfig.mainConfigLocation)
+    const mainConfigLocationEnvVar = process.env.ORCHESTRATOR_MAIN_CONFIG_LOCATION
+    let mainConfigLocation = MAIN_CONFIG_TEMPLATE_LOCATION
+
+    if (mainConfigLocationEnvVar) {
+      mainConfigLocation = mainConfigLocationEnvVar
+    } else {
+      const initConfigRepo = new InitConfigRepo()
+
+      if (initConfigRepo.exists()) {
+        mainConfigLocation = initConfigRepo.load().mainConfigLocation
+      }
+    }
+
+    const mainConfigRepo = new MainConfigRepo(mainConfigLocation)
     const mainConfig = mainConfigRepo.load()
 
     return mainConfig
@@ -24,41 +36,13 @@ function mainConfig(): MainConfig {
 }
 
 export default abstract class extends Command {
-  static servicesEnvironmentsFlags = {
-    service: flags.string({
-      char: 's',
-      description: 'specify the service',
-      multiple: true,
-      required: true,
-      options: mainConfig().services.map(s => s.name),
-      //default: mainConfig().services.map(s => s.name)
-    }),
-    environment: flags.string({
-      char: 'e',
-      required: true,
-      options: mainConfig().environments,
-      default: mainConfig().defaultEnvironment
-    })
-  }
-
-  static serviceEnvironmentsFlags = {
-    service: flags.string({
-      char: 's',
-      description: 'specify the service',
-      multiple: false,
-      required: true,
-      options: mainConfig().services.map(s => s.name)
-    }),
-    environment: flags.string({
-      char: 'e',
-      required: true,
-      options: mainConfig().environments,
-      default: mainConfig().defaultEnvironment
-    })
-  }
-
   dockerCompose() {
-    return new DockerComposeWrapper(mainConfig(), this.shell())
+    return new DockerComposeWrapper(
+      mainConfig().projectName,
+      mainConfig().workDir,
+      mainConfig().services,
+      this.shell()
+    )
   }
 
   shell() {
@@ -66,12 +50,11 @@ export default abstract class extends Command {
   }
 
   async init() {
-    const initConfigRepo = new InitConfigRepo()
-
     try {
-      if (initConfigRepo.exists() === false && this.id !== 'init') {
-        this.error(`Location of <main-config>.json not found. Please see '${chalk.yellow(this.config.name + ' init --help')}' for help.`)
+      const initConfigRepo = new InitConfigRepo()
 
+      if (isEmpty(process.env.ORCHESTRATOR_MAIN_CONFIG_LOCATION) && initConfigRepo.exists() === false && this.id !== 'init') {
+        this.error(`Location of <main-config>.json not found. Please see '${chalk.yellow(this.config.name + ' init --help')}' for help.`)
         process.exit(0)
       }
     } catch (e) {

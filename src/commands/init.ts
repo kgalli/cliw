@@ -3,7 +3,7 @@ import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
 import BaseCommand from '../base'
-import InitConfigRepo from '../init-config-repo'
+import InitConfigRepo from '../config/init-config-repo'
 
 export default class Init extends BaseCommand {
   static description = `initialize and manage project config

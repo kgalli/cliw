@@ -1,22 +1,28 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../base'
+import {environmentFlag, servicesFlag} from '../flags'
 
 export default class Build extends BaseCommand {
   static description = 'build or rebuild services'
 
   static flags = {
-    ...BaseCommand.servicesEnvironmentsFlags,
+    services: servicesFlag,
+    environment: environmentFlag,
     help: flags.help({char: 'h'})
   }
 
   async run() {
     const {flags} = this.parse(Build)
-    const services = flags.service
+    const services = flags.services
     const environment = flags.environment
 
-    this
-      .dockerCompose()
-      .build({}, services, environment)
+    try {
+      this
+        .dockerCompose()
+        .build({}, services, environment)
+    } catch (e) {
+      this.error(`${e.message}\nSee more help with --help`, e)
+    }
   }
 }

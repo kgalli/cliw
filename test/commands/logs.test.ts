@@ -1,10 +1,13 @@
 import {expect, test} from '@oclif/test'
 
+import {env, expectedStdOutForCmd, mainConfig} from '../test-helper'
+
 describe('logs', () => {
   test
+    .env(env)
     .stdout()
-    .command(['logs', '--service', 'api'])
-    .it('runs logs --service api', ctx => {
-      expect(ctx.stdout).to.contain('docker-compose logs api')
+    .command(['logs', '--services', 'api'])
+    .it('invokes logs with known service', ctx => {
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.defaultEnvironment, ['api']))
     })
 })

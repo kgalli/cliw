@@ -1,14 +1,15 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../base'
+import {environmentFlag, serviceFlag} from '../flags'
 
 export default class Run extends BaseCommand {
   static description = 'run a one-off command on a service'
 
   static flags = {
-    ...BaseCommand.serviceEnvironmentsFlags,
-    help: flags.help({char: 'h'}
-    )
+    service: serviceFlag,
+    environment: environmentFlag,
+    help: flags.help({char: 'h'})
   }
 
   static args = [
@@ -29,8 +30,12 @@ export default class Run extends BaseCommand {
     const {args} = this.parse(Run)
     const cmd = args.command
 
-    this
-      .dockerCompose()
-      .run({}, service, environment, cmd)
+    try {
+      this
+        .dockerCompose()
+        .run({}, service, environment, cmd)
+    } catch (e) {
+      this.error(`${e.message}\nSee more help with --help`, e)
+    }
   }
 }

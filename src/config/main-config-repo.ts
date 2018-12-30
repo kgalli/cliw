@@ -37,8 +37,7 @@ interface DefaultEnvironment {
   ports: string[]
   runType: Runtype
 }
-
-export {MainConfig, MainConfigRepo}
+export {MainConfig, MainConfigRepo, Service, CodeSource}
 
 export default class MainConfigRepo {
   mainConfigLocation: string

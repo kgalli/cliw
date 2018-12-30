@@ -1,85 +1,134 @@
-//import {execSync} from 'child_process'
-//import {writeFileSync} from 'fs'
-//import Bash from './bash-wrapper'
 import {isEmpty} from 'lodash'
 
-import DockerComposeConfig from './config'
+import {CodeSource, Service} from '../../config/main-config-repo'
 
 export default class DockerComposeWrapper {
   shellWrapper: any
-  config: DockerComposeConfig
+  services: Service[]
+  workDir: string
+  projectName: string
 
-  constructor(config: any, shellWrapper: any) {
-    this.config = config
+  constructor(projectName: string, workDir: string, services: Service[], shellWrapper: any) {
+    this.projectName = projectName
+    this.workDir = workDir
+    this.services = services
     this.shellWrapper = shellWrapper
   }
 
-  build(options: object, services: Array<string>, environment: string) {
+  serviceNames(): string[] {
+    return this.services.map(s => s.name)
+  }
+
+  internalServiceNames() {
+    return this.services
+      .filter(s => s.source === CodeSource.internal)
+      .map(s => s.name)
+  }
+
+  externalServiceNames() {
+    return this.services
+      .filter(s => s.source === CodeSource.external)
+      .map(s => s.name)
+  }
+
+  validate(serviceNames: string[]) {
+    if (isEmpty(serviceNames)) {
+      throw new Error('Missing required services')
+    }
+
+    serviceNames.forEach((service: string) => {
+      if (!this.serviceNames().includes(service)) {
+        throw new Error(`Expected service ${service} to be one of: ${this.serviceNames()}`)
+      }
+    })
+  }
+
+  build(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const startOptions = isEmpty(options) ? '' : options.toString()
-    const buildCmd = `build ${startOptions} ${services.join(' ')}`
+    const buildCmd = `build ${startOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(buildCmd, environment)
   }
 
-  start(options: object, services: Array<string>, environment: string) {
+  start(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const startOptions = isEmpty(options) ? '' : options.toString()
-    const upNoStartCmd = `up --no-start ${services.join(' ')}`
-    const startCmd = `start ${startOptions} ${services.join(' ')}`
+    const upNoStartCmd = `up --no-start ${serviceNames.join(' ')}`
+    const startCmd = `start ${startOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(upNoStartCmd, environment)
     this.dockerComposeExec(startCmd, environment)
   }
 
-  stop(options: object, services: Array<string>, environment: string) {
+  stop(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const startOptions = isEmpty(options) ? '' : options.toString()
-    const stopCmd = `stop ${startOptions} ${services.join(' ')}`
+    const stopCmd = `stop ${startOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(stopCmd, environment)
   }
 
-  restart(services: Array<string>, environment: string) {
-    this.stop({}, services, environment)
-    this.start({}, services, environment)
+  restart(serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
+    this.stop({}, serviceNames, environment)
+    this.start({}, serviceNames, environment)
   }
 
-  up(options: object, services: Array<string>, environment: string) {
+  up(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const upOptions = isEmpty(options) ? '' : options.toString()
-    const upCmd = `up ${upOptions} ${services.join(' ')}`
+    const upCmd = `up ${upOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(upCmd, environment)
   }
 
-  logs(options: object, services: Array<string>, environment: string) {
+  logs(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const logsOptions = isEmpty(options) ? '' : options.toString()
-    const logsCmd = `logs ${logsOptions} ${services.join(' ')}`
+    const logsCmd = `logs ${logsOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(logsCmd, environment)
   }
 
-  run(options: object, service: string, environment: string, cmd: string) {
+  run(options: object, serviceName: string, environment: string, cmd: string) {
+    this.validate([serviceName])
+
     const runOptions = isEmpty(options) ? '' : options.toString()
-    const runCmd = `run ${runOptions} ${service} ${cmd}`
+    const runCmd = `run ${runOptions} ${serviceName} ${cmd}`
 
     this.dockerComposeExec(runCmd, environment)
   }
 
-  exec(options: object, service: string, environment: string, cmd: string) {
+  exec(options: object, serviceName: string, environment: string, cmd: string) {
+    this.validate([serviceName])
+
     const execOptions = isEmpty(options) ? '' : options.toString()
-    const execCmd = `exec ${execOptions} ${service} ${cmd}`
+    const execCmd = `exec ${execOptions} ${serviceName} ${cmd}`
 
     this.dockerComposeExec(execCmd, environment)
   }
 
-  status(options: object, services: Array<string>, environment: string) {
+  status(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const statusOptions = isEmpty(options) ? '' : options.toString()
-    const statusCmd = `ps ${statusOptions} ${services.join(' ')}`
+    const statusCmd = `ps ${statusOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(statusCmd, environment)
   }
 
-  pull(options: object, services: Array<string>, environment: string) {
+  pull(options: object, serviceNames: string[], environment: string) {
+    this.validate(serviceNames)
+
     const pullOptions = isEmpty(options) ? '' : options.toString()
-    const pullCmd = `pull ${pullOptions} ${services.join(' ')}`
+    const pullCmd = `pull ${pullOptions} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(pullCmd, environment)
   }
@@ -88,11 +137,11 @@ export default class DockerComposeWrapper {
     return `docker-compose -p ${projectName} -f ${configFile} ${cmd}`
   }
   dockerComposeExec(cmd: string, environment: string) {
-    const workDir = this.config.workDir
+    const workDir = this.workDir
     const configFile = `${workDir}/docker-compose.${environment}.yaml`
-    const projectName = this.config.projectName
+    const projectName = this.projectName
 
-    let dcCmd = cmd.replace('  ', ' ')
+    let dcCmd = cmd.replace('  ', ' ').trim()
 
     dcCmd = this.constructDockerComposeCmd(projectName, configFile, dcCmd)
 

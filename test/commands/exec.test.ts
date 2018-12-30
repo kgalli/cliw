@@ -1,10 +1,13 @@
 import {expect, test} from '@oclif/test'
 
+import {env, expectedStdOutForCmd, mainConfig} from '../test-helper'
+
 describe('exec', () => {
   test
+    .env(env)
     .stdout()
     .command(['exec', 'bin/bash', '--service', 'api'])
-    .it('runs exec "bin/bash" --service api', ctx => {
-      expect(ctx.stdout).to.contain('docker-compose exec api bin/bash')
+    .it('invokes exec with known service', ctx => {
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('exec', mainConfig.defaultEnvironment, ['api', 'bin/bash']))
     })
 })

@@ -4,5 +4,9 @@
   "networkName": "orchestrator-default-template",
   "environments": ["development"],
   "defaultEnvironment": "development",
-  "services": []
+  "services": [
+    {
+      "name": "demoTemplate"
+    }
+  ]
 }

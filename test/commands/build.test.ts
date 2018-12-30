@@ -1,17 +1,13 @@
 import {expect, test} from '@oclif/test'
 
+import {env, expectedStdOutForCmd, mainConfig} from '../test-helper'
+
 describe('build', () => {
   test
+    .env(env)
     .stdout()
-    .command(['build'])
-    .it('docker hello', ctx => {
-      expect(ctx.stdout).to.contain('hello world')
-    })
-
-  test
-    .stdout()
-    .command(['build', '--service', 'api'])
-    .it('runs build --service api', ctx => {
-      expect(ctx.stdout).to.contain('docker-compose build api')
+    .command(['build', '--services', 'api'])
+    .it('invokes build with a known service', ctx => {
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('build', mainConfig.defaultEnvironment, []))
     })
 })
