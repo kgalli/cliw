@@ -1,3 +1,5 @@
+import {writeFileSync} from 'fs'
+import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
 import {CodeSource, Service} from '../../config/main-config-repo'
@@ -7,11 +9,13 @@ export default class DockerComposeWrapper {
   services: Service[]
   workDir: string
   projectName: string
+  dryRun: boolean
 
-  constructor(projectName: string, workDir: string, services: Service[], shellWrapper: any) {
+  constructor(projectName: string, workDir: string, services: Service[], dryRun: boolean, shellWrapper: any) {
     this.projectName = projectName
     this.workDir = workDir
     this.services = services
+    this.dryRun = dryRun
     this.shellWrapper = shellWrapper
   }
 
@@ -133,19 +137,72 @@ export default class DockerComposeWrapper {
     this.dockerComposeExec(pullCmd, environment)
   }
 
-  constructDockerComposeCmd(projectName: string, configFile: string, cmd: string) {
+  dockerComposeExec(cmd: string, environment: string) {
+    const configFile = this.constructConfigFilename(this.workDir, environment)
+    const dcCmd = this.constructDockerComposeCmd(this.projectName, configFile, this.sanitizeCmd(cmd))
+    //TODO load runFromSrc from config
+    const runFromSrc = false
+    const dcConfig = this.constructDockerComposeConfig(this.projectName, environment, runFromSrc, this.services)
+
+    if (this.dryRun === false) {
+      this.writeConfigFile(configFile, safeDump(dcConfig))
+    }
+    this.shellWrapper.run(dcCmd)
+  }
+
+  private constructDockerComposeCmd(projectName: string, configFile: string, cmd: string) {
     return `docker-compose -p ${projectName} -f ${configFile} ${cmd}`
   }
-  dockerComposeExec(cmd: string, environment: string) {
-    const workDir = this.workDir
-    const configFile = `${workDir}/docker-compose.${environment}.yaml`
-    const projectName = this.projectName
 
-    let dcCmd = cmd.replace('  ', ' ').trim()
+  private writeConfigFile(fileLocation: string, data: any) {
+    // TODO figure out why this hack is needed js-yaml should not add | instead of ---
+    const yamlData = safeDump(data).replace('|', '---')
+    writeFileSync(fileLocation, yamlData)
+  }
 
-    dcCmd = this.constructDockerComposeCmd(projectName, configFile, dcCmd)
+  private sanitizeCmd(cmd: string): string {
+    return cmd.replace('  ', ' ').trim()
+  }
 
-    //this.config.writeConfig(configFile, environment)
-    this.shellWrapper.run(dcCmd)
+  private constructConfigFilename(workDir: string, environment: string): string {
+    return `${workDir}/docker-compose.${environment}.yaml`
+  }
+
+  private constructDockerComposeConfig(projectName: string, environment: string, runFromSrc: boolean, services: Service[]): any {
+    const servicesObject: any = {}
+
+    services.forEach(s => {
+      const defaultServiceConfig = s.environments.default
+      const runType = runFromSrc ? defaultServiceConfig.runType.src : {image: defaultServiceConfig.runType.image}
+      // @ts-ignore
+      const environmentServiceConfig: any = s.environments[environment]
+
+      let serviceConfig = {
+        ...runType,
+        ...defaultServiceConfig,
+      }
+
+      if (isEmpty(environmentServiceConfig) === false) {
+        serviceConfig = {...serviceConfig, ...environmentServiceConfig}
+      }
+
+      delete serviceConfig.runType
+
+      servicesObject[s.name] = serviceConfig
+    })
+
+    const config = {
+      version: '3',
+      services: servicesObject,
+      networks: {
+        default: {
+          external: {
+            name: `${projectName}_${environment}`
+          }
+        }
+      }
+    }
+
+    return config
   }
 }

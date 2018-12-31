@@ -23,7 +23,7 @@ const enum CodeSource {
   internal, external
 }
 
-interface Runtype {
+interface RunType {
   image: string
   src: {
     build: {
@@ -35,7 +35,7 @@ interface Runtype {
 
 interface DefaultEnvironment {
   ports: string[]
-  runType: Runtype
+  runType: RunType
 }
 export {MainConfig, MainConfigRepo, Service, CodeSource}
 

@@ -41,6 +41,7 @@ export default abstract class extends Command {
       mainConfig().projectName,
       mainConfig().workDir,
       mainConfig().services,
+      dryRun,
       this.shell(dryRun)
     )
   }

@@ -33,6 +33,7 @@ export default class Bash {
     if (this.options.dryRun === false) {
       try {
         return execSync(`${cmd} ${cmdOptions}`, {stdio: 'inherit'})
+        //tslint:disable no-unused
       } catch (e) {
         // TODO append error to the error log
         // do nothing because wrapped command should already print error
