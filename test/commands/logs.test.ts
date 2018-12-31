@@ -6,7 +6,7 @@ describe('logs', () => {
   test
     .env(env)
     .stdout()
-    .command(['logs', '--services', 'api'])
+    .command(['logs', '--services', 'api', '--dryRun'])
     .it('invokes logs with known service', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.defaultEnvironment, ['api']))
     })

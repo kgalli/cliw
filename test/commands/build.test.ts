@@ -6,7 +6,7 @@ describe('build', () => {
   test
     .env(env)
     .stdout()
-    .command(['build', '--services', 'api'])
+    .command(['build', '--services', 'api', '--dryRun'])
     .it('invokes build with a known service', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('build', mainConfig.defaultEnvironment, []))
     })

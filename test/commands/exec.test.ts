@@ -6,7 +6,7 @@ describe('exec', () => {
   test
     .env(env)
     .stdout()
-    .command(['exec', 'bin/bash', '--service', 'api'])
+    .command(['exec', 'bin/bash', '--service', 'api', '--dryRun'])
     .it('invokes exec with known service', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('exec', mainConfig.defaultEnvironment, ['api', 'bin/bash']))
     })

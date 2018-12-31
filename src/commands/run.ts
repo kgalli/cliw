@@ -1,7 +1,7 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../base'
-import {environmentFlag, serviceFlag} from '../flags'
+import {dryRunFlag, environmentFlag, serviceFlag} from '../flags'
 
 export default class Run extends BaseCommand {
   static description = 'run a one-off command on a service'
@@ -9,6 +9,7 @@ export default class Run extends BaseCommand {
   static flags = {
     service: serviceFlag,
     environment: environmentFlag,
+    dryRun: dryRunFlag,
     help: flags.help({char: 'h'})
   }
 
@@ -23,16 +24,15 @@ export default class Run extends BaseCommand {
   static strict = false
 
   async run() {
-    const {flags} = this.parse(Run)
+    const {flags, args} = this.parse(Run)
     const service = flags.service
     const environment = flags.environment
-
-    const {args} = this.parse(Run)
+    const dryRun = flags.dryRun
     const cmd = args.command
 
     try {
       this
-        .dockerCompose()
+        .dockerCompose(dryRun)
         .run({}, service, environment, cmd)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)

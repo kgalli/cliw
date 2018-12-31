@@ -6,7 +6,7 @@ describe('run', () => {
   test
     .env(env)
     .stdout()
-    .command(['run', 'bin/bash', '--service', 'api'])
+    .command(['run', 'bin/bash', '--service', 'api', '--dryRun'])
     .it('runs run "bin/bash" --service api', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('run', mainConfig.defaultEnvironment, ['api', 'bin/bash']))
     })

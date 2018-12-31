@@ -1,7 +1,7 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../base'
-import {environmentFlag, servicesFlag} from '../flags'
+import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
 
 export default class Up extends BaseCommand {
   static description = 'builds, (re)creates, starts, and attaches to containers for a service'
@@ -9,6 +9,7 @@ export default class Up extends BaseCommand {
   static flags = {
     services: servicesFlag,
     environment: environmentFlag,
+    dryRun: dryRunFlag,
     help: flags.help({char: 'h'}),
   }
 
@@ -16,10 +17,11 @@ export default class Up extends BaseCommand {
     const {flags} = this.parse(Up)
     const services = flags.services
     const environment = flags.environment
+    const dryRun = flags.dryRun
 
     try {
       this
-        .dockerCompose()
+        .dockerCompose(dryRun)
         .up({}, services, environment)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)

@@ -6,7 +6,7 @@ describe('up', () => {
   test
     .env(env)
     .stdout()
-    .command(['up', '--services', 'api'])
+    .command(['up', '--services', 'api', '--dryRun'])
     .it('runs up --service api', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('up', mainConfig.defaultEnvironment, ['api']))
     })

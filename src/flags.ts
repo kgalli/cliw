@@ -56,3 +56,8 @@ export const environmentFlag = flags.string({
   options: mainConfig().environments,
   default: mainConfig().defaultEnvironment
 })
+
+export const dryRunFlag = flags.boolean({
+  description: 'print shell commands without executing',
+  default: false
+})

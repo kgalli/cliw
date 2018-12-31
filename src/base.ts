@@ -36,17 +36,17 @@ function mainConfig(): MainConfig {
 }
 
 export default abstract class extends Command {
-  dockerCompose() {
+  dockerCompose(dryRun = true) {
     return new DockerComposeWrapper(
       mainConfig().projectName,
       mainConfig().workDir,
       mainConfig().services,
-      this.shell()
+      this.shell(dryRun)
     )
   }
 
-  shell() {
-    return new BashShell()
+  shell(dryRun: boolean) {
+    return new BashShell({...BashShell.defaultOptions(), dryRun})
   }
 
   async init() {
