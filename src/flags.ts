@@ -1,42 +1,13 @@
 import {flags} from '@oclif/command'
 
-import InitConfigRepo from './config/init-config-repo'
-import {MainConfig, MainConfigRepo} from './config/main-config-repo'
-
-const MAIN_CONFIG_TEMPLATE_LOCATION = `${__dirname}/config/main-config-template.json`
-
-let mainConfigMemory: MainConfig
+import {MainConfig} from './config/main-config'
+import MainConfigService from './config/main-config-service'
 
 function mainConfig(): MainConfig {
-  if (mainConfigMemory) {
-    return mainConfigMemory
-  }
+  const mainConfigService = new MainConfigService()
+  const mainConfig = mainConfigService.mainConfig()
 
-  try {
-    const mainConfigLocationEnvVar = process.env.ORCHESTRATOR_MAIN_CONFIG_LOCATION
-    let mainConfigLocation = MAIN_CONFIG_TEMPLATE_LOCATION
-
-    if (mainConfigLocationEnvVar) {
-      mainConfigLocation = mainConfigLocationEnvVar
-    } else {
-      const initConfigRepo = new InitConfigRepo()
-
-      if (initConfigRepo.exists()) {
-        mainConfigLocation = initConfigRepo.load().mainConfigLocation
-      }
-    }
-
-    const mainConfigRepo = new MainConfigRepo(mainConfigLocation)
-    const mainConfig = mainConfigRepo.load()
-
-    mainConfigMemory = mainConfig
-
-    return mainConfig
-  } catch (e) {
-    // tslint:disable-next-line no-console
-    console.error(e.message)
-    return process.exit(1)
-  }
+  return mainConfig
 }
 
 export const servicesFlag = flags.string({

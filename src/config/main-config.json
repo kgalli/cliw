@@ -35,18 +35,29 @@
         },
         "development": {
           "environment": {
-            "API_URL": "http://localhost:3000"
+            "API_URL": "http://localhost:3000",
+            "DB_HOST": "db",
+            "DB_PORT": "5432",
+            "DB_USER": "kgalli",
+            "DB_PASSWORD": "pg",
+            "DB_ENGINE": "postgresql"
           }
         },
         "test": {
           "ports": [
             "3010:3000"
-          ]
+          ],
+          "API_URL": "http://localhost:3000",
+          "DB_HOST": "db",
+          "DB_PORT": "3306",
+          "DB_USER": "kgalli",
+          "DB_PASSWORD": "pg",
+          "DB_ENGINE": "mysql"
         }
       }
     },
     {
-      "name": "db",
+      "name": "postgres",
       "repositoryUrl": "github.com/kgalli/postgres",
       "source": "external",
       "environments": {

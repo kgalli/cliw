@@ -1,9 +1,9 @@
 import {flags} from '@oclif/command'
 
-import BaseCommand from '../base'
 import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
+import DockerComposeCommand from '../wrapper/docker-compose'
 
-export default class Stop extends BaseCommand {
+export default class Stop extends DockerComposeCommand {
   static description = 'stop services running in daemon mode'
 
   static flags = {

@@ -1,9 +1,9 @@
 import {flags} from '@oclif/command'
 
-import BaseCommand from '../base'
 import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
+import DockerComposeCommand from '../wrapper/docker-compose'
 
-export default class Pull extends BaseCommand {
+export default class Pull extends DockerComposeCommand {
   static description = 'pull docker image(s) from registry'
 
   static flags = {

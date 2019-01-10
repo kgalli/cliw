@@ -5,7 +5,17 @@ const INIT_CONFIG_FILENAME = '.orchestrator-init-config.json'
 const INIT_CONFIG_LOCATION = `${homedir()}/${INIT_CONFIG_FILENAME}`
 
 export interface InitConfig {
-  mainConfigLocation: string
+  projects: ProjectConfig[]
+}
+
+interface ProjectConfig {
+  name: string,
+  mainConfigLocation: string,
+  runTypes: RunType[]
+}
+
+interface RunType {
+  [key: string]: string
 }
 
 /**

@@ -1,11 +1,8 @@
-import {flags} from '@oclif/command'
+import {Command, flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
-import BaseCommand from '../base'
-import InitConfigRepo from '../config/init-config-repo'
-
-export default class Init extends BaseCommand {
+export default class Init extends Command {
   static description = `initialize and manage project config
 
   The cli needs to know the location of the main-config.json
@@ -31,9 +28,11 @@ file: ~/.orchestrator-init-config.json.
       mainConfigLocation = flags.mainConfig
     }
 
+    /*
     const initConfig = {mainConfigLocation}
     const initConfigRepo = new InitConfigRepo()
 
     initConfigRepo.save(initConfig)
+    */
   }
 }

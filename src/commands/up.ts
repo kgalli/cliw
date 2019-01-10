@@ -1,9 +1,9 @@
 import {flags} from '@oclif/command'
 
-import BaseCommand from '../base'
 import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
+import DockerComposeCommand from '../wrapper/docker-compose'
 
-export default class Up extends BaseCommand {
+export default class Up extends DockerComposeCommand {
   static description = 'builds, (re)creates, starts, and attaches to containers for a service'
 
   static flags = {

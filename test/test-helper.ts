@@ -1,7 +1,7 @@
 import {readFileSync} from 'fs'
 import {isEmpty} from 'lodash'
 
-import {MainConfig} from '../src/config/main-config-repo'
+import {MainConfig} from '../src/config/main-config'
 
 const TEST_MAIN_CONFIG_LOCATION = `${__dirname}/config/test-main-config.json`
 const mainConfig: MainConfig = JSON.parse(readFileSync(TEST_MAIN_CONFIG_LOCATION).toString())

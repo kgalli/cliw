@@ -1,9 +1,9 @@
 import {flags} from '@oclif/command'
 
-import BaseCommand from '../base'
 import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
+import DockerComposeCommand from '../wrapper/docker-compose'
 
-export default class Logs extends BaseCommand {
+export default class Logs extends DockerComposeCommand {
   static description = 'show service logs'
 
   static flags = {

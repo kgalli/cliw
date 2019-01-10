@@ -1,9 +1,9 @@
 import {flags} from '@oclif/command'
 
-import BaseCommand from '../base'
 import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
+import DockerComposeCommand from '../wrapper/docker-compose'
 
-export default class Start extends BaseCommand {
+export default class Start extends DockerComposeCommand {
   static description = '(re)creates and starts services in daemon mode'
 
   static flags = {
@@ -24,7 +24,7 @@ export default class Start extends BaseCommand {
         .dockerCompose(dryRun)
         .start({}, services, environment)
     } catch (e) {
-      this.error(`${e.message}\nSee more help with --help`, e)
+      this.error(e.message, e)
     }
   }
 }
