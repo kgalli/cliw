@@ -1,13 +1,18 @@
 import {flags} from '@oclif/command'
 
+import ConfigUtils from './config/config-utils'
 import {MainConfig} from './config/main-config'
-import MainConfigService from './config/main-config-service'
 
 function mainConfig(): MainConfig {
-  const mainConfigService = new MainConfigService()
-  const mainConfig = mainConfigService.mainConfig()
-
-  return mainConfig
+  try {
+    return ConfigUtils.mainConfigLoadDefault()
+  } catch (e) {
+    // TODO investigate and find better solution than swallowing the error
+    // Error is swallowed because if we run init command
+    // while the projectsConfig does not exist we have an issue
+    // because flags get loaded anyway and then it fails with nasty error
+    return {} as MainConfig
+  }
 }
 
 export const servicesFlag = flags.string({

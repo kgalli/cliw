@@ -9,8 +9,8 @@
   "defaultEnvironment": "development",
   "services": [
     {
-      "name": "demo",
-      "repositoryUrl": "github.com/kgalli/demo",
+      "name": "api",
+      "repositoryUrl": "github.com/kgalli/javalin-playground",
       "source": "internal",
       "environments": {
         "default": {
@@ -20,17 +20,14 @@
           "runType": {
             "source": {
               "volumes": [
-                "./demo:/usr/src/app"
+                "./javalin-playground:/usr/src/app"
               ],
               "build": {
-                "context": "./demo",
+                "context": "./javalin-playground",
                 "dockerfile": "Dockerfile"
               }
             },
-            "image": "kgalli/demo:0.0.1"
-          },
-          "environment": {
-            "API_URL": "https://demo.example.com"
+            "image": "kgalli/javalin-playground"
           }
         },
         "development": {
@@ -57,7 +54,7 @@
       }
     },
     {
-      "name": "postgres",
+      "name": "db",
       "repositoryUrl": "github.com/kgalli/postgres",
       "source": "external",
       "environments": {
@@ -67,9 +64,6 @@
           ],
           "runType": {
             "source": {
-              "volumes": [
-                "./demo:/usr/src/app"
-              ],
               "build": {
                 "context": "./demo",
                 "dockerfile": "Dockerfile"
