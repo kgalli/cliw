@@ -1,6 +1,6 @@
 {
   "name": "orchestrator",
-  "description": "Ease your development experience!",
+  "description": "Wrap up your development experience!",
   "version": "0.0.0",
   "author": "kgalli @kgalli",
   "bin": {
