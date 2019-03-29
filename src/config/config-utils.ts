@@ -1,4 +1,5 @@
 import {existsSync, readFileSync, writeFileSync} from 'fs'
+import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
 import {MainConfig} from './main-config'
@@ -6,7 +7,11 @@ import ProjectConfig from './project-config'
 import ProjectsConfig from './projects-config'
 
 const DEFAULT_PROJECT_CONFIG_FILENAME = 'projects.json'
-const DEFAULT_PROJECT_CONFIG_LOCATION = `${homedir()}/.config/orchestrator/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+let DEFAULT_PROJECT_CONFIG_LOCATION = `${homedir()}/.config/orchestrator/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+
+if (!isEmpty(process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION)) {
+  DEFAULT_PROJECT_CONFIG_LOCATION = process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION as string
+}
 
 export default class ConfigUtils {
   static projectsConfigExists(projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION) {

@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-import {env} from '../test-helper'
+import {env} from '../helper/test-helper'
 
 describe('db', () => {
   context('db:console', () => {
