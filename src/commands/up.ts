@@ -4,7 +4,7 @@ import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
 import DockerComposeCommand from '../wrapper/docker-compose'
 
 export default class Up extends DockerComposeCommand {
-  static description = 'builds, (re)creates, starts, and attaches to containers for a service'
+  static description = 'build, (re)create, start, and attach to containers'
 
   static flags = {
     services: servicesFlag,

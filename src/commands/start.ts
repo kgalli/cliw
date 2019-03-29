@@ -4,7 +4,7 @@ import {dryRunFlag, environmentFlag, servicesFlag} from '../flags'
 import DockerComposeCommand from '../wrapper/docker-compose'
 
 export default class Start extends DockerComposeCommand {
-  static description = '(re)creates and starts services in daemon mode'
+  static description = '(re)create and start services in daemon mode'
 
   static flags = {
     services: servicesFlag,
