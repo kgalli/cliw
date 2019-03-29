@@ -6,12 +6,13 @@ import ConfigUtils from '../config/config-utils'
 import ProjectConfig from '../config/project-config'
 
 export default class Init extends Command {
-  static description = `initialize and manage project config
+  static description = `initialize projects config
 
-  The cli needs to know the location of the main-config.json
-file to properly work. The 'init' command is used to determine
-this location form the user and store it for later use in the
-file: ~/.orchestrator-init-config.json.
+  The cli supports the 'orchestration' of multiple projects.
+Therefore it needs to know the location of the corresponding
+main-config.json file. The 'init' command is used to determine
+this location form the user and store it together with the project
+identifier (project name) at: ~/.config/projects-config.json.
   `
   static flags = {
     name: flags.string({
