@@ -92,11 +92,21 @@ export default class DockerComposeWrapper {
     this.dockerComposeExec(upCmd, environment)
   }
 
-  logs(options: object, serviceNames: string[], environment: string) {
+  logs(options: any, serviceNames: string[], environment: string) {
     this.validate(serviceNames)
 
-    const logsOptions = isEmpty(options) ? '' : options.toString()
-    const logsCmd = `logs ${logsOptions} ${serviceNames.join(' ')}`
+    const logsOptions = []
+
+    if (!isEmpty(options)) {
+      if (options.follow) {
+        logsOptions.push('--follow')
+      }
+      if (options.timestamps) {
+        logsOptions.push('--timestamps')
+      }
+    }
+
+    const logsCmd = `logs ${logsOptions.join(' ')} ${serviceNames.join(' ')}`
 
     this.dockerComposeExec(logsCmd, environment)
   }
