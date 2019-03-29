@@ -14,11 +14,13 @@ function stdOutHelperForDockerComposeCmd(projectName: string, workDir: string) {
   }
 
   function stdOutForDockerComposeCmd(cmd: string, environment: string, options: string[]): string {
+    const upNotStartFlag = ['--no-start', options[0]]
+
     switch (cmd) {
     case 'start':
-      const upNoStart = ['--no-start', options[0]]
-      const stdout = `${dockerComposeCmd('up', environment, upNoStart)}\n${dockerComposeCmd(cmd, environment, options)}`
-      return stdout
+      return `${dockerComposeCmd('up', environment, upNotStartFlag)}\n${dockerComposeCmd(cmd, environment, options)}`
+    case 'restart':
+      return `${dockerComposeCmd('stop', environment, options)}\n${dockerComposeCmd('up', environment, upNotStartFlag)}\n${dockerComposeCmd('start', environment, options)}`
     case 'status':
       return dockerComposeCmd('ps', environment, options)
     default:

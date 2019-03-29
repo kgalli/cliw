@@ -77,8 +77,6 @@ export default class DockerComposeWrapper {
   }
 
   restart(serviceNames: string[], environment: string) {
-    this.validate(serviceNames)
-
     this.stop({}, serviceNames, environment)
     this.start({}, serviceNames, environment)
   }
