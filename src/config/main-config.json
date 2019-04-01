@@ -37,6 +37,7 @@
             "DB_PORT": "5432",
             "DB_USER": "kgalli",
             "DB_PASSWORD": "pg",
+            "DB_DATABASE": "pg",
             "DB_ENGINE": "postgresql"
           }
         },

@@ -11,6 +11,7 @@ interface Service {
   name: string
   environments: {
     default: DefaultEnvironment
+    [key: string]: Environment
   },
   repositoryUrl: string
   source: CodeSource
@@ -33,6 +34,16 @@ interface RunType {
 interface DefaultEnvironment {
   ports: string[]
   runType: RunType
+}
+
+export interface Environment {
+  ports?: string[]
+  runType?: RunType
+  environment?: EnvironmentVariable
+}
+
+export interface EnvironmentVariable {
+  [key: string]: string
 }
 
 export {MainConfig, CodeSource, Service}
