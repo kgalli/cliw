@@ -65,6 +65,9 @@
       },
       "db": {
         "description": "maintain service database"
+      },
+      "config": {
+        "description": "get and set project config options"
       }
     }
   },
