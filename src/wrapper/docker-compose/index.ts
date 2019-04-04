@@ -1,11 +1,10 @@
-import {Command} from '@oclif/command'
-
+import BaseCommand from '../../base-command'
 import ConfigUtils from '../../config/config-utils'
 import BashWrapper from '../bash'
 
 import DockerComposeWrapper from './docker-compose-wrapper'
 
-export default abstract class extends Command {
+export default abstract class extends BaseCommand {
   dockerCompose(dryRun = true): DockerComposeWrapper {
     const mainConfig = ConfigUtils.mainConfigLoadDefault()
 

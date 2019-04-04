@@ -1,11 +1,10 @@
-import {Command} from '@oclif/command'
-
+import BaseCommand from '../../base-command'
 import ConfigUtils from '../../config/config-utils'
 import BashWrapper from '../bash'
 
 import DbToolsWrapper from './db-tools-wrapper'
 
-export default abstract class extends Command {
+export default abstract class extends BaseCommand {
   dbTools(dryRun = true): DbToolsWrapper {
     const mainConfig = ConfigUtils.mainConfigLoadDefault()
 

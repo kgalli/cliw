@@ -1,18 +1,38 @@
 import {flags} from '@oclif/command'
 
 import ConfigUtils from './config/config-utils'
-import {MainConfig} from './config/main-config'
 
-function mainConfig(): MainConfig {
-  try {
-    return ConfigUtils.mainConfigLoadDefault()
-  } catch (e) {
-    // TODO investigate and find better solution than swallowing the error
-    // Error is swallowed because if we run init command
-    // while the projectsConfig does not exist we have an issue
-    // because flags get loaded anyway and then it fails with nasty error
-    return {} as MainConfig
+function environments(): string[] {
+  if (ConfigUtils.projectsConfigExists()) {
+    return ConfigUtils.mainConfigLoadDefault().environments
   }
+
+  return []
+}
+
+function defaultEnvironment(): string | undefined {
+  if (ConfigUtils.projectsConfigExists()) {
+    return ConfigUtils.mainConfigLoadDefault().defaultEnvironment
+  }
+
+  return
+}
+
+function projects() {
+  if (ConfigUtils.projectsConfigExists()) {
+    return ConfigUtils.projectsConfigLoad().projects.map(p => p.name)
+  }
+
+  return
+}
+
+
+function defaultProject(): string | undefined {
+  if (ConfigUtils.projectsConfigExists()) {
+    return ConfigUtils.projectsConfigLoad().default
+  }
+
+  return
 }
 
 export const servicesFlag = flags.string({
@@ -29,11 +49,18 @@ export const serviceFlag = flags.string({
 export const environmentFlag = flags.string({
   char: 'e',
   required: true,
-  options: mainConfig().environments,
-  default: mainConfig().defaultEnvironment
+  options: environments(),
+  default: defaultEnvironment()
 })
 
 export const dryRunFlag = flags.boolean({
   description: 'print shell commands without executing',
   default: false
+})
+
+export const projectFlag = flags.string({
+  char: 'p',
+  required: true,
+  options: projects(),
+  default: defaultProject()
 })
