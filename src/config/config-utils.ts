@@ -13,6 +13,7 @@ if (!isEmpty(process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION)) {
   DEFAULT_PROJECT_CONFIG_LOCATION = process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION as string
 }
 
+// tslint:disable-next-line no-unnecessary-class
 export default class ConfigUtils {
   static projectsConfigExists(projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION) {
     return ConfigUtils.exists(projectsConfigLocation)
