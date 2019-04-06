@@ -1,6 +1,6 @@
 import {isEmpty} from 'lodash'
 
-import {Environment, EnvironmentVariable, Service} from '../../config/main-config'
+import {Service} from '../../config/main-config'
 
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
@@ -39,6 +39,7 @@ export default class DbToolsWrapper {
     }
   }
 
+  // tslint:disable-next-line no-unused
   console(options: any, serviceName: string, environment: string) {
     this.validate(serviceName)
     const service = this.serviceByName(serviceName)
@@ -48,6 +49,12 @@ export default class DbToolsWrapper {
 
     const dbConsoleCmd = dbWrapper.dbConsole()
     this.cmdExec(dbConsoleCmd)
+  }
+
+  cmdExec(cmd: string) {
+    // tslint:disable-next-line no-console
+    console.log(`${cmd}`)
+    this.shellWrapper.run(cmd)
   }
 
   private dbWrapper(connectionParams: ConnectionParams, dockerOptions: DockerOptions): PostgreSql {
@@ -78,12 +85,6 @@ export default class DbToolsWrapper {
   private extractDbPort(): number {
     // TODO check docker config and get local port if depends_on is found in docker config
     return 9999
-  }
-
-  cmdExec(cmd: string) {
-    // tslint:disable-next-line no-console
-    console.log(`${cmd}`)
-    this.shellWrapper.run(cmd)
   }
 
 }

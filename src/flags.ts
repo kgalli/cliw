@@ -26,7 +26,6 @@ function projects() {
   return
 }
 
-
 function defaultProject(): string | undefined {
   if (ConfigUtils.projectsConfigExists()) {
     return ConfigUtils.projectsConfigLoad().default
