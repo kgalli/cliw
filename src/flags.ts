@@ -6,6 +6,7 @@ import {MainConfig} from './config/main-config'
 function mainConfig(): MainConfig {
   try {
     return ConfigUtils.mainConfigLoadDefault()
+    // tslint:disable-next-line no-unused
   } catch (e) {
     // TODO investigate and find better solution than swallowing the error
     // Error is swallowed because if we run init command

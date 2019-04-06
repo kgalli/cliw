@@ -13,7 +13,7 @@ export default class AwsKmsClient {
   }
 
   async decrypt(secret: string) {
-    const secretBuffer = new Buffer(secret.replace('aws:kms:', ''), 'base64')
+    const secretBuffer = Buffer.from(secret.replace('aws:kms:', ''), 'base64')
     const params = {CiphertextBlob: secretBuffer}
     const response = await this.client.decrypt(params).promise()
 
