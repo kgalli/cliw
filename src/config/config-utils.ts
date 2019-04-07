@@ -57,7 +57,7 @@ export default class ConfigUtils {
     return ConfigUtils.writeJson(mainConfig, mainConfigLocation)
   }
 
-  private static exists(fileLocation: string): boolean {
+  static exists(fileLocation: string): boolean {
     return existsSync(fileLocation)
   }
 
