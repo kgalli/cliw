@@ -1,4 +1,4 @@
-import {existsSync, readFileSync, writeFileSync} from 'fs'
+import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs'
 import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
@@ -7,7 +7,10 @@ import ProjectConfig from './project-config'
 import ProjectsConfig from './projects-config'
 
 const DEFAULT_PROJECT_CONFIG_FILENAME = 'projects.json'
-let DEFAULT_PROJECT_CONFIG_LOCATION = `${homedir()}/.config/orchestrator/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+const DEFAULT_PROJECT_CONFIG_PATH = `${homedir()}/.config/orchestrator`
+let DEFAULT_PROJECT_CONFIG_LOCATION = `${DEFAULT_PROJECT_CONFIG_PATH}/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+
+mkdirSync(DEFAULT_PROJECT_CONFIG_PATH, {recursive: true, mode: 755})
 
 if (!isEmpty(process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION)) {
   DEFAULT_PROJECT_CONFIG_LOCATION = process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION as string
