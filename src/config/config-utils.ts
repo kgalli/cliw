@@ -26,15 +26,16 @@ export default class ConfigUtils {
     return ConfigUtils.load(projectsConfigLocation, 'ProjectsConfig') as ProjectsConfig
   }
 
+  static projectConfigLoadByName(name: string, projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION): ProjectConfig {
+    const projectsConfig = ConfigUtils.projectsConfigLoad(projectsConfigLocation)
+
+    return ConfigUtils.projectConfigByName(projectsConfig, name)
+  }
+
   static projectsConfigLoadDefault(projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION): ProjectConfig {
     const projectsConfig = ConfigUtils.projectsConfigLoad(projectsConfigLocation)
-    const projectConfig = projectsConfig.projects.find(p => p.name === projectsConfig.default)
 
-    if (projectConfig) {
-      return projectConfig
-    }
-
-    throw new Error('No default project defined')
+    return ConfigUtils.projectConfigByName(projectsConfig, projectsConfig.default)
   }
 
   static projectsConfigSave(projectsConfig: ProjectsConfig, projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION) {
@@ -74,5 +75,15 @@ export default class ConfigUtils {
 
   private static writeJson(config: MainConfig | ProjectsConfig, fileLocation: string) {
     return writeFileSync(fileLocation, JSON.stringify(config))
+  }
+
+  private static projectConfigByName(projectsConfig: ProjectsConfig, name: string): ProjectConfig {
+    const projectConfig = projectsConfig.projects.find(p => p.name === name)
+
+    if (projectConfig) {
+      return projectConfig
+    }
+
+    throw new Error('No default project defined')
   }
 }

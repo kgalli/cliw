@@ -32,7 +32,7 @@ export default class List extends BaseCommand {
 
     const data = [] as any
     services.forEach(s => {
-      data.push({name: s.name, runType: projectConfig.servicesRunType[s.name] || projectConfig.defaultRunTypeFlag})
+      data.push({name: s.name, runType: (projectConfig.servicesRunType[s.name] || projectConfig.defaultRunTypeFlag).toUpperCase()})
     })
 
     cli.table(data, {name: {header: 'ServiceName', minWidth: 7}, runType: {header: 'Runtype'}}, {
