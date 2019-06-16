@@ -1,10 +1,18 @@
 interface MainConfig {
-  workDir: string
-  projectName: string
-  networkName: string
-  environments: string[],
-  services: Service[],
-  defaultEnvironment: string
+  compose: {
+    workDir: string
+    projectName: string
+    networkName: string
+    environments: string[],
+    defaultEnvironment: string
+    services: Service[]
+  }
+
+  dbTools: {
+    environments: string[],
+    defaultEnvironment: string
+    connections: Connection[]
+  },
 }
 
 interface Service {
@@ -15,6 +23,28 @@ interface Service {
   },
   repositoryUrl: string
   source: CodeSource
+}
+
+interface Connection {
+  name: string
+  environments: {
+    [key: string]: ConnectionParams
+  }
+}
+
+export default interface ConnectionParams {
+  host: string
+  port: number
+  user: string
+  password: string
+  database?: string
+  command?: string
+  engine: DbEngine
+  ssh?: any
+}
+
+const enum DbEngine {
+  postgresql, mysql
 }
 
 const enum CodeSource {
@@ -46,4 +76,4 @@ export interface EnvironmentVariable {
   [key: string]: string
 }
 
-export {MainConfig, CodeSource, Service}
+export {MainConfig, CodeSource, Service, Connection}

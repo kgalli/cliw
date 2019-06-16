@@ -9,7 +9,7 @@ describe('start', () => {
     .stdout()
     .command(['start', '--services', 'api', '--dryRun'])
     .it('invokes start with known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('start', mainConfig.defaultEnvironment, ['api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('start', mainConfig.compose.defaultEnvironment, ['api']))
     })
 
   test

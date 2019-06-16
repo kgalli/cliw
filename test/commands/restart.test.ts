@@ -9,6 +9,6 @@ describe('restart', () => {
     .stdout()
     .command(['restart', '--services', 'api', '--dryRun'])
     .it('invokes start with known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('restart', mainConfig.defaultEnvironment, ['api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('restart', mainConfig.compose.defaultEnvironment, ['api']))
     })
 })

@@ -13,6 +13,6 @@ writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION)
 const env = {ORCHESTRATOR_PROJECT_CONFIG_LOCATION: TEST_PROJECTS_CONFIG_LOCATION, TEST_OUTPUT: '0'}
 
 const mainConfig: MainConfig = loadMainConfig(TEST_MAIN_CONFIG_LOCATION)
-const expectedStdOutForCmd = stdOutHelperForDockerComposeCmd(mainConfig.projectName, mainConfig.workDir)
+const expectedStdOutForCmd = stdOutHelperForDockerComposeCmd(mainConfig.compose.projectName, mainConfig.compose.workDir)
 
 export {mainConfig, expectedStdOutForCmd, env}

@@ -8,7 +8,7 @@ describe('logs', () => {
     .stdout()
     .command(['logs', '--services', 'api', '--dryRun'])
     .it('invokes logs with known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.defaultEnvironment, ['api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.compose.defaultEnvironment, ['api']))
     })
 
   test
@@ -16,7 +16,7 @@ describe('logs', () => {
     .stdout()
     .command(['logs', '--services', 'api', '--follow', '--dryRun'])
     .it('invokes logs with follow flag', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.defaultEnvironment, ['--follow', 'api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.compose.defaultEnvironment, ['--follow', 'api']))
     })
 
   test
@@ -24,6 +24,6 @@ describe('logs', () => {
     .stdout()
     .command(['logs', '--services', 'api', '--timestamps', '--dryRun'])
     .it('invokes logs with timestamps flag', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.defaultEnvironment, ['--timestamps', 'api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('logs', mainConfig.compose.defaultEnvironment, ['--timestamps', 'api']))
     })
 })
