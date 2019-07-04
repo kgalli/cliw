@@ -3,7 +3,8 @@ import {flags} from '@oclif/command'
 import BaseCommand from '../../base-command'
 import ConfigUtils from '../../config/config-utils'
 import {RunTypeFlag} from '../../config/project-config'
-import {environmentFlag, projectFlag, serviceFlag} from '../../flags'
+import {projectFlag} from '../../flags'
+import {environmentFlag, serviceFlag} from '../../wrapper/docker-compose/flags'
 
 export default class Set extends BaseCommand {
   static description = 'Set config options'
@@ -39,7 +40,7 @@ export default class Set extends BaseCommand {
       if (project.name === flags.project) {
         project.servicesRunType[flags.service] = runTypeFlag
       }
-    });
+    })
 
     ConfigUtils.projectsConfigSave(projectsConfig)
   }
