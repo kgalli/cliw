@@ -4,7 +4,7 @@ function stdOutHelperForDockerComposeCmd(projectName: string, workDir: string) {
   function dockerComposeCmd(cmd: string, environment: string, options: string[]): string {
     const projectFlag = `-p ${projectName}`
     const dcConfigFileFlag = `-f ${workDir}/docker-compose.${environment}.yaml`
-    let result = `docker-compose ${projectFlag} ${dcConfigFileFlag} ${cmd}`
+    let result = `docker-compose ${projectFlag}_${environment} ${dcConfigFileFlag} ${cmd}`
 
     if (isEmpty(options) === false) {
       result += ` ${options.join(' ')}`
