@@ -10,5 +10,5 @@ export interface ServicesRunType {
 }
 
 export const enum RunTypeFlag {
-  image = 'IMAGE', src = 'SRC'
+  IMAGE = 'image', SRC = 'src'
 }

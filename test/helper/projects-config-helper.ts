@@ -1,5 +1,6 @@
 import {writeFileSync} from 'fs'
 
+import {RunTypeFlag} from '../../src/config/project-config'
 import ProjectsConfig from '../../src/config/projects-config'
 
 export function writeProjectsConfig(projectsConfigLocation: string, mainConfigLocation: string) {
@@ -8,10 +9,10 @@ export function writeProjectsConfig(projectsConfigLocation: string, mainConfigLo
     projects: [{
       name: 'test',
       mainConfigLocation,
-      defaultRunTypeFlag: 'IMAGE',
+      defaultRunTypeFlag: RunTypeFlag.IMAGE,
       servicesRunType: {
-        api: 'IMAGE',
-        web: 'IMAGE'
+        api: RunTypeFlag.IMAGE,
+        web: RunTypeFlag.IMAGE
       }
     }]
   } as ProjectsConfig))

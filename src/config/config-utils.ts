@@ -1,4 +1,4 @@
-import {existsSync, readFileSync, writeFileSync} from 'fs'
+import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs'
 import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
@@ -7,7 +7,10 @@ import ProjectConfig from './project-config'
 import ProjectsConfig from './projects-config'
 
 const DEFAULT_PROJECT_CONFIG_FILENAME = 'projects.json'
-let DEFAULT_PROJECT_CONFIG_LOCATION = `${homedir()}/.config/orchestrator/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+const DEFAULT_PROJECT_CONFIG_PATH = `${homedir()}/.config/orchestrator`
+let DEFAULT_PROJECT_CONFIG_LOCATION = `${DEFAULT_PROJECT_CONFIG_PATH}/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+
+mkdirSync(DEFAULT_PROJECT_CONFIG_PATH, {recursive: true, mode: 755})
 
 if (!isEmpty(process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION)) {
   DEFAULT_PROJECT_CONFIG_LOCATION = process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION as string
@@ -23,15 +26,16 @@ export default class ConfigUtils {
     return ConfigUtils.load(projectsConfigLocation, 'ProjectsConfig') as ProjectsConfig
   }
 
+  static projectConfigLoadByName(name: string, projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION): ProjectConfig {
+    const projectsConfig = ConfigUtils.projectsConfigLoad(projectsConfigLocation)
+
+    return ConfigUtils.projectConfigByName(projectsConfig, name)
+  }
+
   static projectsConfigLoadDefault(projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION): ProjectConfig {
     const projectsConfig = ConfigUtils.projectsConfigLoad(projectsConfigLocation)
-    const projectConfig = projectsConfig.projects.find(p => p.name === projectsConfig.default)
 
-    if (projectConfig) {
-      return projectConfig
-    }
-
-    throw new Error('No default project defined')
+    return ConfigUtils.projectConfigByName(projectsConfig, projectsConfig.default)
   }
 
   static projectsConfigSave(projectsConfig: ProjectsConfig, projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION) {
@@ -71,5 +75,15 @@ export default class ConfigUtils {
 
   private static writeJson(config: MainConfig | ProjectsConfig, fileLocation: string) {
     return writeFileSync(fileLocation, JSON.stringify(config))
+  }
+
+  private static projectConfigByName(projectsConfig: ProjectsConfig, name: string): ProjectConfig {
+    const projectConfig = projectsConfig.projects.find(p => p.name === name)
+
+    if (projectConfig) {
+      return projectConfig
+    }
+
+    throw new Error('No default project defined')
   }
 }
