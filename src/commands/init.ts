@@ -3,7 +3,7 @@ import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
 import ConfigUtils from '../config/config-utils'
-import ProjectConfig from '../config/project-config'
+import ProjectConfig, {RunTypeFlag, ServicesRunType} from '../config/project-config'
 
 export default class Init extends Command {
   static description = `initialize projects config
@@ -44,13 +44,21 @@ identifier (project name) at: ~/.config/projects-config.json.
       mainConfigLocation = await cli.prompt('Please enter the location of your <main-config>.json file')
     }
 
+    if (!ConfigUtils.exists(mainConfigLocation as string)) {
+      this.error('MainConfig could not be found with the provided location')
+    }
+
     // TODO validate main config
-    // TODO determine internal services to create runTypes array
+    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
+    const servicesRunType = {} as ServicesRunType
+
+    mainConfig.compose.services.forEach(s => servicesRunType[s.name] = RunTypeFlag.image)
 
     const projectConfig = {
       name: projectName,
       mainConfigLocation,
-      runTypes: []
+      defaultRunTypeFlag: RunTypeFlag.src,
+      servicesRunType
     } as ProjectConfig
 
     ConfigUtils.projectsConfigSave({

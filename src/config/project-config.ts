@@ -1,9 +1,14 @@
 export default interface ProjectConfig {
   name: string
   mainConfigLocation: string,
-  runTypes: RunType[]
+  defaultRunTypeFlag: RunTypeFlag
+  servicesRunType: ServicesRunType
 }
 
-interface RunType {
-  [key: string]: string
+export interface ServicesRunType {
+  [key: string]: RunTypeFlag
+}
+
+export const enum RunTypeFlag {
+  image = 'IMAGE', src = 'SRC'
 }

@@ -1,86 +1,120 @@
 {
-  "workDir": "/Users/example/dev",
-  "projectName": "orchestrator",
-  "networkName": "orchestrator",
-  "environments": [
-    "development",
-    "test"
-  ],
-  "defaultEnvironment": "development",
-  "services": [
-    {
-      "name": "api",
-      "repositoryUrl": "github.com/kgalli/demo",
-      "source": "internal",
-      "environments": {
-        "default": {
-          "ports": [
-            "3000:3000"
-          ],
-          "runType": {
-            "source": {
-              "volumes": [
-                "./demo:/usr/src/app"
-              ],
-              "build": {
-                "context": "./demo",
-                "dockerfile": "Dockerfile"
-              }
-            },
-            "image": "kgalli/demo:0.0.1"
+  "compose": {
+    "workDir": "/Users/kgallinowsk/dev",
+    "projectName": "orchestrator",
+    "networkName": "orchestrator",
+    "defaultEnvironment": "development",
+    "environments": [
+      "development",
+      "test"
+    ],
+    "services": [
+      {
+        "name": "api",
+        "repositoryUrl": "github.com/kgalli/javalin-playground",
+        "source": "internal",
+        "environments": {
+          "default": {
+            "ports": [
+              "3000:3000"
+            ],
+            "runType": {
+              "source": {
+                "volumes": [
+                  "./javalin-playground:/usr/src/app"
+                ],
+                "build": {
+                  "context": "./javalin-playground",
+                  "dockerfile": "Dockerfile"
+                }
+              },
+              "image": "kgalli/javalin-playground"
+            }
           },
-          "environment": {
-            "API_URL": "https://demo.example.com"
+          "development": {
+            "environment": {
+              "API_URL": "http://localhost:3000",
+              "DB_HOST": "db",
+              "DB_PORT": "5432",
+              "DB_USER": "kgalli",
+              "DB_PASSWORD": "pg",
+              "DB_DATABASE": "pg",
+              "DB_ENGINE": "postgresql"
+            }
+          },
+          "test": {
+            "ports": [
+              "3010:3000"
+            ],
+            "API_URL": "http://localhost:3000",
+            "DB_HOST": "db",
+            "DB_PORT": "3306",
+            "DB_USER": "kgalli",
+            "DB_PASSWORD": "pg",
+            "DB_ENGINE": "mysql"
           }
-        },
-        "development": {
-          "environment": {
-            "API_URL": "http://localhost:3000"
+        }
+      },
+      {
+        "name": "db",
+        "repositoryUrl": "github.com/kgalli/postgres",
+        "source": "external",
+        "environments": {
+          "default": {
+            "ports": [
+              "9999:5432"
+            ],
+            "runType": {
+              "source": {
+                "build": {
+                  "context": "./demo",
+                  "dockerfile": "Dockerfile"
+                }
+              },
+              "image": "postgres"
+            },
+            "environment": {
+              "POSTGRES_PASSWORD": "pg",
+              "POSTGRES_USER": "kgalli"
+            }
+          },
+          "development": {
+          },
+          "test": {
+            "ports": [
+              "9998:5432"
+            ]
           }
-        },
-        "test": {
-          "ports": [
-            "3010:3000"
-          ]
         }
       }
-    },
-    {
-      "name": "web",
-      "repositoryUrl": "github.com/kgalli/demo",
-      "source": "internal",
-      "environments": {
-        "default": {
-          "ports": [
-            "3000:3000"
-          ],
-          "runType": {
-            "source": {
-              "volumes": [
-                "./demo:/usr/src/app"
-              ],
-              "build": {
-                "context": "./demo",
-                "dockerfile": "Dockerfile"
-              }
-            },
-            "image": "kgalli/demo:0.0.1"
-          },
-          "environment": {
-            "API_URL": "https://demo.example.com"
+    ]
+  },
+  "dbTools": {
+    "environments": [
+      "development",
+      "test"
+    ],
+    "defaultEnvironment": "development",
+    "connections": [
+      {
+        "name": "api",
+        "environments": {
+          "development": {
+            "host": "127.0.0.1",
+            "port": "9999",
+            "user": "kgalli",
+            "password": "pg",
+            "database": "kgalli",
+            "engine": "postgresql",
+            "ssh": {
+              "proxyHost": "",
+              "proxyUser": "",
+              "sshKeyLocation": "",
+              "sshKeyPassword": ""
+            }
           }
-        },
-        "development": {
-          "environment": {
-            "API_URL": "http://localhost:3000"
-          }
-        },
-        "test": {
-          "ports": [
-            "3010:3000"
-          ]
         }
       }
-    }
-  ]
+    ]
+  }
 }

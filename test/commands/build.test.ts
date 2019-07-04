@@ -8,6 +8,6 @@ describe('build', () => {
     .stdout()
     .command(['build', '--services', 'api', '--dryRun'])
     .it('invokes build with a known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('build', mainConfig.defaultEnvironment, []))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('build', mainConfig.compose.defaultEnvironment, []))
     })
 })
