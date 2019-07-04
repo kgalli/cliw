@@ -3,19 +3,24 @@ import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
 import {CodeSource, Service} from '../../config/main-config'
+import {RunTypeFlag, ServicesRunType} from '../../config/project-config'
 
 export default class DockerComposeWrapper {
   shellWrapper: any
   services: Service[]
   workDir: string
   projectName: string
+  networkName: string
   dryRun: boolean
+  servicesRunType: ServicesRunType
 
-  constructor(projectName: string, workDir: string, services: Service[], dryRun: boolean, shellWrapper: any) {
+  constructor(projectName: string, networkName: string, workDir: string, services: Service[], servicesRunType: ServicesRunType, dryRun: boolean, shellWrapper: any) {
     this.projectName = projectName
+    this.networkName = networkName
     this.workDir = workDir
     this.services = services
     this.dryRun = dryRun
+    this.servicesRunType = servicesRunType
     this.shellWrapper = shellWrapper
   }
 
@@ -175,10 +180,8 @@ export default class DockerComposeWrapper {
 
   dockerComposeExec(cmd: string, environment: string) {
     const configFile = this.constructConfigFilename(this.workDir, environment)
-    const dcCmd = this.constructDockerComposeCmd(this.projectName, configFile, this.sanitizeCmd(cmd))
-    //TODO load runFromSrc from config
-    const runFromSrc = false
-    const dcConfig = this.constructDockerComposeConfig(this.projectName, environment, runFromSrc, this.services)
+    const dcCmd = this.constructDockerComposeCmd(this.projectName, environment, configFile, this.sanitizeCmd(cmd))
+    const dcConfig = this.constructDockerComposeConfig(this.projectName, this.networkName, environment, this.services)
 
     if (this.dryRun === false) {
       this.writeConfigFile(configFile, safeDump(dcConfig))
@@ -186,8 +189,8 @@ export default class DockerComposeWrapper {
     this.shellWrapper.run(dcCmd)
   }
 
-  private constructDockerComposeCmd(projectName: string, configFile: string, cmd: string) {
-    return `docker-compose -p ${projectName} -f ${configFile} ${cmd}`
+  private constructDockerComposeCmd(projectName: string, environment: string, configFile: string, cmd: string) {
+    return `docker-compose -p ${projectName}_${environment} -f ${configFile} ${cmd}`
   }
 
   private writeConfigFile(fileLocation: string, data: any) {
@@ -204,16 +207,18 @@ export default class DockerComposeWrapper {
     return `${workDir}/docker-compose.${environment}.yaml`
   }
 
-  private constructDockerComposeConfig(projectName: string, environment: string, runFromSrc: boolean, services: Service[]): any {
+  private constructDockerComposeConfig(projectName: string, networkName: string, environment: string, services: Service[]): any {
     const servicesObject: any = {}
 
     services.forEach(s => {
       const defaultServiceConfig = s.environments.default
+      const runFromSrc = this.servicesRunType[s.name] === RunTypeFlag.SRC
       const runType = runFromSrc ? defaultServiceConfig.runType.src : {image: defaultServiceConfig.runType.image}
       // @ts-ignore
       const environmentServiceConfig: any = s.environments[environment]
 
       let serviceConfig = {
+        container_name: this.contructContainerName(projectName, s.name, environment),
         ...runType,
         ...defaultServiceConfig,
       }
@@ -227,18 +232,20 @@ export default class DockerComposeWrapper {
       servicesObject[s.name] = serviceConfig
     })
 
-    const config = {
+    return {
       version: '3',
       services: servicesObject,
       networks: {
         default: {
           external: {
-            name: `${projectName}_${environment}`
+            name: `${networkName}_${environment}`
           }
         }
       }
     }
+  }
 
-    return config
+  private contructContainerName(projectName: string, environment: string, serviceName: string): string {
+    return `${projectName}_${serviceName}_${environment}`
   }
 }
