@@ -20,7 +20,7 @@ export default class List extends BaseCommand {
     const projectConfig = projectsConfig.projects
       .find(pc => pc.name === flags.project) as ProjectConfig
     const mainConfig = ConfigUtils.mainConfigLoad(projectConfig.mainConfigLocation)
-    const services = mainConfig.services
+    const services = mainConfig.compose.services
 
     this.log('---')
     cli.table([projectConfig], {name: {header: 'ProjectName', minWidth: 7}, mainConfigLocation: {}}, {

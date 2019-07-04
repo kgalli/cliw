@@ -52,7 +52,7 @@ identifier (project name) at: ~/.config/projects-config.json.
     const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
     const servicesRunType = {} as ServicesRunType
 
-    mainConfig.services.forEach(s => servicesRunType[s.name] = RunTypeFlag.image)
+    mainConfig.compose.services.forEach(s => servicesRunType[s.name] = RunTypeFlag.image)
 
     const projectConfig = {
       name: projectName,

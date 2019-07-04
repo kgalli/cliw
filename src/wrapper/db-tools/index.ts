@@ -9,9 +9,7 @@ export default abstract class extends BaseCommand {
     const mainConfig = ConfigUtils.mainConfigLoadDefault()
 
     return new DbToolsWrapper(
-      mainConfig.projectName,
-      mainConfig.workDir,
-      mainConfig.services,
+      mainConfig.dbTools.connections,
       dryRun,
       new BashWrapper({...BashWrapper.defaultOptions(), dryRun})
     )

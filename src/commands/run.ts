@@ -1,7 +1,8 @@
 import {flags} from '@oclif/command'
 
-import {dryRunFlag, environmentFlag, serviceFlag} from '../flags'
+import {dryRunFlag} from '../flags'
 import DockerComposeCommand from '../wrapper/docker-compose'
+import {environmentFlag, serviceFlag} from '../wrapper/docker-compose/flags'
 
 export default class Run extends DockerComposeCommand {
   static description = 'run a one-off command on a service'

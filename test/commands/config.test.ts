@@ -4,7 +4,8 @@ import {env} from '../helper/test-helper'
 
 describe('config', () => {
   context('list', () => {
-    const expectedOutPut = '---\nServiceName Runtype \napi         IMAGE   \nweb         IMAGE   \n'
+    // tslint:disable-next-line:no-multi-spaces
+    const expectedOutPut =  '---\nServiceName Runtype \napi         IMAGE   \ndb          IMAGE'
 
     test
       .env(env)

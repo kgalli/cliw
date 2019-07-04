@@ -1,6 +1,6 @@
 import {isEmpty} from 'lodash'
 
-import {Service} from '../../config/main-config'
+import {Connection} from '../../config/main-config'
 
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
@@ -8,41 +8,37 @@ import PostgreSql from './postgre-sql'
 
 export default class DbToolsWrapper {
   shellWrapper: any
-  services: Service[]
-  workDir: string
-  projectName: string
+  connections: Connection[]
   dryRun: boolean
 
-  constructor(projectName: string, workDir: string, services: Service[], dryRun: boolean, shellWrapper: any) {
-    this.projectName = projectName
-    this.workDir = workDir
-    this.services = services
+  constructor(connections: Connection[], dryRun: boolean, shellWrapper: any) {
+    this.connections = connections
     this.dryRun = dryRun
     this.shellWrapper = shellWrapper
   }
 
-  serviceByName(name: string) {
-    return this.services.find((s: Service) => s.name === name) as Service
+  connectionByName(name: string) {
+    return this.connections.find((c: Connection) => c.name === name) as Connection
   }
 
-  serviceNames(): string[] {
-    return this.services.map(s => s.name)
+  connectionNames(): string[] {
+    return this.connections.map(s => s.name)
   }
 
-  validate(serviceName: string) {
-    if (isEmpty(serviceName)) {
-      throw new Error('Missing required services')
+  validate(connectionName: string) {
+    if (isEmpty(connectionName)) {
+      throw new Error('Missing required connectionName')
     }
 
-    if (!this.serviceNames().includes(serviceName)) {
-      throw new Error(`Expected service ${serviceName} to be one of: ${this.serviceNames()}`)
+    if (!this.connectionNames().includes(connectionName)) {
+      throw new Error(`Expected service ${connectionName} to be one of: ${this.connectionNames()}`)
     }
   }
 
   // tslint:disable-next-line no-unused
-  console(options: any, serviceName: string, environment: string) {
-    this.validate(serviceName)
-    const service = this.serviceByName(serviceName)
+  console(options: any, connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
     const connectionParams = this.extractConnectionParams(service, environment)
     const dockerOptions = {enabled: true} as DockerOptions
     const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
@@ -61,13 +57,18 @@ export default class DbToolsWrapper {
     return new PostgreSql(connectionParams, dockerOptions)
   }
 
-  private extractConnectionParams(service: Service, environment: string): ConnectionParams {
-    const serviceEnvironment = service.environments[environment].environment as any
-    const host = serviceEnvironment.DB_HOST as string
-    const port = serviceEnvironment.DB_PORT as number
-    const database = serviceEnvironment.DB_DATABASE as string
-    const user = serviceEnvironment.DB_USER as string
-    const password = serviceEnvironment.DB_PASSWORD as string
+  private extractConnectionParams(connection: Connection, environment: string): ConnectionParams {
+    const connectionParams = connection.environments[environment]
+
+    if (isEmpty(connectionParams)) {
+      throw new Error(`Connection params for environment "${environment}" not set`)
+    }
+
+    const host = connectionParams.host as string
+    const port = connectionParams.port as number
+    const database = connectionParams.database as string
+    const user = connectionParams.user as string
+    const password = connectionParams.password as string
 
     return { host,
       port,
@@ -76,15 +77,4 @@ export default class DbToolsWrapper {
       database
     } as ConnectionParams
   }
-
-  private extractDbHost(): string {
-    // TODO check docker config and return localhost if depends_on is found in docker config
-    return '127.0.0.1'
-  }
-
-  private extractDbPort(): number {
-    // TODO check docker config and get local port if depends_on is found in docker config
-    return 9999
-  }
-
 }

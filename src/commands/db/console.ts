@@ -1,13 +1,14 @@
 import {flags} from '@oclif/command'
 
-import {dryRunFlag, environmentFlag, serviceFlag} from '../../flags'
+import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
+import {connectionFlag, environmentFlag} from '../../wrapper/db-tools/flags'
 
 export default class Console extends DbToolsWrapper {
   static description = 'run database console'
 
   static flags = {
-    service: serviceFlag,
+    service: connectionFlag,
     environment: environmentFlag,
     dryRun: dryRunFlag,
     help: flags.help({char: 'h'})

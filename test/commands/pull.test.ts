@@ -8,6 +8,6 @@ describe('pull', () => {
     .stdout()
     .command(['pull', '--services', 'api', '--dryRun'])
     .it('invokes pull with known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('pull', mainConfig.defaultEnvironment, ['api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('pull', mainConfig.compose.defaultEnvironment, ['api']))
     })
 })
