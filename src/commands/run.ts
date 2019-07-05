@@ -10,7 +10,7 @@ export default class Run extends DockerComposeCommand {
   static flags = {
     service: serviceFlag,
     environment: environmentFlag,
-    dryRun: dryRunFlag,
+    'dry-run': dryRunFlag,
     help: flags.help({char: 'h'})
   }
 
@@ -28,7 +28,7 @@ export default class Run extends DockerComposeCommand {
     const {flags, args} = this.parse(Run)
     const service = flags.service
     const environment = flags.environment
-    const dryRun = flags.dryRun
+    const dryRun = flags['dry-run']
     const cmd = args.command
 
     try {
