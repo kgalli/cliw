@@ -64,10 +64,13 @@
         "description": "encrypt, decrypt secret via AWS KMS"
       },
       "db": {
-        "description": "maintain service database"
+        "description": "dump, restore or run a database console"
+      },
+      "service": {
+        "description": "manage services to run as docker containers"
       },
       "config": {
-        "description": "get and set project config options"
+        "description": "get and set project config properties"
       }
     }
   },
