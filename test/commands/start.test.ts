@@ -7,7 +7,7 @@ describe('start', () => {
     .env(env)
     //.stdout({print: true})
     .stdout()
-    .command(['start', '--services', 'api', '--dry-run'])
+    .command(['service:start', '--services', 'api', '--dry-run'])
     .it('invokes start with known service', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('start', mainConfig.compose.defaultEnvironment, ['api']))
     })
@@ -15,7 +15,7 @@ describe('start', () => {
   test
     .env(env)
     .stdout()
-    .command(['start', '--services', 'demoTest', '--dry-run'])
+    .command(['service:start', '--services', 'demoTest', '--dry-run'])
     .catch(err => expect(err.message).to.match(/Expected service demoTest to be one of:/))
     .it('does not invoke start with unknown service')
 })

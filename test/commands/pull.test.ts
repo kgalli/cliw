@@ -6,7 +6,7 @@ describe('pull', () => {
   test
     .env(env)
     .stdout()
-    .command(['pull', '--services', 'api', '--dry-run'])
+    .command(['service:pull', '--services', 'api', '--dry-run'])
     .it('invokes pull with known service', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('pull', mainConfig.compose.defaultEnvironment, ['api']))
     })

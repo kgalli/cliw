@@ -48,8 +48,6 @@ export default class DbToolsWrapper {
   }
 
   cmdExec(cmd: string) {
-    // tslint:disable-next-line no-console
-    console.log(`${cmd}`)
     this.shellWrapper.run(cmd)
   }
 
