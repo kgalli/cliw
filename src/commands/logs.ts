@@ -10,7 +10,7 @@ export default class Logs extends DockerComposeCommand {
   static flags = {
     services: servicesFlag,
     environment: environmentFlag,
-    dryRun: dryRunFlag,
+    'dry-run': dryRunFlag,
     help: flags.help({char: 'h'}),
     follow: flags.boolean({
       char: 'f',
@@ -28,7 +28,7 @@ export default class Logs extends DockerComposeCommand {
     const {flags} = this.parse(Logs)
     const services = flags.services
     const environment = flags.environment
-    const dryRun = flags.dryRun
+    const dryRun = flags['dry-run']
     const options = {
       follow: flags.follow,
       timestamps: flags.timestamps

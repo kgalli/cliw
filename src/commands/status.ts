@@ -10,7 +10,7 @@ export default class Status extends DockerComposeCommand {
   static flags = {
     services: servicesFlag,
     environment: environmentFlag,
-    dryRun: dryRunFlag,
+    'dry-run': dryRunFlag,
     help: flags.help({char: 'h'}),
   }
 
@@ -18,7 +18,7 @@ export default class Status extends DockerComposeCommand {
     const {flags} = this.parse(Status)
     const services = flags.services
     const environment = flags.environment
-    const dryRun = flags.dryRun
+    const dryRun = flags['dry-run']
 
     try {
       this
