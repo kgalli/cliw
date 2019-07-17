@@ -218,7 +218,7 @@ export default class DockerComposeWrapper {
       const environmentServiceConfig: any = s.environments[environment]
 
       let serviceConfig = {
-        container_name: this.contructContainerName(projectName, s.name, environment),
+        container_name: this.contructContainerName(projectName, environment, s.name),
         ...runType,
         ...defaultServiceConfig,
       }
