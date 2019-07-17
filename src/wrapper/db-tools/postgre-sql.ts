@@ -1,11 +1,16 @@
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
+import PgdumpOptions from './pgdump-options'
 import PsqlOptions from './psql-options'
 
-const DOCKER_VOLUME = '/opt'
+const defaultDockerOptions: DockerOptions = {
+  enabled: true,
+  volume: '/opt'
+}
 
 export default class PostgreSql {
   static psql(connectionParams: ConnectionParams, options: PsqlOptions) {
+    const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
 
     cmd.push('psql')
@@ -21,16 +26,16 @@ export default class PostgreSql {
       cmd.push(`-c ${options.command}`)
     }
 
-    if (options.docker.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, options.docker.volume || DOCKER_VOLUME)
+    if (dockerOptions.enabled) {
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
     }
 
     return cmd.join(' ')
   }
 
-  static pgDump(connectionParams: ConnectionParams, dockerOptions: DockerOptions) {
+  static pgDump(connectionParams: ConnectionParams, options: PgdumpOptions) {
+    const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
-    const schemaOnly = false
 
     cmd.push('pg_dump')
     cmd.push(`-h ${connectionParams.host}`)
@@ -38,23 +43,24 @@ export default class PostgreSql {
     cmd.push(`-U ${connectionParams.user}`)
     cmd.push('--verbose --no-security-labels --no-owner --if-exists --clean --no-tablespaces --no-privileges')
 
-    if (schemaOnly) {
+    if (options.schemaOnly) {
       cmd.push('--schema-only')
     } else {
       cmd.push('--format=custom')
     }
 
-    //cmd.push("--file #{file}")
+    cmd.push(`--file ${options.target}`)
     cmd.push(`-d ${connectionParams.database}`)
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume || DOCKER_VOLUME)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
     }
 
     return cmd.join(' ')
   }
 
-  static pgRestore(connectionParams: ConnectionParams, dockerOptions: DockerOptions) {
+  static pgRestore(connectionParams: ConnectionParams, options: any) {
+    const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
 
     cmd.push('pg_restore')
@@ -69,16 +75,23 @@ export default class PostgreSql {
     //cmd.push("#{file}")
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume || DOCKER_VOLUME)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
     }
 
     return cmd.join(' ')
   }
 
   private static asDockerCmd(dbCmd: string, password: string, volume: string) {
-    const volumeOption = `-v $PWD:${volume || DOCKER_VOLUME}`
+    const dockerRunOptions = []
 
-    return `docker run --rm -it --net=host -e PGPASSWORD=${password} ${volumeOption} postgres ${dbCmd}`
+    dockerRunOptions.push('--rm')
+    dockerRunOptions.push('-it')
+    dockerRunOptions.push('--net=host')
+    dockerRunOptions.push(`-e PGPASSWORD=${password}`)
+    dockerRunOptions.push(`-v $PWD:${volume}`)
+    dockerRunOptions.push(`-w ${volume}`)
+
+    return `docker run ${dockerRunOptions.join(' ')} postgres ${dbCmd}`
   }
 
   readonly connectionParams: ConnectionParams
@@ -119,9 +132,12 @@ export default class PostgreSql {
   dbRestore() {
     return PostgreSql.psql(this.connectionParams, this.dockerOptions)
   }
-
-  dbDump() {
-    return PostgreSql.psql(this.connectionParams, this.dockerOptions)
-  }
   */
+
+  dbDump(options: PgdumpOptions) {
+    const connectionParams = {...this.connectionParams}
+    const pgDumpOptions = {...options, docker: this.dockerOptions}
+
+    return PostgreSql.pgDump(connectionParams, pgDumpOptions)
+  }
 }

@@ -51,6 +51,17 @@ export default class DbToolsWrapper {
     this.cmdExec(dbConsoleCmd)
   }
 
+  dump(options: any, connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbDumpCmd = dbWrapper.dbDump(options)
+    this.cmdExec(dbDumpCmd)
+  }
+
   private connectionByName(name: string) {
     return this.connections.find((c: Connection) => c.name === name) as Connection
   }

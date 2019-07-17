@@ -1,6 +1,6 @@
 import DockerOptions from './docker-options'
 
 export default interface PsqlOptions {
-  docker: DockerOptions
+  docker?: DockerOptions
   command: string
 }
