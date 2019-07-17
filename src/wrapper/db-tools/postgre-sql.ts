@@ -1,6 +1,7 @@
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
-import PgdumpOptions from './pgdump-options'
+import PgDumpOptions from './pgdump-options'
+import PgRestoreOptions from './pgrestore-options'
 import PsqlOptions from './psql-options'
 
 const defaultDockerOptions: DockerOptions = {
@@ -33,7 +34,7 @@ export default class PostgreSql {
     return cmd.join(' ')
   }
 
-  static pgDump(connectionParams: ConnectionParams, options: PgdumpOptions) {
+  static pgDump(connectionParams: ConnectionParams, options: PgDumpOptions) {
     const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
 
@@ -59,20 +60,18 @@ export default class PostgreSql {
     return cmd.join(' ')
   }
 
-  static pgRestore(connectionParams: ConnectionParams, options: any) {
+  static pgRestore(connectionParams: ConnectionParams, options: PgRestoreOptions) {
     const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
 
     cmd.push('pg_restore')
-    cmd.push('pg_dump')
     cmd.push(`-h ${connectionParams.host}`)
     cmd.push(`-p ${connectionParams.port}`)
     cmd.push(`-U ${connectionParams.user}`)
     cmd.push('--verbose --no-owner --no-privileges --format=custom')
     cmd.push(`-d ${connectionParams.database}`)
 
-    //  ? "#{docker_options[:volume]}/#{params[:file]}" : params[
-    //cmd.push("#{file}")
+    cmd.push(options.restoreFileLocation)
 
     if (dockerOptions.enabled) {
       return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
@@ -128,13 +127,14 @@ export default class PostgreSql {
     return PostgreSql.psql(connectionParams, psqlOptions)
   }
 
-  /*
-  dbRestore() {
-    return PostgreSql.psql(this.connectionParams, this.dockerOptions)
-  }
-  */
+  dbRestore(options: PgRestoreOptions) {
+    const connectionParams = {...this.connectionParams}
+    const pgRestoreOptions = {...options, docker: this.dockerOptions}
 
-  dbDump(options: PgdumpOptions) {
+    return PostgreSql.pgRestore(connectionParams, pgRestoreOptions)
+  }
+
+  dbDump(options: PgDumpOptions) {
     const connectionParams = {...this.connectionParams}
     const pgDumpOptions = {...options, docker: this.dockerOptions}
 

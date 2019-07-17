@@ -4,6 +4,8 @@ import {Connection} from '../../config/main-config'
 
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
+import PgdumpOptions from './pgdump-options'
+import PgRestoreOptions from './pgrestore-options'
 import PostgreSql from './postgre-sql'
 
 export default class DbToolsWrapper {
@@ -51,7 +53,7 @@ export default class DbToolsWrapper {
     this.cmdExec(dbConsoleCmd)
   }
 
-  dump(options: any, connectionName: string, environment: string) {
+  dump(options: PgdumpOptions, connectionName: string, environment: string) {
     this.validate(connectionName)
     const service = this.connectionByName(connectionName)
     const connectionParams = this.extractConnectionParams(service, environment)
@@ -60,6 +62,17 @@ export default class DbToolsWrapper {
 
     const dbDumpCmd = dbWrapper.dbDump(options)
     this.cmdExec(dbDumpCmd)
+  }
+
+  restore(options: PgRestoreOptions, connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbRestoreCmd = dbWrapper.dbRestore(options)
+    this.cmdExec(dbRestoreCmd)
   }
 
   private connectionByName(name: string) {

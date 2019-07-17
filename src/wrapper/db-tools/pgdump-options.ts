@@ -1,6 +1,6 @@
 import DockerOptions from './docker-options'
 
-export default interface PgdumpOptions {
+export default interface PgDumpOptions {
   docker?: DockerOptions
   target: string
   schemaOnly: boolean
