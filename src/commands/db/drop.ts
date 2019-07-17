@@ -10,7 +10,7 @@ export default class Drop extends DbToolsWrapper {
   static flags = {
     service: connectionFlag,
     environment: environmentFlag,
-    dryRun: dryRunFlag,
+    'dry-run': dryRunFlag,
     help: flags.help({char: 'h'})
   }
 
@@ -18,7 +18,7 @@ export default class Drop extends DbToolsWrapper {
     const {flags} = this.parse(Drop)
     const service = flags.service
     const environment = flags.environment
-    const dryRun = flags.dryRun
+    const dryRun = flags['dry-run']
 
     try {
       this
