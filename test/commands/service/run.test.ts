@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-import {env, expectedStdOutForCmd, mainConfig} from '../helper/test-helper'
+import {env, expectedStdOutForCmd, mainConfig} from '../../helper/test-helper'
 
 describe('run', () => {
   test

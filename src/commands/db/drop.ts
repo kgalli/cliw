@@ -4,8 +4,8 @@ import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
 import {connectionFlag, environmentFlag} from '../../wrapper/db-tools/flags'
 
-export default class Console extends DbToolsWrapper {
-  static description = 'run database console'
+export default class Drop extends DbToolsWrapper {
+  static description = 'create database'
 
   static flags = {
     service: connectionFlag,
@@ -15,7 +15,7 @@ export default class Console extends DbToolsWrapper {
   }
 
   async run() {
-    const {flags} = this.parse(Console)
+    const {flags} = this.parse(Drop)
     const service = flags.service
     const environment = flags.environment
     const dryRun = flags['dry-run']
@@ -23,7 +23,7 @@ export default class Console extends DbToolsWrapper {
     try {
       this
         .dbTools(dryRun)
-        .console({}, service, environment)
+        .drop(service, environment)
     } catch (e) {
       this.error(e.message, e)
     }

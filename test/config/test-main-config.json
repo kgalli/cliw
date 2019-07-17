@@ -101,10 +101,10 @@
         "environments": {
           "development": {
             "host": "127.0.0.1",
-            "port": "9999",
-            "user": "kgalli",
-            "password": "pg",
-            "database": "kgalli",
+            "port": "5436",
+            "user": "kgalli_us",
+            "password": "kgalli_pw",
+            "database": "kgalli_db",
             "engine": "postgresql",
             "ssh": {
               "proxyHost": "",

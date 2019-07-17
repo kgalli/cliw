@@ -4,6 +4,8 @@ import {Connection} from '../../config/main-config'
 
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
+import PgdumpOptions from './pgdump-options'
+import PgRestoreOptions from './pgrestore-options'
 import PostgreSql from './postgre-sql'
 
 export default class DbToolsWrapper {
@@ -17,15 +19,71 @@ export default class DbToolsWrapper {
     this.shellWrapper = shellWrapper
   }
 
-  connectionByName(name: string) {
+  // tslint:disable-next-line no-unused
+  console(options: any, connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbConsoleCmd = dbWrapper.dbConsole(options)
+    this.cmdExec(dbConsoleCmd)
+  }
+
+  create(connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbConsoleCmd = dbWrapper.dbCreate()
+    this.cmdExec(dbConsoleCmd)
+  }
+
+  drop(connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbConsoleCmd = dbWrapper.dbDrop()
+    this.cmdExec(dbConsoleCmd)
+  }
+
+  dump(options: PgdumpOptions, connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbDumpCmd = dbWrapper.dbDump(options)
+    this.cmdExec(dbDumpCmd)
+  }
+
+  restore(options: PgRestoreOptions, connectionName: string, environment: string) {
+    this.validate(connectionName)
+    const service = this.connectionByName(connectionName)
+    const connectionParams = this.extractConnectionParams(service, environment)
+    const dockerOptions = {enabled: true} as DockerOptions
+    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+
+    const dbRestoreCmd = dbWrapper.dbRestore(options)
+    this.cmdExec(dbRestoreCmd)
+  }
+
+  private connectionByName(name: string) {
     return this.connections.find((c: Connection) => c.name === name) as Connection
   }
 
-  connectionNames(): string[] {
+  private connectionNames(): string[] {
     return this.connections.map(s => s.name)
   }
 
-  validate(connectionName: string) {
+  private validate(connectionName: string) {
     if (isEmpty(connectionName)) {
       throw new Error('Missing required connectionName')
     }
@@ -35,19 +93,7 @@ export default class DbToolsWrapper {
     }
   }
 
-  // tslint:disable-next-line no-unused
-  console(options: any, connectionName: string, environment: string) {
-    this.validate(connectionName)
-    const service = this.connectionByName(connectionName)
-    const connectionParams = this.extractConnectionParams(service, environment)
-    const dockerOptions = {enabled: true} as DockerOptions
-    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
-
-    const dbConsoleCmd = dbWrapper.dbConsole()
-    this.cmdExec(dbConsoleCmd)
-  }
-
-  cmdExec(cmd: string) {
+  private cmdExec(cmd: string) {
     this.shellWrapper.run(cmd)
   }
 
