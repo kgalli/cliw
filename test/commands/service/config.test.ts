@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-import {env} from '../helper/test-helper'
+import {env} from '../../helper/test-helper'
 
 describe('config', () => {
   context('list', () => {
