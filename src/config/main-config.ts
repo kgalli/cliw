@@ -11,7 +11,7 @@ interface MainConfig {
   dbTools: {
     environments: string[],
     defaultEnvironment: string
-    connections: Connection[]
+    dataSources: DataSource[]
   },
 }
 
@@ -25,22 +25,28 @@ interface Service {
   source: CodeSource
 }
 
-interface Connection {
+interface DataSource {
   name: string
   environments: {
-    [key: string]: ConnectionParams
+    [key: string]: DataSourceParams
   }
 }
 
-export default interface ConnectionParams {
+interface SshParams {
+  beforeShellCmd?: string
+  jumpHost: string
+  localPort: number
+}
+
+export default interface DataSourceParams {
   host: string
   port: number
   user: string
   password: string
-  database?: string
-  command?: string
+  database: string
   engine: DbEngine
-  ssh?: any
+  readonly: boolean
+  ssh?: SshParams
 }
 
 const enum DbEngine {
@@ -76,4 +82,4 @@ export interface EnvironmentVariable {
   [key: string]: string
 }
 
-export {MainConfig, CodeSource, Service, Connection}
+export {MainConfig, CodeSource, Service, DataSourceParams, DataSource}
