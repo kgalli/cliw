@@ -92,7 +92,7 @@
   "dbTools": {
     "environments": [
       "development",
-      "test"
+      "production"
     ],
     "defaultEnvironment": "development",
     "dataSources": [
@@ -107,6 +107,15 @@
             "database": "kgalli_db",
             "engine": "postgresql",
             "readonly": false
+          },
+          "production": {
+            "host": "127.0.0.1",
+            "port": "5436",
+            "user": "kgalli_us",
+            "password": "kgalli_pw",
+            "database": "kgalli_db",
+            "engine": "postgresql",
+            "readonly": true
           }
         }
       }
