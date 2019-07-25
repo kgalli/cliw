@@ -1,12 +1,12 @@
 {
-  "name": "orchestrator",
-  "description": "Wrap up your development experience!",
-  "version": "0.0.0",
+  "name": "cliw",
+  "description": "A cliw[rapper] to ease day to day command line tasks!",
+  "version": "0.1.0",
   "author": "kgalli @kgalli",
   "bin": {
-    "orchestrator": "./bin/run"
+    "cliw": "./bin/run"
   },
-  "bugs": "https://github.com/kgalli/orchestrator/issues",
+  "bugs": "https://github.com/kgalli/cliw/issues",
   "dependencies": {
     "@oclif/command": "^1.5.8",
     "@oclif/config": "^1.10.3",
@@ -49,15 +49,15 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/kgalli/orchestrator",
+  "homepage": "https://github.com/kgalli/cliw",
   "keywords": [
-    "oclif"
+    "oclif, cli, database tools, docker compose"
   ],
   "license": "MIT",
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "orchestrator",
+    "bin": "cliw",
     "plugins": [
       "@oclif/plugin-help"
     ],
@@ -76,7 +76,7 @@
       }
     }
   },
-  "repository": "kgalli/orchestrator",
+  "repository": "kgalli/cliw",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "tslint -p test -t stylish",
