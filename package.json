@@ -10,10 +10,12 @@
   "dependencies": {
     "@oclif/command": "^1.5.8",
     "@oclif/config": "^1.10.3",
+    "@types/ip": "^1.1.0",
     "aws-sdk": "^2.382.0",
     "chalk": "^2.4.1",
     "cli-ux": "^5.0.0",
     "inquirer": "^6.2.1",
+    "ip": "^1.1.5",
     "js-yaml": "^3.13.1",
     "lodash": ">=4.17.13",
     "tslib": "^1.9.3"

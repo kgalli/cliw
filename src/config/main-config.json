@@ -95,7 +95,7 @@
       "test"
     ],
     "defaultEnvironment": "development",
-    "connections": [
+    "dataSources": [
       {
         "name": "api",
         "environments": {
@@ -106,12 +106,7 @@
             "password": "pg",
             "database": "kgalli",
             "engine": "postgresql",
-            "ssh": {
-              "proxyHost": "",
-              "proxyUser": "",
-              "sshKeyLocation": "",
-              "sshKeyPassword": ""
-            }
+            "readonly": false
           }
         }
       }

@@ -92,10 +92,10 @@
   "dbTools": {
     "environments": [
       "development",
-      "test"
+      "production"
     ],
     "defaultEnvironment": "development",
-    "connections": [
+    "dataSources": [
       {
         "name": "api",
         "environments": {
@@ -106,12 +106,16 @@
             "password": "kgalli_pw",
             "database": "kgalli_db",
             "engine": "postgresql",
-            "ssh": {
-              "proxyHost": "",
-              "proxyUser": "",
-              "sshKeyLocation": "",
-              "sshKeyPassword": ""
-            }
+            "readonly": false
+          },
+          "production": {
+            "host": "127.0.0.1",
+            "port": "5436",
+            "user": "kgalli_us",
+            "password": "kgalli_pw",
+            "database": "kgalli_db",
+            "engine": "postgresql",
+            "readonly": true
           }
         }
       }
