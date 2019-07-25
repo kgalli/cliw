@@ -1,84 +1,79 @@
-orchestrator
+CLIW
 ============
 
-Ease your development experience!
+A CliW[rapper] to ease day to day command line tasks!
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/orchestrator.svg)](https://npmjs.org/package/orchestrator)
-[![Downloads/week](https://img.shields.io/npm/dw/orchestrator.svg)](https://npmjs.org/package/orchestrator)
-[![License](https://img.shields.io/npm/l/orchestrator.svg)](https://github.com/kgalli/orchestrator/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/orchestrator.svg)](https://npmjs.org/package/cliw)
+[![Downloads/week](https://img.shields.io/npm/dw/orchestrator.svg)](https://npmjs.org/package/cliw)
+[![License](https://img.shields.io/npm/l/orchestrator.svg)](https://github.com/kgalli/cliw/blob/master/package.json)
 
 <!-- toc -->
+* [Installation](#install)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+# Installation
+<!-- install -->
+```sh-session
+$ npm install -g cliw
+```
+
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g orchestrator
-$ orchestrator COMMAND
+$ cliw COMMAND
 running command...
-$ orchestrator (-v|--version|version)
-orchestrator/0.0.0 darwin-x64 node-v10.12.0
-$ orchestrator --help [COMMAND]
+
+$ cliw (-v|--version|version)
+cliw/0.0.0 darwin-x64 node-v10.12.0
+
+$ cliw --help [COMMAND]
 USAGE
-  $ orchestrator COMMAND
+  $ cliw COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`orchestrator build [FILE]`](#orchestrator-build-file)
-* [`orchestrator exec [FILE]`](#orchestrator-exec-file)
-* [`orchestrator goodby`](#orchestrator-goodby)
-* [`orchestrator hello [FILE]`](#orchestrator-hello-file)
-* [`orchestrator help [COMMAND]`](#orchestrator-help-command)
-* [`orchestrator logs [FILE]`](#orchestrator-logs-file)
-* [`orchestrator run [FILE]`](#orchestrator-run-file)
-* [`orchestrator start [FILE]`](#orchestrator-start-file)
-* [`orchestrator status [FILE]`](#orchestrator-status-file)
-* [`orchestrator stop [FILE]`](#orchestrator-stop-file)
-* [`orchestrator up [FILE]`](#orchestrator-up-file)
+* [`cliw db`](#cliw-db)
+* [`cliw help`](#cliw-help-command)
+* [`cliw init`](#cliw-init)
+* [`cliw secret`](#cliw-secret)
+* [`cliw service`](#cliw-service)
 
-## `orchestrator build [FILE]`
+## `cliw db`
 
-describe the command here
+The `db` command is a wrapper of several database command line tools e.g. `psql`, `pg_dump`
+`pg_restore` and exposes those via a streamlined simplified interface (incl. support of
+data sources which can only be accessed via `SSH TUNNEL`). It is also using
+`docker` images to provide this tools so that no actual installation of the tools is necessary.
+
+Currently only `Postgres` is supported but `MySQL` is already in development.
+
+```
+dump, restore or run a database console
+
+USAGE
+  $ cliw db:COMMAND
+
+COMMANDS
+  db:console  run database console
+  db:create   create database
+  db:drop     create database
+  db:dump     create database
+  db:restore  restore database
+```
+
+_See example code: [src/commands/db/console.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/db/console.ts)_
+
+## `cliw help [COMMAND]`
+
+The `help` command 
 
 ```
 USAGE
-  $ orchestrator build [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/build.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/build.ts)_
-
-## `orchestrator exec [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ orchestrator exec [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/exec.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/exec.ts)_
-
-## `orchestrator help [COMMAND]`
-
-display help for orchestrator
-
-```
-USAGE
-  $ orchestrator help [COMMAND]
+  $ cliw help [COMMAND]
 
 ARGUMENTS
   COMMAND  command to show help for
@@ -89,99 +84,78 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.4/src/commands/help.ts)_
 
-## `orchestrator logs [FILE]`
+## `cliw init`
 
-describe the command here
+The `init` command supports to manage several services and databases under a project. This way
+multiple configurations can be maintained at the same time while `cliw` supports switching
+between those when needed. Typical if work is done for several clients or keep private and
+business projects separated.
 
 ```
+initialize projects config
+
 USAGE
-  $ orchestrator logs [FILE]
+  $ cliw init
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help                   show CLI help
+  -m, --mainConfig=mainConfig  location of the main-config.json file
+  -n, --name=name              name used as identifier for project
+
+DESCRIPTION
+  The cli supports the 'orchestration' of multiple projects.
+  Therefore it needs to know the location of the corresponding
+  main-config.json file. The 'init' command is used to determine
+  this location form the user and store it together with the project
+  identifier (project name) at: ~/.config/projects-config.json.
 ```
 
-_See code: [src/commands/logs.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/logs.ts)_
+_See example code: [src/commands/db/console.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/db/console.ts)_
 
-## `orchestrator run [FILE]`
+## `cliw secret`
 
-describe the command here
+The `secret` command is a wrapper of the AWS KMS SDK to encrypt or decrypt string
+token e.g. passwords.
 
 ```
+encrypt, decrypt secret via AWS KMS
+
 USAGE
-  $ orchestrator run [FILE]
+  $ cliw secret:COMMAND
 
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+COMMANDS
+  secret:decrypt  decrypt secret encrypted via AWS KMS
+  secret:encrypt  encrypt value via AWS KMS
 ```
 
-_See code: [src/commands/run.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/run.ts)_
+_See example code: [src/commands/db/encrypt.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/db/encrypt.ts)_
 
-## `orchestrator start [FILE]`
+## `cliw service`
 
-describe the command here
+The `service` command is a wrapper of `docker-compose`. The benefit of using this wrapper
+is that you can easily manage e.g. start, stop services in different environments (configuration)
+at the same time. It also supports to switch between running a service container from an image
+or build the image from source directly.
 
 ```
+manage services to run as docker containers
+
 USAGE
-  $ orchestrator start [FILE]
+  $ cliw service:COMMAND
 
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+COMMANDS
+  service:build    build or rebuild services
+  service:exec     execute a command in a running container
+  service:logs     show service logs
+  service:pull     pull docker image(s) from registry
+  service:restart  stop, (re)create and start services in daemon mode
+  service:run      run a one-off command on a service
+  service:start    (re)create and start services in daemon mode
+  service:status   show services run status
+  service:stop     stop services running in daemon mode
+  service:up       build, (re)create, start, and attach to containers
 ```
 
-_See code: [src/commands/start.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/start.ts)_
+_See example code: [src/commands/service/run.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/service/run.ts)_
 
-## `orchestrator status [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ orchestrator status [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/status.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/status.ts)_
-
-## `orchestrator stop [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ orchestrator stop [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/stop.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/stop.ts)_
-
-## `orchestrator up [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ orchestrator up [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-```
-
-_See code: [src/commands/up.ts](https://github.com/kgalli/orchestrator/blob/v0.0.0/src/commands/up.ts)_
 <!-- commandsstop -->
