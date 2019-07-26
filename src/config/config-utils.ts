@@ -7,13 +7,13 @@ import ProjectConfig from './project-config'
 import ProjectsConfig from './projects-config'
 
 const DEFAULT_PROJECT_CONFIG_FILENAME = 'projects.json'
-const DEFAULT_PROJECT_CONFIG_PATH = `${homedir()}/.config/orchestrator`
+const DEFAULT_PROJECT_CONFIG_PATH = `${homedir()}/.config/cliw`
 let DEFAULT_PROJECT_CONFIG_LOCATION = `${DEFAULT_PROJECT_CONFIG_PATH}/${DEFAULT_PROJECT_CONFIG_FILENAME}`
 
 mkdirSync(DEFAULT_PROJECT_CONFIG_PATH, {recursive: true, mode: 755})
 
-if (!isEmpty(process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION)) {
-  DEFAULT_PROJECT_CONFIG_LOCATION = process.env.ORCHESTRATOR_PROJECT_CONFIG_LOCATION as string
+if (!isEmpty(process.env.CLIW_PROJECT_CONFIG_LOCATION)) {
+  DEFAULT_PROJECT_CONFIG_LOCATION = process.env.CLIW_PROJECT_CONFIG_LOCATION as string
 }
 
 // tslint:disable-next-line no-unnecessary-class

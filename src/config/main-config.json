@@ -1,8 +1,8 @@
 {
   "compose": {
     "workDir": "/Users/kgalli/dev",
-    "projectName": "orchestrator",
-    "networkName": "orchestrator",
+    "projectName": "cliw",
+    "networkName": "cliw",
     "defaultEnvironment": "development",
     "environments": [
       "development",

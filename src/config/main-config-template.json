@@ -1,7 +1,7 @@
 {
   "workDir": "",
-  "projectName": "orchestrator-default-template",
-  "networkName": "orchestrator-default-template",
+  "projectName": "cliw-default-template",
+  "networkName": "cliw-default-template",
   "environments": ["development"],
   "defaultEnvironment": "development",
   "services": [
