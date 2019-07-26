@@ -3,6 +3,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 PROJECT_ROOT="$DIR/../"
 
-#docker run --rm -it -v ${PROJECT_ROOT}:/usr/src/app kgalli/orchestrator $@
-docker build -t kgalli/orchestrator -f ${PROJECT_ROOT}/Dockerfile  ${PROJECT_ROOT} > /dev/null
-docker run --rm -it kgalli/orchestrator $@
+#docker run --rm -it -v ${PROJECT_ROOT}:/usr/src/app kgalli/cliw $@
+docker build -t kgalli/cliw -f ${PROJECT_ROOT}/Dockerfile  ${PROJECT_ROOT} > /dev/null
+docker run --rm -it kgalli/cliw $@
