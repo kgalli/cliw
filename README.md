@@ -103,7 +103,7 @@ OPTIONS
   -p, --project=project  (required)
 ```
 
-_See code: [src/commands/config/list.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/config/list.ts)_
+_See code: [src/commands/config/list.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/config/list.ts)_
 
 ## `cliw config:set KEY VALUE`
 
@@ -124,7 +124,7 @@ OPTIONS
   -s, --service=service  (required)
 ```
 
-_See code: [src/commands/config/set.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/config/set.ts)_
+_See code: [src/commands/config/set.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/config/set.ts)_
 
 ## `cliw db:console`
 
@@ -141,7 +141,7 @@ OPTIONS
   --dry-run              print shell commands without executing
 ```
 
-_See code: [src/commands/db/console.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/db/console.ts)_
+_See code: [src/commands/db/console.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/console.ts)_
 
 ## `cliw db:create`
 
@@ -158,7 +158,7 @@ OPTIONS
   --dry-run              print shell commands without executing
 ```
 
-_See code: [src/commands/db/create.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/db/create.ts)_
+_See code: [src/commands/db/create.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/create.ts)_
 
 ## `cliw db:drop`
 
@@ -175,7 +175,7 @@ OPTIONS
   --dry-run              print shell commands without executing
 ```
 
-_See code: [src/commands/db/drop.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/db/drop.ts)_
+_See code: [src/commands/db/drop.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/drop.ts)_
 
 ## `cliw db:dump`
 
@@ -194,7 +194,7 @@ OPTIONS
   --dry-run              print shell commands without executing
 ```
 
-_See code: [src/commands/db/dump.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/db/dump.ts)_
+_See code: [src/commands/db/dump.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/dump.ts)_
 
 ## `cliw db:restore`
 
@@ -212,7 +212,7 @@ OPTIONS
   --dry-run                        print shell commands without executing
 ```
 
-_See code: [src/commands/db/restore.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/db/restore.ts)_
+_See code: [src/commands/db/restore.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/restore.ts)_
 
 ## `cliw help [COMMAND]`
 
@@ -252,7 +252,7 @@ DESCRIPTION
   identifier (project name) at: ~/.config/projects-config.json.
 ```
 
-_See code: [src/commands/init.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/init.ts)_
 
 ## `cliw secret:decrypt`
 
@@ -267,7 +267,7 @@ OPTIONS
   -s, --secret=secret  (required) Secret to decrypt
 ```
 
-_See code: [src/commands/secret/decrypt.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/secret/decrypt.ts)_
+_See code: [src/commands/secret/decrypt.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/secret/decrypt.ts)_
 
 ## `cliw secret:encrypt`
 
@@ -283,7 +283,7 @@ OPTIONS
   -v, --value=value  (required) Value to encrypt
 ```
 
-_See code: [src/commands/secret/encrypt.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/secret/encrypt.ts)_
+_See code: [src/commands/secret/encrypt.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/secret/encrypt.ts)_
 
 ## `cliw service:build`
 
@@ -300,7 +300,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/build.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/build.ts)_
+_See code: [src/commands/service/build.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/build.ts)_
 
 ## `cliw service:exec COMMAND`
 
@@ -320,7 +320,7 @@ OPTIONS
   --dry-run              print shell commands without executing
 ```
 
-_See code: [src/commands/service/exec.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/exec.ts)_
+_See code: [src/commands/service/exec.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/exec.ts)_
 
 ## `cliw service:logs`
 
@@ -339,7 +339,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/logs.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/logs.ts)_
+_See code: [src/commands/service/logs.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/logs.ts)_
 
 ## `cliw service:pull`
 
@@ -356,7 +356,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/pull.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/pull.ts)_
+_See code: [src/commands/service/pull.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/pull.ts)_
 
 ## `cliw service:restart`
 
@@ -373,7 +373,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/restart.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/restart.ts)_
+_See code: [src/commands/service/restart.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/restart.ts)_
 
 ## `cliw service:run COMMAND`
 
@@ -393,7 +393,7 @@ OPTIONS
   --dry-run              print shell commands without executing
 ```
 
-_See code: [src/commands/service/run.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/run.ts)_
+_See code: [src/commands/service/run.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/run.ts)_
 
 ## `cliw service:start`
 
@@ -410,7 +410,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/start.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/start.ts)_
+_See code: [src/commands/service/start.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/start.ts)_
 
 ## `cliw service:status`
 
@@ -427,7 +427,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/status.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/status.ts)_
+_See code: [src/commands/service/status.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/status.ts)_
 
 ## `cliw service:stop`
 
@@ -445,7 +445,7 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/stop.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/stop.ts)_
+_See code: [src/commands/service/stop.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/stop.ts)_
 
 ## `cliw service:up`
 
@@ -462,5 +462,5 @@ OPTIONS
   --dry-run                print shell commands without executing
 ```
 
-_See code: [src/commands/service/up.ts](https://github.com/kgalli/cliw/blob/v0.1.0/src/commands/service/up.ts)_
+_See code: [src/commands/service/up.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/up.ts)_
 <!-- commandsstop -->

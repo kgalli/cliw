@@ -1,7 +1,7 @@
 {
   "name": "cliw",
   "description": "A cliw[rapper] to ease day to day command line tasks!",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "kgalli @kgalli",
   "bin": {
     "cliw": "./bin/run"
@@ -78,9 +78,9 @@
   },
   "repository": "kgalli/cliw",
   "scripts": {
-    "postpack": "rm -f oclif.manifest.json",
+    "postpack": "rm -f oclif.manifest.json tsconfig.tsbuildinfo",
     "posttest": "tslint -p test -t stylish",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "prepack": "rm -rf lib tsconfig.tsbuildinfo && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
