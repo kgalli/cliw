@@ -1,4 +1,4 @@
-import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs'
+import {existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
 import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
@@ -44,6 +44,10 @@ export default class ConfigUtils {
     return ConfigUtils.writeJson(projectsConfig, projectsConfigLocation)
   }
 
+  static projectsConfigDelete(projectsConfigLocation: string = DEFAULT_PROJECT_CONFIG_LOCATION) {
+    return ConfigUtils.delete(projectsConfigLocation)
+  }
+
   static mainConfigExists(mainConfigLocation: string) {
     return ConfigUtils.exists(mainConfigLocation)
   }
@@ -73,6 +77,14 @@ export default class ConfigUtils {
     }
 
     throw Error(`${configName} at '${fileLocation}' does not exist`)
+  }
+
+  private static delete(fileLocation: string) {
+    if (existsSync(fileLocation)) {
+      return unlinkSync(fileLocation)
+    }
+
+    throw Error(`File '${fileLocation}' to delete does not exist`)
   }
 
   private static writeJson(config: MainConfig | ProjectsConfig, fileLocation: string) {

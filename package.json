@@ -71,8 +71,8 @@
       "service": {
         "description": "manage services to run as docker containers"
       },
-      "config": {
-        "description": "get and set project config properties"
+      "project": {
+        "description": "list, add, remove projects and set the default"
       }
     }
   },
