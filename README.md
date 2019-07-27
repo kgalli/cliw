@@ -39,37 +39,38 @@ USAGE
 
 ## `cliw init`
 
-The `init` command supports to manage several services and databases under a project. This way
-multiple configurations can be maintained at the same time while `cliw` supports switching
-between those when needed. Typical if work is done for several clients or keep private and
-business projects separated.
+The `init` is used to create the initial projects config file. This is needed because the `cliw` supports
+to manage several services and databases under a project. This way multiple `cliw` configurations can be
+maintained at the same time while `cliw` supports switching between those when needed. This functionality
+comes in very handy when work has to be for several clients or to keep private and business projects separated.
+
+The location of the projects config file is `$HOME/.config/cliw`.
 
 ## `cliw db`
 
-The `db` command is a wrapper of several database command line tools e.g. `psql`, `pg_dump`
-`pg_restore` and exposes those via a streamlined simplified interface (incl. support of
-data sources which can only be accessed via `SSH TUNNEL`). It is also using
-`docker` images to provide this tools so that no actual installation of the tools is necessary.
+The `db` command is a wrapper for several database command line tools e.g. `psql`, `pg_dump`
+`pg_restore` to expose those via a streamlined simplified interface. Furthermore it is using one centralized
+configuration file to be able to connect to different data sources incl. support of data sources which can only
+be accessed via `SSH TUNNEL`. To remove the pain of installing all those tools locally official `docker`
+`docker` images are used.
 
 Currently only `Postgres` is supported but `MySQL` is already in development.
 
 ## `cliw secret`
 
 The `secret` command is a wrapper of the AWS KMS SDK to encrypt or decrypt string
-token e.g. passwords.
+tokens e.g. passwords.
 
 ## `cliw service`
 
 The `service` command is a wrapper of `docker-compose`. The benefit of using this wrapper
-is that you can easily manage e.g. start, stop services in different environments (configuration)
-at the same time. It also supports to switch between running a service container from an image
-or build the image from source directly.
+is that you can easily manage e.g. start, stop services in different environments defined using one centralized
+configuration. The switch between running a service container from an image of a registry or build the image from
+source is supported via `cliw` commands directly. No change of configuration files is necessary.
 
 
 # Command Reference
 <!-- commands -->
-* [`cliw config:list`](#cliw-configlist)
-* [`cliw config:set KEY VALUE`](#cliw-configset-key-value)
 * [`cliw db:console`](#cliw-dbconsole)
 * [`cliw db:create`](#cliw-dbcreate)
 * [`cliw db:drop`](#cliw-dbdrop)
@@ -85,46 +86,12 @@ or build the image from source directly.
 * [`cliw service:pull`](#cliw-servicepull)
 * [`cliw service:restart`](#cliw-servicerestart)
 * [`cliw service:run COMMAND`](#cliw-servicerun-command)
+* [`cliw service:runtype:list`](#cliw-serviceruntypelist)
+* [`cliw service:runtype:set VALUE`](#cliw-serviceruntypeset-value)
 * [`cliw service:start`](#cliw-servicestart)
 * [`cliw service:status`](#cliw-servicestatus)
 * [`cliw service:stop`](#cliw-servicestop)
 * [`cliw service:up`](#cliw-serviceup)
-
-## `cliw config:list`
-
-list config options
-
-```
-USAGE
-  $ cliw config:list
-
-OPTIONS
-  -h, --help             show CLI help
-  -p, --project=project  (required)
-```
-
-_See code: [src/commands/config/list.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/config/list.ts)_
-
-## `cliw config:set KEY VALUE`
-
-Set config options
-
-```
-USAGE
-  $ cliw config:set KEY VALUE
-
-ARGUMENTS
-  KEY    (buildtype) options key to set
-  VALUE  (image|src) value of options key to set
-
-OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -p, --project=project  (required)
-  -s, --service=service  (required)
-```
-
-_See code: [src/commands/config/set.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/config/set.ts)_
 
 ## `cliw db:console`
 
@@ -135,13 +102,13 @@ USAGE
   $ cliw db:console
 
 OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -s, --service=service  (required)
-  --dry-run              print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --service=service               (required)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/console.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/console.ts)_
+_See code: [src/commands/db/console.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/db/console.ts)_
 
 ## `cliw db:create`
 
@@ -152,13 +119,13 @@ USAGE
   $ cliw db:create
 
 OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -s, --service=service  (required)
-  --dry-run              print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --service=service               (required)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/create.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/create.ts)_
+_See code: [src/commands/db/create.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/db/create.ts)_
 
 ## `cliw db:drop`
 
@@ -169,13 +136,13 @@ USAGE
   $ cliw db:drop
 
 OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -s, --service=service  (required)
-  --dry-run              print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --service=service               (required)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/drop.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/drop.ts)_
+_See code: [src/commands/db/drop.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/db/drop.ts)_
 
 ## `cliw db:dump`
 
@@ -186,15 +153,15 @@ USAGE
   $ cliw db:dump
 
 OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -o, --schema-only      dump schema without data
-  -s, --service=service  (required)
-  -t, --target=target    (required) dump file location (relative to current directory)
-  --dry-run              print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -o, --schema-only                   dump schema without data
+  -s, --service=service               (required)
+  -t, --target=target                 (required) dump file location (relative to current directory)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/dump.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/dump.ts)_
+_See code: [src/commands/db/dump.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/db/dump.ts)_
 
 ## `cliw db:restore`
 
@@ -205,14 +172,14 @@ USAGE
   $ cliw db:restore
 
 OPTIONS
-  -e, --environment=               (required)
-  -h, --help                       show CLI help
-  -r, --restore-file=restore-file  (required) restore file location (relative to current directory)
-  -s, --service=service            (required)
-  --dry-run                        print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -r, --restore-file=restore-file     (required) restore file location (relative to current directory)
+  -s, --service=service               (required)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/restore.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/db/restore.ts)_
+_See code: [src/commands/db/restore.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/db/restore.ts)_
 
 ## `cliw help [COMMAND]`
 
@@ -252,7 +219,7 @@ DESCRIPTION
   identifier (project name) at: ~/.config/projects-config.json.
 ```
 
-_See code: [src/commands/init.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/init.ts)_
 
 ## `cliw secret:decrypt`
 
@@ -267,7 +234,7 @@ OPTIONS
   -s, --secret=secret  (required) Secret to decrypt
 ```
 
-_See code: [src/commands/secret/decrypt.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/secret/decrypt.ts)_
+_See code: [src/commands/secret/decrypt.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/secret/decrypt.ts)_
 
 ## `cliw secret:encrypt`
 
@@ -283,7 +250,7 @@ OPTIONS
   -v, --value=value  (required) Value to encrypt
 ```
 
-_See code: [src/commands/secret/encrypt.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/secret/encrypt.ts)_
+_See code: [src/commands/secret/encrypt.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/secret/encrypt.ts)_
 
 ## `cliw service:build`
 
@@ -294,13 +261,13 @@ USAGE
   $ cliw service:build
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  --dry-run                print shell commands without executing
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/build.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/build.ts)_
+_See code: [src/commands/service/build.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/build.ts)_
 
 ## `cliw service:exec COMMAND`
 
@@ -314,13 +281,13 @@ ARGUMENTS
   COMMAND  specify command to execute
 
 OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -s, --service=service  (required)
-  --dry-run              print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --service=service               (required)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/exec.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/exec.ts)_
+_See code: [src/commands/service/exec.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/exec.ts)_
 
 ## `cliw service:logs`
 
@@ -331,15 +298,15 @@ USAGE
   $ cliw service:logs
 
 OPTIONS
-  -e, --environment=       (required)
-  -f, --follow             follow log output
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -f, --follow                        follow log output
+  -h, --help                          show CLI help
   -s, --services=services
-  -t, --timestamps         show timestamps
-  --dry-run                print shell commands without executing
+  -t, --timestamps                    show timestamps
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/logs.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/logs.ts)_
+_See code: [src/commands/service/logs.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/logs.ts)_
 
 ## `cliw service:pull`
 
@@ -350,13 +317,13 @@ USAGE
   $ cliw service:pull
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  --dry-run                print shell commands without executing
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/pull.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/pull.ts)_
+_See code: [src/commands/service/pull.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/pull.ts)_
 
 ## `cliw service:restart`
 
@@ -367,13 +334,13 @@ USAGE
   $ cliw service:restart
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  --dry-run                print shell commands without executing
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/restart.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/restart.ts)_
+_See code: [src/commands/service/restart.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/restart.ts)_
 
 ## `cliw service:run COMMAND`
 
@@ -387,13 +354,51 @@ ARGUMENTS
   COMMAND  specify command to execute
 
 OPTIONS
-  -e, --environment=     (required)
-  -h, --help             show CLI help
-  -s, --service=service  (required)
-  --dry-run              print shell commands without executing
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --service=service               (required)
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/run.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/run.ts)_
+_See code: [src/commands/service/run.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/run.ts)_
+
+## `cliw service:runtype:list`
+
+list service(s) runtype
+
+```
+USAGE
+  $ cliw service:runtype:list
+
+OPTIONS
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --services=services
+```
+
+_See code: [src/commands/service/runtype/list.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/runtype/list.ts)_
+
+## `cliw service:runtype:set VALUE`
+
+set service(s) runtype
+
+```
+USAGE
+  $ cliw service:runtype:set VALUE
+
+ARGUMENTS
+  VALUE  (image|src) runtype value
+
+OPTIONS
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
+  -s, --services=services             (required)
+
+EXAMPLE
+  $ cliw service:runtype:set image -s api
+```
+
+_See code: [src/commands/service/runtype/set.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/runtype/set.ts)_
 
 ## `cliw service:start`
 
@@ -404,13 +409,13 @@ USAGE
   $ cliw service:start
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  --dry-run                print shell commands without executing
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/start.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/start.ts)_
+_See code: [src/commands/service/start.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/start.ts)_
 
 ## `cliw service:status`
 
@@ -421,13 +426,13 @@ USAGE
   $ cliw service:status
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  --dry-run                print shell commands without executing
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/status.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/status.ts)_
+_See code: [src/commands/service/status.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/status.ts)_
 
 ## `cliw service:stop`
 
@@ -438,14 +443,14 @@ USAGE
   $ cliw service:stop
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  -t, --timeout=timeout    [default: 10] specify a shutdown timeout in seconds
-  --dry-run                print shell commands without executing
+  -t, --timeout=timeout               [default: 10] specify a shutdown timeout in seconds
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/stop.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/stop.ts)_
+_See code: [src/commands/service/stop.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/stop.ts)_
 
 ## `cliw service:up`
 
@@ -456,11 +461,11 @@ USAGE
   $ cliw service:up
 
 OPTIONS
-  -e, --environment=       (required)
-  -h, --help               show CLI help
+  -e, --environment=development|test  (required) [default: development]
+  -h, --help                          show CLI help
   -s, --services=services
-  --dry-run                print shell commands without executing
+  --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/service/up.ts](https://github.com/kgalli/cliw/blob/v0.4.1/src/commands/service/up.ts)_
+_See code: [src/commands/service/up.ts](https://github.com/kgalli/cliw/blob/v0.5.0/src/commands/service/up.ts)_
 <!-- commandsstop -->
