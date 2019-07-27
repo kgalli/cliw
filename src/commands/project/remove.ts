@@ -1,4 +1,5 @@
 import {flags} from '@oclif/command'
+import {isEmpty} from 'lodash'
 
 import BaseCommand from '../../base-command'
 import ConfigUtils from '../../config/config-utils'
@@ -30,7 +31,7 @@ export default class ProjectRemove extends BaseCommand {
       .projects
       .find!(projectConfig => projectConfig.name === projectToRemoveName) || {} as ProjectConfig
 
-    if (projectToRemove === undefined) {
+    if (isEmpty(projectToRemove)) {
       this.error(`Project ${projectToRemove} could not be found.`)
     }
 
