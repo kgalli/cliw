@@ -2,15 +2,15 @@ import {expect, test} from '@oclif/test'
 
 import {env} from '../../helper/test-helper'
 
-describe('config', () => {
+describe('service:runtype', () => {
   context('list', () => {
     // tslint:disable-next-line:no-multi-spaces
-    const expectedOutPut =  '---\nServiceName Runtype \napi         IMAGE   \ndb          IMAGE'
+    const expectedOutPut =  'ServiceName Runtype \napi         IMAGE   \ndb          IMAGE'
 
     test
       .env(env)
       .stdout()
-      .command(['config:list', '--project', 'test'])
+      .command(['service:runtype:list'])
       .it('lists services run-types', ctx => {
         expect(ctx.stdout).to.contain(expectedOutPut)
       })
