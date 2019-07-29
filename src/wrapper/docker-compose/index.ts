@@ -5,7 +5,7 @@ import BashWrapper from '../bash'
 import DockerComposeWrapper from './docker-compose-wrapper'
 
 export default abstract class extends BaseCommand {
-  dockerCompose(dryRun = true): DockerComposeWrapper {
+  dockerCompose(dryRun = false): DockerComposeWrapper {
     const mainConfig = ConfigUtils.mainConfigLoadDefault()
     const composeConfig = mainConfig.compose
     // TODO find a better way to store and retrieve runtypes

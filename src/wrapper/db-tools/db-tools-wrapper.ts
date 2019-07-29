@@ -1,7 +1,8 @@
 import {address} from 'ip'
 import {isEmpty} from 'lodash'
 
-import {DataSource, DataSourceParams} from '../../config/main-config'
+import AwsKmsClient from '../../aws-kms'
+import DataSource, {DataSourceParams} from '../../config/data-source'
 
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
@@ -20,24 +21,24 @@ export default class DbToolsWrapper {
     this.shellWrapper = shellWrapper
   }
 
-  console(options: any, dataSourceName: string, environment: string) {
-    this.runDbCmd(dataSourceName, environment, 'console', options)
+  async console(options: any, dataSourceName: string, environment: string) {
+    return this.runDbCmd(dataSourceName, environment, 'console', options)
   }
 
-  create(dataSourceName: string, environment: string) {
-    this.runDbCmd(dataSourceName, environment, 'create', null)
+  async create(dataSourceName: string, environment: string) {
+    return this.runDbCmd(dataSourceName, environment, 'create', null)
   }
 
-  drop(dataSourceName: string, environment: string) {
-    this.runDbCmd(dataSourceName, environment, 'drop', null)
+  async drop(dataSourceName: string, environment: string) {
+    return this.runDbCmd(dataSourceName, environment, 'drop', null)
   }
 
-  dump(options: PgdumpOptions, dataSourceName: string, environment: string) {
-    this.runDbCmd(dataSourceName, environment, 'dump', options)
+  async dump(options: PgdumpOptions, dataSourceName: string, environment: string) {
+    return this.runDbCmd(dataSourceName, environment, 'dump', options)
   }
 
-  restore(options: PgRestoreOptions, dataSourceName: string, environment: string) {
-    this.runDbCmd(dataSourceName, environment, 'restore', options)
+  async restore(options: PgRestoreOptions, dataSourceName: string, environment: string) {
+    return this.runDbCmd(dataSourceName, environment, 'restore', options)
   }
 
   private dataSourceByName(name: string) {
@@ -58,7 +59,7 @@ export default class DbToolsWrapper {
     }
   }
 
-  private runDbCmd(dataSourceName: string, environment: string, cmd: string, options: any) {
+  private async runDbCmd(dataSourceName: string, environment: string, cmd: string, options: any) {
     this.validate(dataSourceName)
     const dataSource = this.dataSourceByName(dataSourceName)
     const dataSourceParams = this.extractDataSourceParams(dataSource, environment)
@@ -82,6 +83,12 @@ export default class DbToolsWrapper {
         const beforeShellCmd = dataSourceParams.ssh!.beforeShellCmd
         sshCmdTemplate = `${beforeShellCmd} && ${sshCmdTemplate}`
       }
+    }
+
+    if (this.passwordDecryptionRequired(dataSourceParams)) {
+      const client = new AwsKmsClient({})
+
+      dataSourceParams.password = await client.decrypt(dataSourceParams.password) as string
     }
 
     const connectionParams = this.extractConnectionParams(dataSourceParams)
@@ -115,7 +122,7 @@ export default class DbToolsWrapper {
 
     shellCmdToExec = isEmpty(sshCmdTemplate) ? shellCmdToExec : sshCmdTemplate.replace('@@', shellCmdToExec)
 
-    this.runShellCmd(shellCmdToExec)
+    return this.runShellCmd(shellCmdToExec)
   }
 
   private runShellCmd(cmd: string) {
@@ -160,5 +167,17 @@ export default class DbToolsWrapper {
 
   private sshConnectionRequired(dataSourceParams: DataSourceParams) {
     return !isEmpty(dataSourceParams.ssh)
+  }
+
+  private passwordDecryptionRequired(dataSourceParams: DataSourceParams) {
+    if (!dataSourceParams.passwordEncryption || dataSourceParams.passwordEncryption === 'none') {
+      return false
+    }
+
+    if (dataSourceParams.passwordEncryption === 'awskms') {
+      return true
+    }
+
+    throw new Error(`Unsupported password decryption for ${dataSourceParams.passwordEncryption} encryption type. Only AWS KMS ('awskms') is currently supported.`)
   }
 }

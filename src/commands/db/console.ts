@@ -21,7 +21,7 @@ export default class Console extends DbToolsWrapper {
     const dryRun = flags['dry-run']
 
     try {
-      this
+      await this
         .dbTools(dryRun)
         .console({}, service, environment)
     } catch (e) {

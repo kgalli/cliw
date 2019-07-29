@@ -11,7 +11,7 @@ export default class Bash {
   static defaultOptions(): ShellOptions {
     return {
       dryRun: false,
-      print: true,
+      print: false,
       highlight: true
     }
   }
@@ -25,12 +25,12 @@ export default class Bash {
   run(cmd: string, options: object) {
     const cmdOptions = isEmpty(options) ? '' : options
 
-    if (this.options.print) {
+    if (this.options.print || this.options.dryRun) {
       // tslint:disable-next-line no-console
       console.log(`${cmd} ${cmdOptions}`)
     }
 
-    if (this.options.dryRun === false) {
+    if (!this.options.dryRun) {
       try {
         return execSync(`${cmd} ${cmdOptions}`, {stdio: 'inherit'})
         //tslint:disable no-unused

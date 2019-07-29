@@ -1,4 +1,6 @@
-interface MainConfig {
+import DataSource from './data-source'
+
+export interface MainConfig {
   compose: {
     workDir: string
     projectName: string
@@ -15,7 +17,7 @@ interface MainConfig {
   },
 }
 
-interface Service {
+export interface Service {
   name: string
   environments: {
     default: DefaultEnvironment
@@ -25,35 +27,7 @@ interface Service {
   source: CodeSource
 }
 
-interface DataSource {
-  name: string
-  environments: {
-    [key: string]: DataSourceParams
-  }
-}
-
-interface SshParams {
-  beforeShellCmd?: string
-  jumpHost: string
-  localPort: number
-}
-
-export default interface DataSourceParams {
-  host: string
-  port: number
-  user: string
-  password: string
-  database: string
-  engine: DbEngine
-  readonly: boolean
-  ssh?: SshParams
-}
-
-const enum DbEngine {
-  postgresql, mysql
-}
-
-const enum CodeSource {
+export const enum CodeSource {
   internal, external
 }
 
@@ -81,5 +55,3 @@ export interface Environment {
 export interface EnvironmentVariable {
   [key: string]: string
 }
-
-export {MainConfig, CodeSource, Service, DataSourceParams, DataSource}
