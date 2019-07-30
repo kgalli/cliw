@@ -21,7 +21,7 @@ export default class Create extends DbToolsWrapper {
     const dryRun = flags['dry-run']
 
     try {
-      this
+      await this
         .dbTools(dryRun)
         .create(service, environment)
     } catch (e) {

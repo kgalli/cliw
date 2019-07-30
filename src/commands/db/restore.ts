@@ -32,7 +32,7 @@ export default class Restore extends DbToolsWrapper {
     }
 
     try {
-      this
+      await this
         .dbTools(dryRun)
         .restore(options, service, environment)
     } catch (e) {

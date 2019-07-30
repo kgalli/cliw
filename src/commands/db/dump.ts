@@ -37,7 +37,7 @@ export default class Dump extends DbToolsWrapper {
     }
 
     try {
-      this
+      await this
         .dbTools(dryRun)
         .dump(options, service, environment)
     } catch (e) {
