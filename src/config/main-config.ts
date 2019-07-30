@@ -31,9 +31,11 @@ export const enum CodeSource {
   internal, external
 }
 
-interface RunType {
-  image: string
-  src: {
+interface BuildOrigin {
+  registry: {
+    image: string
+  },
+  source: {
     build: {
       context: string
       dockerfile: string
@@ -43,12 +45,12 @@ interface RunType {
 
 interface DefaultEnvironment {
   ports: string[]
-  runType: RunType
+  buildOrigin: BuildOrigin
 }
 
 export interface Environment {
   ports?: string[]
-  runType?: RunType
+  buildOrigin: BuildOrigin
   environment?: EnvironmentVariable
 }
 

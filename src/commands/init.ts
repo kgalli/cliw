@@ -3,7 +3,7 @@ import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
 import ConfigUtils from '../config/config-utils'
-import ProjectConfig, {RunTypeFlag, ServicesRunType} from '../config/project-config'
+import ProjectConfig, {BuildOrigin, ServicesBuildOrigin} from '../config/project-config'
 
 export default class Init extends Command {
   static description = `initialize projects config
@@ -50,15 +50,15 @@ identifier (project name) at: ~/.config/projects-config.json.
 
     // TODO validate main config
     const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
-    const servicesRunType = {} as ServicesRunType
+    const servicesBuildOrigin = {} as ServicesBuildOrigin
 
-    mainConfig.compose.services.forEach(s => servicesRunType[s.name] = RunTypeFlag.IMAGE)
+    mainConfig.compose.services.forEach(s => servicesBuildOrigin[s.name] = BuildOrigin.REGISTRY)
 
     const projectConfig = {
       name: projectName,
       mainConfigLocation,
-      defaultRunTypeFlag: RunTypeFlag.SRC,
-      servicesRunType
+      defaultBuildOrigin: BuildOrigin.REGISTRY,
+      servicesBuildOrigin
     } as ProjectConfig
 
     ConfigUtils.projectsConfigSave({

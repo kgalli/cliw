@@ -3,7 +3,7 @@ import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
 import {CodeSource, Service} from '../../config/main-config'
-import {RunTypeFlag, ServicesRunType} from '../../config/project-config'
+import {BuildOrigin, ServicesBuildOrigin} from '../../config/project-config'
 
 export default class DockerComposeWrapper {
   shellWrapper: any
@@ -12,15 +12,15 @@ export default class DockerComposeWrapper {
   projectName: string
   networkName: string
   dryRun: boolean
-  servicesRunType: ServicesRunType
+  servicesBuildOrigin: ServicesBuildOrigin
 
-  constructor(projectName: string, networkName: string, workDir: string, services: Service[], servicesRunType: ServicesRunType, dryRun: boolean, shellWrapper: any) {
+  constructor(projectName: string, networkName: string, workDir: string, services: Service[], servicesBuildOrigin: ServicesBuildOrigin, dryRun: boolean, shellWrapper: any) {
     this.projectName = projectName
     this.networkName = networkName
     this.workDir = workDir
     this.services = services
     this.dryRun = dryRun
-    this.servicesRunType = servicesRunType
+    this.servicesBuildOrigin = servicesBuildOrigin
     this.shellWrapper = shellWrapper
   }
 
@@ -212,14 +212,13 @@ export default class DockerComposeWrapper {
 
     services.forEach(s => {
       const defaultServiceConfig = s.environments.default
-      const runFromSrc = this.servicesRunType[s.name] === RunTypeFlag.SRC
-      const runType = runFromSrc ? defaultServiceConfig.runType.src : {image: defaultServiceConfig.runType.image}
-      // @ts-ignore
+      const runFromSrc = this.servicesBuildOrigin[s.name] === BuildOrigin.SOURCE
+      const buildOrigin = runFromSrc ? defaultServiceConfig.buildOrigin.source : defaultServiceConfig.buildOrigin.registry
       const environmentServiceConfig: any = s.environments[environment]
 
       let serviceConfig = {
-        container_name: this.contructContainerName(projectName, environment, s.name),
-        ...runType,
+        container_name: this.constructContainerName(projectName, environment, s.name),
+        ...buildOrigin,
         ...defaultServiceConfig,
       }
 
@@ -227,7 +226,7 @@ export default class DockerComposeWrapper {
         serviceConfig = {...serviceConfig, ...environmentServiceConfig}
       }
 
-      delete serviceConfig.runType
+      delete serviceConfig.buildOrigin
 
       servicesObject[s.name] = serviceConfig
     })
@@ -245,7 +244,7 @@ export default class DockerComposeWrapper {
     }
   }
 
-  private contructContainerName(projectName: string, environment: string, serviceName: string): string {
+  private constructContainerName(projectName: string, environment: string, serviceName: string): string {
     return `${projectName}_${serviceName}_${environment}`
   }
 }
