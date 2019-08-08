@@ -18,7 +18,7 @@
             "ports": [
               "3000:3000"
             ],
-            "runType": {
+            "buildOrigin": {
               "source": {
                 "volumes": [
                   "./javalin-playground:/usr/src/app"
@@ -28,7 +28,9 @@
                   "dockerfile": "Dockerfile"
                 }
               },
-              "image": "kgalli/javalin-playground"
+              "registry":  {
+                "image": "kgalli/javalin-playground"
+              }
             }
           },
           "development": {
@@ -64,14 +66,16 @@
             "ports": [
               "9999:5432"
             ],
-            "runType": {
+            "buildOrigin": {
               "source": {
                 "build": {
                   "context": "./demo",
                   "dockerfile": "Dockerfile"
                 }
               },
-              "image": "postgres"
+              "registry": {
+                "image": "postgres"
+              }
             },
             "environment": {
               "POSTGRES_PASSWORD": "pg",

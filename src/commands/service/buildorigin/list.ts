@@ -5,7 +5,7 @@ import BaseCommand from '../../../base-command'
 import ConfigUtils from '../../../config/config-utils'
 import {environmentFlag, servicesFlag} from '../../../wrapper/docker-compose/flags'
 
-export default class ListRunType extends BaseCommand {
+export default class BuildOriginList extends BaseCommand {
   static description = 'list service(s) runtype'
 
   static flags = {
@@ -15,7 +15,7 @@ export default class ListRunType extends BaseCommand {
   }
 
   async run() {
-    const {flags} = this.parse(ListRunType)
+    const {flags} = this.parse(BuildOriginList)
     const defaultProjectConfig = ConfigUtils.projectsConfigLoadDefault()
 
     const mainConfig = ConfigUtils.mainConfigLoad(defaultProjectConfig.mainConfigLocation)
@@ -23,11 +23,11 @@ export default class ListRunType extends BaseCommand {
     const data = [] as any
     services.forEach(s => {
       if (!flags.services || flags.services.includes(s.name)) {
-        data.push({name: s.name, runType: (defaultProjectConfig.servicesRunType[s.name] || defaultProjectConfig.defaultRunTypeFlag).toUpperCase()})
+        data.push({name: s.name, buildOrigin: (defaultProjectConfig.servicesBuildOrigin[s.name] || defaultProjectConfig.defaultBuildOrigin).toUpperCase()})
       }
     })
 
-    cli.table(data, {name: {header: 'ServiceName', minWidth: 7}, runType: {header: 'Runtype'}}, {
+    cli.table(data, {name: {header: 'ServiceName', minWidth: 7}, buildOrigin: {header: 'BuildOrigin'}}, {
       printLine: this.log
     })
   }

@@ -1,8 +1,8 @@
 export default interface ProjectConfig {
   name: string
   mainConfigLocation: string,
-  defaultRunTypeFlag: RunTypeFlag
-  servicesRunType: ServicesRunType
+  defaultBuildOrigin: BuildOrigin
+  servicesBuildOrigin: ServicesBuildOrigin
 }
 
 export interface ServicesRunType {
@@ -11,4 +11,12 @@ export interface ServicesRunType {
 
 export const enum RunTypeFlag {
   IMAGE = 'image', SRC = 'src'
+}
+
+export interface ServicesBuildOrigin {
+  [key: string]: BuildOrigin
+}
+
+export const enum BuildOrigin {
+  SOURCE = 'source', REGISTRY = 'registry'
 }

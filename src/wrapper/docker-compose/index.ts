@@ -8,16 +8,16 @@ export default abstract class extends BaseCommand {
   dockerCompose(dryRun = false): DockerComposeWrapper {
     const mainConfig = ConfigUtils.mainConfigLoadDefault()
     const composeConfig = mainConfig.compose
-    // TODO find a better way to store and retrieve runtypes
+    // TODO find a better way to store and retrieve buildOrigin
     const projectConfig = ConfigUtils.projectsConfigLoadDefault()
-    const servicesRunType = projectConfig.servicesRunType
+    const servicesBuildOrigin = projectConfig.servicesBuildOrigin
 
     return new DockerComposeWrapper(
       composeConfig.projectName,
       composeConfig.networkName,
       composeConfig.workDir,
       composeConfig.services,
-      servicesRunType,
+      servicesBuildOrigin,
       dryRun,
       new BashWrapper({...BashWrapper.defaultOptions(), dryRun})
     )
