@@ -2,7 +2,7 @@ import {flags} from '@oclif/command'
 
 import BaseCommand from '../../base-command'
 import ConfigUtils from '../../config/config-utils'
-import ProjectConfig, {RunTypeFlag, ServicesRunType} from '../../config/project-config'
+import ProjectConfig, {BuildOrigin, ServicesBuildOrigin} from '../../config/project-config'
 
 export default class ProjectAdd extends BaseCommand {
   static description = 'add project'
@@ -32,15 +32,15 @@ export default class ProjectAdd extends BaseCommand {
     }
 
     const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
-    const servicesRunType = {} as ServicesRunType
+    const servicesBuildOrigin = {} as ServicesBuildOrigin
 
-    mainConfig.compose.services.forEach(s => servicesRunType[s.name] = RunTypeFlag.IMAGE)
+    mainConfig.compose.services.forEach(s => servicesBuildOrigin[s.name] = BuildOrigin.REGISTRY)
 
     const projectConfig = {
       name: projectName,
       mainConfigLocation,
-      defaultRunTypeFlag: RunTypeFlag.SRC,
-      servicesRunType
+      defaultBuildOrigin: BuildOrigin.REGISTRY,
+      servicesBuildOrigin
     } as ProjectConfig
 
     projectsConfig.projects.push(projectConfig)

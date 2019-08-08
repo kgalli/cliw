@@ -71,8 +71,8 @@
       "service": {
         "description": "manage services to run as docker containers"
       },
-      "service:runtype": {
-        "description": "list or set services runtype"
+      "service:buildorigin": {
+        "description": "list or set services build origin"
       },
       "project": {
         "description": "list, add, remove projects and set the default"
