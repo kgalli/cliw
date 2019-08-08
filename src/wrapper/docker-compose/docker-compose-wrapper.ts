@@ -184,7 +184,7 @@ export default class DockerComposeWrapper {
     const dcConfig = this.constructDockerComposeConfig(this.projectName, this.networkName, environment, this.services)
 
     if (this.dryRun === false) {
-      this.writeConfigFile(configFile, safeDump(dcConfig))
+      this.writeConfigFile(configFile, dcConfig)
     }
     this.shellWrapper.run(dcCmd)
   }
@@ -194,9 +194,7 @@ export default class DockerComposeWrapper {
   }
 
   private writeConfigFile(fileLocation: string, data: any) {
-    // TODO figure out why this hack is needed js-yaml should not add | instead of ---
-    const yamlData = safeDump(data).replace('|', '---')
-    writeFileSync(fileLocation, yamlData)
+    writeFileSync(fileLocation, safeDump(data))
   }
 
   private sanitizeCmd(cmd: string): string {
