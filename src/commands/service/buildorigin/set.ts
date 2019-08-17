@@ -29,14 +29,14 @@ export default class BuildOriginSet extends BaseCommand {
 
   async run() {
     const {flags, args} = this.parse(BuildOriginSet)
-    const runTypeFlag = args.value === BuildOrigin.REGISTRY.toString() ? BuildOrigin.REGISTRY : BuildOrigin.SOURCE
+    const buildOrigin = args.value === BuildOrigin.REGISTRY.toString() ? BuildOrigin.REGISTRY : BuildOrigin.SOURCE
     const defaultProjectConfig = ConfigUtils.projectsConfigLoadDefault()
     const projectsConfig = ConfigUtils.projectsConfigLoad()
 
     projectsConfig.projects.forEach(projectConfig => {
       if (projectConfig.name === defaultProjectConfig.name) {
         flags.services.forEach(serviceName => {
-          projectConfig.servicesBuildOrigin[serviceName] = runTypeFlag
+          projectConfig.servicesBuildOrigin[serviceName] = buildOrigin
         })
       }
     })
