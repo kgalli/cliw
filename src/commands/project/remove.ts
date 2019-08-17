@@ -6,7 +6,7 @@ import ConfigUtils from '../../config/config-utils'
 import ProjectConfig from '../../config/project-config'
 
 export default class ProjectRemove extends BaseCommand {
-  static description = 'add project'
+  static description = 'remove project'
 
   static flags = {
     name: flags.string({
@@ -39,7 +39,7 @@ export default class ProjectRemove extends BaseCommand {
 
     projectsConfig.projects.splice(indexOfProjectToRemove, 1)
 
-    if (projectsConfig.projects.length === 1) {
+    if (projectsConfig.projects.length === 0) {
       ConfigUtils.projectsConfigDelete()
     } else {
       ConfigUtils.projectsConfigSave(projectsConfig)
