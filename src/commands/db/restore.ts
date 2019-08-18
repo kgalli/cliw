@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
 import {connectionFlag, environmentFlag} from '../../wrapper/db-tools/flags'
-import PgrestoreOptions from '../../wrapper/db-tools/pgrestore-options'
+import PgrestoreOptions from '../../wrapper/db-tools/postgre-sql/pgrestore-options'
 
 export default class Restore extends DbToolsWrapper {
   static description = 'restore database'

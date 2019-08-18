@@ -1,6 +1,6 @@
 import DockerOptions from './docker-options'
 
-export default interface PgRestoreOptions {
+export default interface DbRestoreOptions {
   docker?: DockerOptions
   restoreFileLocation: string
 }

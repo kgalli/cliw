@@ -3,7 +3,7 @@ import {flags} from '@oclif/command'
 import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
 import {connectionFlag, environmentFlag} from '../../wrapper/db-tools/flags'
-import PgdumpOptions from '../../wrapper/db-tools/pgdump-options'
+import PgdumpOptions from '../../wrapper/db-tools/postgre-sql/pgdump-options'
 
 export default class Dump extends DbToolsWrapper {
   static description = 'create database'

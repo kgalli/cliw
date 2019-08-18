@@ -1,7 +1,8 @@
-import ConnectionParams from './connection-params'
-import DockerOptions from './docker-options'
-import PgDumpOptions from './pgdump-options'
-import PgRestoreOptions from './pgrestore-options'
+import ConnectionParams from '../connection-params'
+import DbDumpOptions from '../db-dump-options'
+import DbRestoreOptions from '../db-restore-options'
+import DockerOptions from '../docker-options'
+
 import PsqlOptions from './psql-options'
 
 const defaultDockerOptions: DockerOptions = {
@@ -34,7 +35,7 @@ export default class PostgreSql {
     return cmd.join(' ')
   }
 
-  static pgDump(connectionParams: ConnectionParams, options: PgDumpOptions) {
+  static pgDump(connectionParams: ConnectionParams, options: DbDumpOptions) {
     const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
 
@@ -60,7 +61,7 @@ export default class PostgreSql {
     return cmd.join(' ')
   }
 
-  static pgRestore(connectionParams: ConnectionParams, options: PgRestoreOptions) {
+  static pgRestore(connectionParams: ConnectionParams, options: DbRestoreOptions) {
     const dockerOptions = {...defaultDockerOptions, ...options.docker}
     const cmd = []
 
@@ -127,14 +128,14 @@ export default class PostgreSql {
     return PostgreSql.psql(connectionParams, psqlOptions)
   }
 
-  dbRestore(options: PgRestoreOptions) {
+  dbRestore(options: DbRestoreOptions) {
     const connectionParams = {...this.connectionParams}
     const pgRestoreOptions = {...options, docker: this.dockerOptions}
 
     return PostgreSql.pgRestore(connectionParams, pgRestoreOptions)
   }
 
-  dbDump(options: PgDumpOptions) {
+  dbDump(options: DbDumpOptions) {
     const connectionParams = {...this.connectionParams}
     const pgDumpOptions = {...options, docker: this.dockerOptions}
 
