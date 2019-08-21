@@ -6,7 +6,7 @@ import ConfigUtils from '../../../config/config-utils'
 import {environmentFlag, servicesFlag} from '../../../wrapper/docker-compose/flags'
 
 export default class BuildOriginList extends BaseCommand {
-  static description = 'list service(s) runtype'
+  static description = 'list service(s) origin SOURCE|REGISTRY'
 
   static flags = {
     help: flags.help({char: 'h'}),

@@ -71,7 +71,7 @@
       "service": {
         "description": "manage services to run as docker containers"
       },
-      "service:buildorigin": {
+      "service:origin": {
         "description": "list or set services build origin"
       },
       "project": {
