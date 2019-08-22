@@ -2,21 +2,27 @@ import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
 import DockerComposeCommand from '../../wrapper/docker-compose'
-import {environmentFlag, servicesFlag} from '../../wrapper/docker-compose/flags'
+import {servicesArg} from '../../wrapper/docker-compose/args'
+import {environmentFlag} from '../../wrapper/docker-compose/flags'
 
 export default class Pull extends DockerComposeCommand {
   static description = 'pull docker image(s) from registry'
 
   static flags = {
-    services: servicesFlag,
     environment: environmentFlag,
     'dry-run': dryRunFlag,
     help: flags.help({char: 'h'}),
   }
 
+  static strict = false
+
+  static args = [
+    servicesArg,
+  ]
+
   async run() {
-    const {flags} = this.parse(Pull)
-    const services = flags.services
+    const {argv, flags} = this.parse(Pull)
+    const services = argv
     const environment = flags.environment
     const dryRun = flags['dry-run']
 
