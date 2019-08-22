@@ -2,19 +2,20 @@ import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
 import DockerComposeCommand from '../../wrapper/docker-compose'
-import {environmentFlag, serviceFlag} from '../../wrapper/docker-compose/flags'
+import {serviceArg} from '../../wrapper/docker-compose/args'
+import {environmentFlag} from '../../wrapper/docker-compose/flags'
 
 export default class Run extends DockerComposeCommand {
   static description = 'run a one-off command on a service'
 
   static flags = {
-    service: serviceFlag,
     environment: environmentFlag,
     'dry-run': dryRunFlag,
     help: flags.help({char: 'h'})
   }
 
   static args = [
+    serviceArg,
     {
       name: 'command',
       description: 'specify command to execute',
@@ -25,11 +26,11 @@ export default class Run extends DockerComposeCommand {
   static strict = false
 
   async run() {
-    const {flags, args} = this.parse(Run)
-    const service = flags.service
+    const {flags, args, argv} = this.parse(Run)
+    const service = args.service
     const environment = flags.environment
     const dryRun = flags['dry-run']
-    const cmd = args.command
+    const cmd = argv.slice(1).join(' ')
 
     try {
       this

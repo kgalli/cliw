@@ -6,8 +6,8 @@ describe('status', () => {
   test
     .env(env)
     .stdout()
-    .command(['service:status', '--services', 'api', '--dry-run'])
-    .it('runs status --service api', ctx => {
+    .command(['service:status', 'api', '--dry-run'])
+    .it('runs status api', ctx => {
       expect(ctx.stdout).to.contain(expectedStdOutForCmd('status', mainConfig.compose.defaultEnvironment, ['api']))
     })
 })

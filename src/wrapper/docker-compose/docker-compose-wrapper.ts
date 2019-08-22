@@ -53,10 +53,10 @@ export default class DockerComposeWrapper {
   }
 
   build(options: any, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const startOptions = isEmpty(options) ? '' : options.toString()
@@ -66,10 +66,10 @@ export default class DockerComposeWrapper {
   }
 
   start(options: object, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const startOptions = isEmpty(options) ? '' : options.toString()
@@ -81,10 +81,10 @@ export default class DockerComposeWrapper {
   }
 
   stop(options: object, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const startOptions = isEmpty(options) ? '' : options.toString()
@@ -99,10 +99,10 @@ export default class DockerComposeWrapper {
   }
 
   up(options: object, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const upOptions = isEmpty(options) ? '' : options.toString()
@@ -112,10 +112,10 @@ export default class DockerComposeWrapper {
   }
 
   logs(options: any, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const logsOptions = []
@@ -153,10 +153,10 @@ export default class DockerComposeWrapper {
   }
 
   status(options: object, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const statusOptions = isEmpty(options) ? '' : options.toString()
@@ -166,10 +166,10 @@ export default class DockerComposeWrapper {
   }
 
   pull(options: object, serviceNames: string[], environment: string) {
-    if (serviceNames) {
-      this.validate(serviceNames)
-    } else {
+    if (isEmpty(serviceNames)) {
       serviceNames = []
+    } else {
+      this.validate(serviceNames)
     }
 
     const pullOptions = isEmpty(options) ? '' : options.toString()
