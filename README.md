@@ -42,9 +42,14 @@ USAGE
 The `init` is used to create the initial projects config file. This is needed because the `cliw` supports
 to manage several services and databases under a project. This way multiple `cliw` configurations can be
 maintained at the same time while `cliw` supports switching between those when needed. This functionality
-comes in very handy when work has to be for several clients or to keep private and business projects separated.
+comes in very handy when work has to be done for several clients or to keep private and business projects separated.
 
 The location of the projects config file is `$HOME/.config/cliw`.
+
+## `cliw project`
+
+Once the `init` command was used to setup the first project the `project` command can be used to add new projects
+and switch between them when needed.
 
 ## `cliw db`
 
