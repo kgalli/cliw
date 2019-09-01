@@ -2,14 +2,14 @@ import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
-import {connectionFlag, environmentFlag} from '../../wrapper/db-tools/flags'
+import {dataSourceNameArg} from '../../wrapper/db-tools/args'
+import {environmentFlag} from '../../wrapper/db-tools/flags'
 import PgrestoreOptions from '../../wrapper/db-tools/pgrestore-options'
 
 export default class Restore extends DbToolsWrapper {
   static description = 'restore database'
 
   static flags = {
-    service: connectionFlag,
     environment: environmentFlag,
     'dry-run': dryRunFlag,
     'restore-file': flags.string({
@@ -21,9 +21,13 @@ export default class Restore extends DbToolsWrapper {
     help: flags.help({char: 'h'})
   }
 
+  static args = [
+    dataSourceNameArg
+  ]
+
   async run() {
-    const {flags} = this.parse(Restore)
-    const service = flags.service
+    const {args, flags} = this.parse(Restore)
+    const service = args.datasource
     const environment = flags.environment
     const restoreFileLocation = flags['restore-file']
     const dryRun = flags['dry-run']
