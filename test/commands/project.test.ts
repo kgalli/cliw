@@ -37,7 +37,7 @@ describe('project', () => {
       .env(env)
       .stdout()
       .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
-      .command(['project:add', '-n', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
+      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
       .command(['project:list', '--csv'])
       .it('adds the project', ctx => {
         const csvOutput = ctx.stdout.split('\n')
@@ -66,8 +66,8 @@ describe('project', () => {
       .env(env)
       .stdout()
       .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
-      .command(['project:add', '-n', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
-      .command(['project:remove', '-n', 'project1'])
+      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
+      .command(['project:remove', 'project1'])
       .command(['project:list', '--csv'])
       .it('removes the project', ctx => {
         const csvOutput = ctx.stdout.split('\n')
@@ -90,8 +90,8 @@ describe('project', () => {
       .env(env)
       .stdout()
       .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
-      .command(['project:add', '-n', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
-      .command(['project:set-default', '-n', 'project1'])
+      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
+      .command(['project:set-default', 'project1'])
       .command(['project:list', '--csv'])
       .it('sets the default project', ctx => {
         const csvOutput = ctx.stdout.split('\n')

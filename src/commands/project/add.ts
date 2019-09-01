@@ -8,11 +8,6 @@ export default class ProjectAdd extends BaseCommand {
   static description = 'add project'
 
   static flags = {
-    name: flags.string({
-      char: 'n',
-      required: true,
-      description: 'name used as identifier for project'
-    }),
     config: flags.string({
       char: 'c',
       required: true,
@@ -21,9 +16,17 @@ export default class ProjectAdd extends BaseCommand {
     help: flags.help({char: 'h'})
   }
 
+  static args = [
+    {
+      name: 'project',
+      required: true,
+      description: 'project specified by name'
+    }
+  ]
+
   async run() {
-    const {flags} = this.parse(ProjectAdd)
-    const projectName = flags.name
+    const {args, flags} = this.parse(ProjectAdd)
+    const projectName = args.project
     const mainConfigLocation = flags.config
     const projectsConfig = ConfigUtils.projectsConfigLoad()
 

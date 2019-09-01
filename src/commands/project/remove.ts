@@ -9,17 +9,19 @@ export default class ProjectRemove extends BaseCommand {
   static description = 'remove project'
 
   static flags = {
-    name: flags.string({
-      char: 'n',
-      required: true,
-      description: 'name used as identifier for project'
-    }),
     help: flags.help({char: 'h'})
   }
+  static args = [
+    {
+      name: 'project',
+      required: true,
+      description: 'project specified by name'
+    }
+  ]
 
   async run() {
-    const {flags} = this.parse(ProjectRemove)
-    const projectToRemoveName = flags.name
+    const {args} = this.parse(ProjectRemove)
+    const projectToRemoveName = args.project
     const defaultProjectsConfig = ConfigUtils.projectsConfigLoadDefault()
     const projectsConfig = ConfigUtils.projectsConfigLoad()
 

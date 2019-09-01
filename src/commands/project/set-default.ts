@@ -7,17 +7,20 @@ export default class ProjectSetDefault extends BaseCommand {
   static description = 'set default project'
 
   static flags = {
-    name: flags.string({
-      char: 'n',
-      required: true,
-      description: 'name used as identifier for project'
-    }),
     help: flags.help({char: 'h'})
   }
 
+  static args = [
+    {
+      name: 'project',
+      required: true,
+      description: 'project specified by name'
+    }
+  ]
+
   async run() {
-    const {flags} = this.parse(ProjectSetDefault)
-    const projectName = flags.name
+    const {args} = this.parse(ProjectSetDefault)
+    const projectName = args.project
     const projectsConfig = ConfigUtils.projectsConfigLoad()
     const projectExists = projectsConfig.projects
       .map(project => project.name)
