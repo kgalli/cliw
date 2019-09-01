@@ -6,7 +6,7 @@ describe('db:restore', () => {
   test
     .env(env)
     .stdout()
-    .command(['db:restore', '--service', 'api', '-r', 'kgalli-development.dump', '--dry-run'])
+    .command(['db:restore', 'api', '-r', 'kgalli-development.dump', '--dry-run'])
     .it('invokes docker command to restore database', ctx => {
       const expectedOutput = 'docker run --rm -it --net=host -e PGPASSWORD=kgalli_pw -v $PWD:/opt -w /opt postgres pg_restore -h 127.0.0.1 -p 5436 -U kgalli_us --verbose --no-owner --no-privileges --format=custom -d kgalli_db kgalli-development.dump'
 
@@ -16,7 +16,7 @@ describe('db:restore', () => {
   test
     .env(env)
     .stdout()
-    .command(['db:restore', '--service', 'api', '--environment', 'production', '-r', 'kgalli-development.dump', '--dry-run'])
+    .command(['db:restore', 'api', '--environment', 'production', '-r', 'kgalli-development.dump', '--dry-run'])
     .catch(err => expect(err.message).to.match(/Command "restore" is not supported in a readonly connection/))
     .it('raises an error due to readonly data source')
 })
