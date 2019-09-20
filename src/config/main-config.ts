@@ -2,7 +2,6 @@ import DataSource from './data-source'
 
 export interface MainConfig {
   compose: {
-    workDir: string
     projectName: string
     networkName: string
     environments: string[],

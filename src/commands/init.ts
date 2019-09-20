@@ -21,7 +21,11 @@ identifier (project name) at: ~/.config/projects-config.json.
     }),
     mainConfig: flags.string({
       char: 'm',
-      description: 'location of the main-config.json file'
+      description: 'absolute location of the main-config.json file'
+    }),
+    workDir: flags.string({
+      char: 'w',
+      description: 'absolute location of the working directory'
     }),
     help: flags.help({char: 'h'})
   }
@@ -48,6 +52,14 @@ identifier (project name) at: ~/.config/projects-config.json.
       this.error('MainConfig could not be found with the provided location')
     }
 
+    let workDirLocation = flags.workDir
+    if (isEmpty(flags.workDir)) {
+      workDirLocation = await cli.prompt('Please enter the absolute path to your working directory')
+    }
+
+    if (!ConfigUtils.exists(workDirLocation as string)) {
+      this.error('Working directory could not be found with at the provided location')
+    }
     // TODO validate main config
     const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
     const servicesBuildOrigin = {} as ServicesBuildOrigin
@@ -56,6 +68,7 @@ identifier (project name) at: ~/.config/projects-config.json.
 
     const projectConfig = {
       name: projectName,
+      workDir: workDirLocation,
       mainConfigLocation,
       defaultBuildOrigin: BuildOrigin.REGISTRY,
       servicesBuildOrigin

@@ -4,6 +4,7 @@ import {writeProjectsConfig} from '../helper/projects-config-helper'
 
 const TEST_PROJECTS_CONFIG_LOCATION = `${__dirname}/../config/test-projects-config.json`
 const TEST_MAIN_CONFIG_LOCATION = `${__dirname}/../config/test-main-config.json`
+const TEST_WORKDIR_LOCATION = '/tmp'
 const env = {CLIW_PROJECT_CONFIG_LOCATION: TEST_PROJECTS_CONFIG_LOCATION, TEST_OUTPUT: '0'}
 
 describe('project', () => {
@@ -11,21 +12,24 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
+      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_WORKDIR_LOCATION))
       .command(['project:list', '--csv'])
       .it('lists projects', ctx => {
         const csvOutput = ctx.stdout.split('\n')
         // header
         const header = csvOutput[0]
-        expect(header).to.contain('Name,Mainconfiglocation,Default')
+        expect(header).to.contain('Name,Workdir,Mainconfiglocation,Default')
         // project column
         const firstProject = csvOutput[1].split(',')[0]
         expect(firstProject).to.eql('test')
+        // working directory location column
+        const firstWorkDirLocation = csvOutput[1].split(',')[1]
+        expect(firstWorkDirLocation).to.eql(TEST_WORKDIR_LOCATION)
         // main config location column
-        const firstMainConfigLocation = csvOutput[1].split(',')[1]
+        const firstMainConfigLocation = csvOutput[1].split(',')[2]
         expect(firstMainConfigLocation).to.eql(TEST_MAIN_CONFIG_LOCATION)
         // default project column
-        const firstProjectDefault = csvOutput[1].split(',')[2]
+        const firstProjectDefault = csvOutput[1].split(',')[3]
         expect(firstProjectDefault).to.eql('true')
         // only one project in list
         expect(csvOutput.length).to.eql(3)
@@ -36,8 +40,8 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
-      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
+      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_WORKDIR_LOCATION))
+      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION, '-w', TEST_WORKDIR_LOCATION])
       .command(['project:list', '--csv'])
       .it('adds the project', ctx => {
         const csvOutput = ctx.stdout.split('\n')
@@ -46,14 +50,19 @@ describe('project', () => {
         const secondProject = csvOutput[2].split(',')[0]
         expect(firstProject).to.eql('project1')
         expect(secondProject).to.eql('test')
+        // working directory location column
+        const firstWorkDirLocation = csvOutput[1].split(',')[1]
+        const secondWorkDirLocation = csvOutput[1].split(',')[1]
+        expect(firstWorkDirLocation).to.eql(TEST_WORKDIR_LOCATION)
+        expect(secondWorkDirLocation).to.eql(TEST_WORKDIR_LOCATION)
         // main config location column
-        const firstMainConfigLocation = csvOutput[1].split(',')[1]
-        const secondMainConfigLocation = csvOutput[2].split(',')[1]
+        const firstMainConfigLocation = csvOutput[1].split(',')[2]
+        const secondMainConfigLocation = csvOutput[2].split(',')[2]
         expect(firstMainConfigLocation).to.eql(TEST_MAIN_CONFIG_LOCATION)
         expect(secondMainConfigLocation).to.eql(TEST_MAIN_CONFIG_LOCATION)
         // default project column
-        const firstProjectDefault = csvOutput[1].split(',')[2]
-        const secondProjectDefault = csvOutput[2].split(',')[2]
+        const firstProjectDefault = csvOutput[1].split(',')[3]
+        const secondProjectDefault = csvOutput[2].split(',')[3]
         expect(firstProjectDefault).to.eql('')
         expect(secondProjectDefault).to.eql('true')
         // two projects in list
@@ -65,8 +74,8 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
-      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
+      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_WORKDIR_LOCATION))
+      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION, '-w', TEST_WORKDIR_LOCATION])
       .command(['project:remove', 'project1'])
       .command(['project:list', '--csv'])
       .it('removes the project', ctx => {
@@ -75,10 +84,10 @@ describe('project', () => {
         const firstProject = csvOutput[1].split(',')[0]
         expect(firstProject).to.eql('test')
         // main config location column
-        const firstMainConfigLocation = csvOutput[1].split(',')[1]
+        const firstMainConfigLocation = csvOutput[1].split(',')[2]
         expect(firstMainConfigLocation).to.eql(TEST_MAIN_CONFIG_LOCATION)
         // default project column
-        const firstProjectDefault = csvOutput[1].split(',')[2]
+        const firstProjectDefault = csvOutput[1].split(',')[3]
         expect(firstProjectDefault).to.eql('true')
         // only one project in list
         expect(csvOutput.length).to.eql(3)
@@ -89,8 +98,8 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION))
-      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION])
+      .do(() => writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_WORKDIR_LOCATION))
+      .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION, '-w', TEST_WORKDIR_LOCATION])
       .command(['project:set-default', 'project1'])
       .command(['project:list', '--csv'])
       .it('sets the default project', ctx => {
@@ -101,13 +110,13 @@ describe('project', () => {
         expect(firstProject).to.eql('project1')
         expect(secondProject).to.eql('test')
         // main config location column
-        const firstMainConfigLocation = csvOutput[1].split(',')[1]
-        const secondMainConfigLocation = csvOutput[2].split(',')[1]
+        const firstMainConfigLocation = csvOutput[1].split(',')[2]
+        const secondMainConfigLocation = csvOutput[2].split(',')[2]
         expect(firstMainConfigLocation).to.eql(TEST_MAIN_CONFIG_LOCATION)
         expect(secondMainConfigLocation).to.eql(TEST_MAIN_CONFIG_LOCATION)
         // default project column
-        const firstProjectDefault = csvOutput[1].split(',')[2]
-        const secondProjectDefault = csvOutput[2].split(',')[2]
+        const firstProjectDefault = csvOutput[1].split(',')[3]
+        const secondProjectDefault = csvOutput[2].split(',')[3]
         expect(firstProjectDefault).to.eql('true')
         expect(secondProjectDefault).to.eql('')
         // two projects in list

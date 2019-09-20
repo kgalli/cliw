@@ -3,12 +3,15 @@ import {writeFileSync} from 'fs'
 import {BuildOrigin} from '../../src/config/project-config'
 import ProjectsConfig from '../../src/config/projects-config'
 
-export function writeProjectsConfig(projectsConfigLocation: string, mainConfigLocation: string) {
+export function writeProjectsConfig(projectsConfigLocation: string,
+                                    mainConfigLocation: string,
+                                    workDir: string) {
   writeFileSync(projectsConfigLocation, JSON.stringify({
     default: 'test',
     projects: [
       {
         name: 'test',
+        workDir,
         mainConfigLocation,
         defaultBuildOrigin: BuildOrigin.REGISTRY,
         servicesBuildOrigin: {

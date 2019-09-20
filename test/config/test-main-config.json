@@ -1,6 +1,5 @@
 {
   "compose": {
-    "workDir": "/Users/kgallinowsk/dev",
     "projectName": "cliw",
     "networkName": "cliw",
     "defaultEnvironment": "development",
