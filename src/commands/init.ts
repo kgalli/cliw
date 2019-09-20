@@ -17,13 +17,13 @@ identifier (project name) at: ~/.config/projects-config.json.
   static flags = {
     name: flags.string({
       char: 'n',
-      description: 'name used as identifier for project'
+      description: 'project unique identifier (name)'
     }),
-    mainConfig: flags.string({
-      char: 'm',
-      description: 'absolute location of the main-config.json file'
+    config: flags.string({
+      char: 'c',
+      description: 'location of the configuration file (*.json)'
     }),
-    workDir: flags.string({
+    'working-directory': flags.string({
       char: 'w',
       description: 'absolute location of the working directory'
     }),
@@ -34,7 +34,7 @@ identifier (project name) at: ~/.config/projects-config.json.
     const {flags} = this.parse(Init)
 
     if (ConfigUtils.projectsConfigExists()) {
-      this.log('Init config already exists')
+      this.log('Initial project already exists. Use `cliw project:list` command for details')
       return
     }
 
@@ -43,8 +43,8 @@ identifier (project name) at: ~/.config/projects-config.json.
       projectName = await cli.prompt('Please enter the project name')
     }
 
-    let mainConfigLocation = flags.mainConfig
-    if (isEmpty(flags.mainConfig)) {
+    let mainConfigLocation = flags.config
+    if (isEmpty(flags.config)) {
       mainConfigLocation = await cli.prompt('Please enter the location of your <main-config>.json file')
     }
 
@@ -52,8 +52,8 @@ identifier (project name) at: ~/.config/projects-config.json.
       this.error('MainConfig could not be found with the provided location')
     }
 
-    let workDirLocation = flags.workDir
-    if (isEmpty(flags.workDir)) {
+    let workDirLocation = flags['working-directory']
+    if (isEmpty(flags['working-directory'])) {
       workDirLocation = await cli.prompt('Please enter the absolute path to your working directory')
     }
 
