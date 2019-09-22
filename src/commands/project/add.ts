@@ -13,6 +13,11 @@ export default class ProjectAdd extends BaseCommand {
       required: true,
       description: 'location of the configuration file (*.json)'
     }),
+    'working-directory': flags.string({
+      char: 'w',
+      required: true,
+      description: 'absolute location of the working directory'
+    }),
     help: flags.help({char: 'h'})
   }
 
@@ -28,10 +33,15 @@ export default class ProjectAdd extends BaseCommand {
     const {args, flags} = this.parse(ProjectAdd)
     const projectName = args.project
     const mainConfigLocation = flags.config
+    const workDir = flags['working-directory']
     const projectsConfig = ConfigUtils.projectsConfigLoad()
 
     if (!ConfigUtils.exists(mainConfigLocation as string)) {
       this.error('MainConfig could not be found with the provided location')
+    }
+
+    if (!ConfigUtils.exists(workDir as string)) {
+      this.error(`Working directory could not be found at ${workDir}`)
     }
 
     const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
@@ -41,6 +51,7 @@ export default class ProjectAdd extends BaseCommand {
 
     const projectConfig = {
       name: projectName,
+      workDir,
       mainConfigLocation,
       defaultBuildOrigin: BuildOrigin.REGISTRY,
       servicesBuildOrigin

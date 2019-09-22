@@ -15,7 +15,7 @@ export default abstract class extends BaseCommand {
     return new DockerComposeWrapper(
       composeConfig.projectName,
       composeConfig.networkName,
-      composeConfig.workDir,
+      projectConfig.workDir,
       composeConfig.services,
       servicesBuildOrigin,
       dryRun,

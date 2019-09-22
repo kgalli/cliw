@@ -1,6 +1,7 @@
 export default interface ProjectConfig {
   name: string
-  mainConfigLocation: string,
+  workDir: string
+  mainConfigLocation: string
   defaultBuildOrigin: BuildOrigin
   servicesBuildOrigin: ServicesBuildOrigin
 }
