@@ -42,7 +42,7 @@ export default class PostgreSql {
     cmd.push(`-h ${connectionParams.host}`)
     cmd.push(`-p ${connectionParams.port}`)
     cmd.push(`-U ${connectionParams.user}`)
-    cmd.push('--verbose --no-security-labels --no-owner --if-exists --clean --no-tablespaces --no-privileges')
+    cmd.push('--verbose --no-security-labels --no-owner --if-exists --clean --no-tablespaces --no-privileges --disable-dollar-quoting')
 
     if (options.schemaOnly) {
       cmd.push('--schema-only')
