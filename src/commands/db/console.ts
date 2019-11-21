@@ -10,6 +10,12 @@ export default class Console extends DbToolsWrapper {
 
   static flags = {
     environment: environmentFlag,
+    command: flags.string({
+      char: 'c',
+      description: 'run only single command (SQL or internal) and exit',
+      multiple: false,
+      required: false
+    }),
     'dry-run': dryRunFlag,
     help: flags.help({char: 'h'})
   }
@@ -23,11 +29,13 @@ export default class Console extends DbToolsWrapper {
     const dataSource = args.datasource
     const environment = flags.environment
     const dryRun = flags['dry-run']
+    const command = flags.command
+    const options = flags.command ? {command} : {}
 
     try {
       await this
         .dbTools(dryRun)
-        .console({}, dataSource, environment)
+        .console(options, dataSource, environment)
     } catch (e) {
       this.error(e.message, e)
     }

@@ -9,6 +9,14 @@ const defaultDockerOptions: DockerOptions = {
   volume: '/opt'
 }
 
+function stripEnclosingDoubleQuotes(value: string): string {
+  if (value.startsWith('"') && value.endsWith('"')) {
+    return value.substr(1, value.length)
+  }
+
+  return value
+}
+
 export default class PostgreSql {
   static psql(connectionParams: ConnectionParams, options: PsqlOptions) {
     const dockerOptions = {...defaultDockerOptions, ...options.docker}
@@ -24,7 +32,7 @@ export default class PostgreSql {
     }
 
     if (options.command) {
-      cmd.push(`-c ${options.command}`)
+      cmd.push(`-c "${stripEnclosingDoubleQuotes(options.command)}"`)
     }
 
     if (dockerOptions.enabled) {
@@ -111,7 +119,7 @@ export default class PostgreSql {
 
   dbCreate() {
     const connectionParams = {...this.connectionParams}
-    const createStatement = `"CREATE DATABASE ${connectionParams.database} WITH OWNER ${connectionParams.user} ENCODING 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';"`
+    const createStatement = `CREATE DATABASE ${connectionParams.database} WITH OWNER ${connectionParams.user} ENCODING 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';`
     const psqlOptions = {command: createStatement, docker: this.dockerOptions}
 
     connectionParams.database = 'template1'
@@ -120,7 +128,7 @@ export default class PostgreSql {
 
   dbDrop() {
     const connectionParams = {...this.connectionParams}
-    const dropStatement = `"DROP DATABASE IF EXISTS ${connectionParams.database};"`
+    const dropStatement = `DROP DATABASE IF EXISTS ${connectionParams.database};`
     const psqlOptions = {command: dropStatement, docker: this.dockerOptions}
 
     connectionParams.database = 'template1'
