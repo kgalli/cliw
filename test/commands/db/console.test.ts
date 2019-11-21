@@ -24,4 +24,21 @@ describe('db:console', () => {
 
       expect(ctx.stdout).to.contain(expectedOutput)
     })
+
+  test
+    .env(env)
+    .stdout()
+    .command(['db:console', 'api', '-f', '"db/inserts.sql"', '--dry-run'])
+    .it('invokes docker cmd to run commands given by file', ctx => {
+      const expectedOutput = `${expectedDockerCmdPrefix} psql -h 127.0.0.1 -p 5436 -U kgalli_us -d kgalli_db -f "db/inserts.sql"`
+
+      expect(ctx.stdout).to.contain(expectedOutput)
+    })
+
+  test
+    .env(env)
+    .stdout()
+    .command(['db:console', 'api', '-c', 'SELECT * FROM users LIMIT 1;', '-f', 'db/inserts.sql', '--dry-run'])
+    .catch(err => expect(err.message).to.eql('--file= cannot also be provided when using --command='))
+    .it('does not allow to use --command option together with --file option')
 })

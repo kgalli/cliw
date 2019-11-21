@@ -14,7 +14,15 @@ export default class Console extends DbToolsWrapper {
       char: 'c',
       description: 'run only single command (SQL or internal) and exit',
       multiple: false,
-      required: false
+      required: false,
+      exclusive: ['file']
+    }),
+    file: flags.string({
+      char: 'f',
+      description: 'execute commands from file, then exit',
+      multiple: false,
+      required: false,
+      exclusive: ['command']
     }),
     'dry-run': dryRunFlag,
     help: flags.help({char: 'h'})
@@ -30,7 +38,11 @@ export default class Console extends DbToolsWrapper {
     const environment = flags.environment
     const dryRun = flags['dry-run']
     const command = flags.command
-    const options = flags.command ? {command} : {}
+    const file = flags.file
+    const options = {
+      command,
+      file
+    }
 
     try {
       await this

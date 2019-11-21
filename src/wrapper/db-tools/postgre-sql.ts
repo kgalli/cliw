@@ -35,6 +35,10 @@ export default class PostgreSql {
       cmd.push(`-c "${stripEnclosingDoubleQuotes(options.command)}"`)
     }
 
+    if (options.file) {
+      cmd.push(`-f "${stripEnclosingDoubleQuotes(options.file)}"`)
+    }
+
     if (dockerOptions.enabled) {
       return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
     }
