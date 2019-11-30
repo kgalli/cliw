@@ -8,7 +8,7 @@ describe('db:restore', () => {
     .stdout()
     .command(['db:restore', 'api', '-r', 'kgalli-development.dump', '--dry-run'])
     .it('invokes docker command to restore database', ctx => {
-      const expectedOutput = 'docker run --rm -it --net=host -e PGPASSWORD=kgalli_pw -v $PWD:/opt -w /opt postgres pg_restore -h 127.0.0.1 -p 5436 -U kgalli_us --verbose --no-owner --no-privileges --format=custom -d kgalli_db kgalli-development.dump'
+      const expectedOutput = 'docker run --rm -t --net=host -e PGPASSWORD=kgalli_pw -v $PWD:/opt -w /opt postgres pg_restore -h 127.0.0.1 -p 5436 -U kgalli_us --verbose --no-owner --no-privileges --format=custom -d kgalli_db kgalli-development.dump'
 
       expect(ctx.stdout).to.contain(expectedOutput)
     })
