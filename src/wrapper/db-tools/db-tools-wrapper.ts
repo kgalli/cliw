@@ -92,7 +92,7 @@ export default class DbToolsWrapper {
     }
 
     const connectionParams = this.extractConnectionParams(dataSourceParams)
-    const dockerOptions = {enabled: true} as DockerOptions
+    const dockerOptions = {enabled: true, tty: Boolean(process.stdout.isTTY)} as DockerOptions
     const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
 
     let shellCmdToExec

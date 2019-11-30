@@ -6,7 +6,9 @@ import PsqlOptions from './psql-options'
 
 const defaultDockerOptions: DockerOptions = {
   enabled: true,
-  volume: '/opt'
+  volume: '/opt',
+  tty: false,
+  interactive: false
 }
 
 function stripEnclosingDoubleQuotes(value: string): string {
@@ -40,7 +42,7 @@ export default class PostgreSql {
     }
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
     }
 
     return cmd.join(' ')
@@ -66,7 +68,7 @@ export default class PostgreSql {
     cmd.push(`-d ${connectionParams.database}`)
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
     }
 
     return cmd.join(' ')
@@ -86,21 +88,29 @@ export default class PostgreSql {
     cmd.push(options.restoreFileLocation)
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
     }
 
     return cmd.join(' ')
   }
 
-  private static asDockerCmd(dbCmd: string, password: string, volume: string) {
+  private static asDockerCmd(dbCmd: string, password: string, options: DockerOptions) {
     const dockerRunOptions = []
 
     dockerRunOptions.push('--rm')
-    dockerRunOptions.push('-it')
+
+    if (options.interactive) {
+      dockerRunOptions.push('-i')
+    }
+
+    if (options.tty) {
+      dockerRunOptions.push('-t')
+    }
+
     dockerRunOptions.push('--net=host')
     dockerRunOptions.push(`-e PGPASSWORD=${password}`)
-    dockerRunOptions.push(`-v $PWD:${volume}`)
-    dockerRunOptions.push(`-w ${volume}`)
+    dockerRunOptions.push(`-v $PWD:${options.volume}`)
+    dockerRunOptions.push(`-w ${options.volume}`)
 
     return `docker run ${dockerRunOptions.join(' ')} postgres ${dbCmd}`
   }
@@ -117,6 +127,7 @@ export default class PostgreSql {
     const psqlOptions = {...options}
 
     psqlOptions.docker = this.dockerOptions
+    psqlOptions.docker.interactive = true
 
     return PostgreSql.psql(this.connectionParams, psqlOptions)
   }

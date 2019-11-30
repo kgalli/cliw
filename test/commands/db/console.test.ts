@@ -3,7 +3,7 @@ import {expect, test} from '@oclif/test'
 import {env} from '../../helper/test-helper'
 
 describe('db:console', () => {
-  const expectedDockerCmdPrefix = 'docker run --rm -it --net=host -e PGPASSWORD=kgalli_pw -v $PWD:/opt -w /opt postgres'
+  const expectedDockerCmdPrefix = 'docker run --rm -i -t --net=host -e PGPASSWORD=kgalli_pw -v $PWD:/opt -w /opt postgres'
 
   test
     .env(env)
