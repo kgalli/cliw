@@ -6,3 +6,5 @@
 /tmp
 /yarn.lock
 node_modules
+
+test/config/test-projects-config.json
