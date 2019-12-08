@@ -5,12 +5,13 @@ import ProjectsConfig from '../../src/config/projects-config'
 
 export function writeProjectsConfig(projectsConfigLocation: string,
                                     mainConfigLocation: string,
+                                    projectName: string,
                                     workDir: string) {
   writeFileSync(projectsConfigLocation, JSON.stringify({
-    default: 'test',
+    default: projectName,
     projects: [
       {
-        name: 'test',
+        name: projectName,
         workDir,
         mainConfigLocation,
         defaultBuildOrigin: BuildOrigin.REGISTRY,

@@ -7,13 +7,27 @@ import {writeProjectsConfig} from './projects-config-helper'
 const TEST_PROJECTS_CONFIG_LOCATION = `${__dirname}/../config/test-projects-config.json`
 const TEST_MAIN_CONFIG_LOCATION = `${__dirname}/../config/test-main-config.json`
 const TEST_WORK_DIR_LOCATION = '/tmp'
-
-writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_WORK_DIR_LOCATION)
+const TEST_DEFAULT_PROJECT_NAME = 'test'
 
 // set TEST_OUTPUT: '1' to see console.log statements in tests
 const env = {CLIW_PROJECT_CONFIG_LOCATION: TEST_PROJECTS_CONFIG_LOCATION, TEST_OUTPUT: '0'}
 
 const mainConfig: MainConfig = loadMainConfig(TEST_MAIN_CONFIG_LOCATION)
-const expectedStdOutForCmd = stdOutHelperForDockerComposeCmd(mainConfig.compose.projectName, TEST_WORK_DIR_LOCATION)
+const expectedStdOutForCmd = stdOutHelperForDockerComposeCmd(TEST_DEFAULT_PROJECT_NAME, TEST_WORK_DIR_LOCATION)
 
-export {mainConfig, expectedStdOutForCmd, env}
+function writeProjectsConfigDefault() {
+  writeProjectsConfig(
+    TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_DEFAULT_PROJECT_NAME, TEST_WORK_DIR_LOCATION
+  )
+}
+
+export {
+  mainConfig,
+  expectedStdOutForCmd,
+  env,
+  writeProjectsConfigDefault,
+  TEST_DEFAULT_PROJECT_NAME,
+  TEST_PROJECTS_CONFIG_LOCATION,
+  TEST_MAIN_CONFIG_LOCATION,
+  TEST_WORK_DIR_LOCATION
+}
