@@ -13,7 +13,7 @@ export default abstract class extends BaseCommand {
     const servicesBuildOrigin = projectConfig.servicesBuildOrigin
 
     return new DockerComposeWrapper(
-      composeConfig.projectName,
+      projectConfig.name,
       composeConfig.networkName,
       projectConfig.workDir,
       composeConfig.services,

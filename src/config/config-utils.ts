@@ -1,4 +1,5 @@
 import {existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
+import {safeLoad} from 'js-yaml'
 import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
@@ -73,7 +74,11 @@ export default class ConfigUtils {
 
   private static load(fileLocation: string, configName: string): ProjectsConfig | MainConfig {
     if (existsSync(fileLocation)) {
-      return JSON.parse(readFileSync(fileLocation).toString())
+      if (fileLocation.endsWith('yaml') || fileLocation.endsWith('yml')) {
+        return safeLoad(readFileSync(fileLocation, 'utf8'))
+      }
+
+      return JSON.parse(readFileSync(fileLocation, 'utf8').toString())
     }
 
     throw Error(`${configName} at '${fileLocation}' does not exist`)
