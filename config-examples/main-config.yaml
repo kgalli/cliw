@@ -1,0 +1,79 @@
+compose:
+  networkName: "cliw"
+  defaultEnvironment: "development"
+  environments:
+    - "development"
+    - "test"
+  services:
+    - name: "api"
+      repositoryUrl: "github.com/kgalli/javalin-playground"
+      source: "internal"
+      environments:
+        default:
+          ports:
+            - "3000:3000"
+          buildOrigin:
+            source:
+              build:
+                context: "./javalin-playground"
+                dockerfile: "Dockerfile"
+              command: "java -jar /usr/src/app/app.jar"
+            registry:
+              image: "kgalli/javalin-playground"
+        development:
+          environment:
+            API_URL: "http://localhost:3000"
+            DB_HOST: "db"
+            DB_PORT: "5432"
+            DB_USER: "kgalli"
+            DB_PASSWORD: "kgalli"
+            DB_DATABASE: "kgalli"
+            DB_ENGINE: "postgresql"
+        test:
+          ports:
+            - "3010:3000"
+          API_URL: "http://localhost:3000"
+          DB_HOST: "db"
+          DB_PORT: "9998"
+          DB_USER: "kgalli"
+          DB_PASSWORD: "kgalli"
+          DB_ENGINE: "postgresql"
+
+    - name: "db"
+      repositoryUrl: "github.com/kgalli/postgres"
+      source: "external"
+      environments:
+        default:
+          ports:
+            - "9999:5432"
+          buildOrigin:
+            source:
+              build:
+                context: "./demo"
+                dockerfile: "Dockerfile"
+            registry:
+              image: "postgres"
+          environment:
+            POSTGRES_PASSWORD: "kgalli"
+            POSTGRES_USER: "kgalli"
+        development":
+        test:
+          ports:
+            - "9998:5432"
+
+dbTools:
+  environments:
+    - "development"
+    - "test"
+  defaultEnvironment: "development"
+  dataSources:
+    - name: "api"
+      environments:
+        development:
+          host: "127.0.0.1"
+          port: "9999"
+          user: "kgalli"
+          password: "kgalli"
+          database: "kgalli"
+          engine: "postgresql"
+          readonly: false
