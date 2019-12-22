@@ -8,3 +8,4 @@
 node_modules
 
 test/config/test-projects-config.json
+test/config/test-build-origins-config.json

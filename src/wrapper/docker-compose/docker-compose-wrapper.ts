@@ -2,8 +2,8 @@ import {writeFileSync} from 'fs'
 import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
+import {BuildOrigin, ServicesBuildOrigin} from '../../config/build-origins-config'
 import {CodeSource, Service} from '../../config/main-config'
-import {BuildOrigin, ServicesBuildOrigin} from '../../config/project-config'
 
 export default class DockerComposeWrapper {
   shellWrapper: any
@@ -210,7 +210,7 @@ export default class DockerComposeWrapper {
 
     services.forEach(s => {
       const defaultServiceConfig = s.environments.default
-      const runFromSrc = this.servicesBuildOrigin[s.name] === BuildOrigin.SOURCE
+      const runFromSrc = this.servicesBuildOrigin[s.name][environment] === BuildOrigin.SOURCE
       const buildOrigin = runFromSrc ? defaultServiceConfig.buildOrigin.source : defaultServiceConfig.buildOrigin.registry
       const environmentServiceConfig: any = s.environments[environment]
 

@@ -1,8 +1,9 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../../base-command'
+import {BuildOrigin, BuildOriginsConfig} from '../../config/build-origins-config'
 import ConfigUtils from '../../config/config-utils'
-import ProjectConfig, {BuildOrigin, ServicesBuildOrigin} from '../../config/project-config'
+import ProjectConfig from '../../config/project-config'
 
 export default class ProjectAdd extends BaseCommand {
   static description = 'add project'
@@ -44,20 +45,26 @@ export default class ProjectAdd extends BaseCommand {
       this.error(`Working directory could not be found at ${workDir}`)
     }
 
-    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
-    const servicesBuildOrigin = {} as ServicesBuildOrigin
-
-    mainConfig.compose.services.forEach(s => servicesBuildOrigin[s.name] = BuildOrigin.REGISTRY)
-
     const projectConfig = {
       name: projectName,
       workDir,
       mainConfigLocation,
-      defaultBuildOrigin: BuildOrigin.REGISTRY,
-      servicesBuildOrigin
     } as ProjectConfig
 
     projectsConfig.projects.push(projectConfig)
     ConfigUtils.projectsConfigSave(projectsConfig)
+
+    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
+    const buildOriginsConfig = {} as BuildOriginsConfig
+
+    buildOriginsConfig[projectName] = {}
+    mainConfig.compose.services.forEach(service => {
+      buildOriginsConfig[projectName][service.name] = {}
+      mainConfig.compose.environments.forEach(environment =>
+        buildOriginsConfig[projectName][service.name][environment] = BuildOrigin.REGISTRY
+      )
+    })
+
+    ConfigUtils.buildOriginsConfigSave(buildOriginsConfig)
   }
 }

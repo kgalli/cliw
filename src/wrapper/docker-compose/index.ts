@@ -8,9 +8,9 @@ export default abstract class extends BaseCommand {
   dockerCompose(dryRun = false): DockerComposeWrapper {
     const mainConfig = ConfigUtils.mainConfigLoadDefault()
     const composeConfig = mainConfig.compose
-    // TODO find a better way to store and retrieve buildOrigin
     const projectConfig = ConfigUtils.projectsConfigLoadDefault()
-    const servicesBuildOrigin = projectConfig.servicesBuildOrigin
+    const buildOriginsConfig = ConfigUtils.buildOriginConfigLoad()
+    const servicesBuildOrigin = buildOriginsConfig[projectConfig.name]
 
     return new DockerComposeWrapper(
       projectConfig.name,
