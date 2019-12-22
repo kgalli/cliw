@@ -2,6 +2,7 @@ import {flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 
 import BaseCommand from '../../../base-command'
+import {BuildOrigin} from '../../../config/build-origins-config'
 import ConfigUtils from '../../../config/config-utils'
 import {environmentFlag, servicesFlag} from '../../../wrapper/docker-compose/flags'
 
@@ -16,14 +17,16 @@ export default class BuildOriginList extends BaseCommand {
 
   async run() {
     const {flags} = this.parse(BuildOriginList)
+    const environment = flags.environment
     const defaultProjectConfig = ConfigUtils.projectsConfigLoadDefault()
+    const buildOriginsConfig = ConfigUtils.buildOriginConfigLoad()
 
     const mainConfig = ConfigUtils.mainConfigLoad(defaultProjectConfig.mainConfigLocation)
     const services = mainConfig.compose.services
     const data = [] as any
     services.forEach(s => {
       if (!flags.services || flags.services.includes(s.name)) {
-        data.push({name: s.name, buildOrigin: (defaultProjectConfig.servicesBuildOrigin[s.name] || defaultProjectConfig.defaultBuildOrigin).toUpperCase()})
+        data.push({name: s.name, buildOrigin: (buildOriginsConfig[defaultProjectConfig.name][s.name][environment] || BuildOrigin.REGISTRY).toUpperCase()})
       }
     })
 

@@ -2,8 +2,10 @@ import {Command, flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
+import {BuildOrigin, BuildOriginsConfig} from '../config/build-origins-config'
 import ConfigUtils from '../config/config-utils'
-import ProjectConfig, {BuildOrigin, ServicesBuildOrigin} from '../config/project-config'
+import ProjectConfig from '../config/project-config'
+import ProjectsConfig from '../config/projects-config'
 
 export default class Init extends Command {
   static description = `initialize projects config
@@ -38,10 +40,9 @@ identifier (project name) at: ~/.config/projects-config.json.
       return
     }
 
-    let projectName = flags.name
-    if (isEmpty(flags.name)) {
-      projectName = await cli.prompt('Please enter the project name')
-    }
+    const projectName = isEmpty(flags.name)
+      ? await cli.prompt('Please enter the project name')
+      : flags.name
 
     let mainConfigLocation = flags.config
     if (isEmpty(flags.config)) {
@@ -60,23 +61,31 @@ identifier (project name) at: ~/.config/projects-config.json.
     if (!ConfigUtils.exists(workDirLocation as string)) {
       this.error('Working directory could not be found with at the provided location')
     }
-    // TODO validate main config
-    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
-    const servicesBuildOrigin = {} as ServicesBuildOrigin
-
-    mainConfig.compose.services.forEach(s => servicesBuildOrigin[s.name] = BuildOrigin.REGISTRY)
 
     const projectConfig = {
       name: projectName,
       workDir: workDirLocation,
       mainConfigLocation,
-      defaultBuildOrigin: BuildOrigin.REGISTRY,
-      servicesBuildOrigin
     } as ProjectConfig
 
-    ConfigUtils.projectsConfigSave({
-      default: projectConfig.name,
+    const projectsConfig = {
+      default: projectName,
       projects: [projectConfig]
+    } as ProjectsConfig
+
+    ConfigUtils.projectsConfigSave(projectsConfig)
+
+    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
+    const buildOriginsConfig = {} as BuildOriginsConfig
+
+    buildOriginsConfig[projectName] = {}
+    mainConfig.compose.services.forEach(s => {
+      buildOriginsConfig[projectName][s.name] = {}
+      mainConfig.compose.environments.forEach(
+        environment => buildOriginsConfig[projectName][s.name][environment] = BuildOrigin.REGISTRY
+      )
     })
+
+    ConfigUtils.buildOriginsConfigSave(buildOriginsConfig)
   }
 }

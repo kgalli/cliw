@@ -3,20 +3,29 @@ import {safeLoad} from 'js-yaml'
 import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
+import {BuildOriginsConfig, ServicesBuildOrigin} from './build-origins-config'
 import {MainConfig} from './main-config'
 import ProjectConfig from './project-config'
 import ProjectsConfig from './projects-config'
 
-const DEFAULT_PROJECT_CONFIG_FILENAME = 'projects.json'
-const DEFAULT_PROJECT_CONFIG_PATH = `${homedir()}/.config/cliw`
-let DEFAULT_PROJECT_CONFIG_LOCATION = `${DEFAULT_PROJECT_CONFIG_PATH}/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+const DEFAULT_CONFIG_PATH = `${homedir()}/.config/cliw`
 
-if (!existsSync(DEFAULT_PROJECT_CONFIG_PATH)) {
-  mkdirSync(DEFAULT_PROJECT_CONFIG_PATH, {recursive: true, mode: 755})
+const DEFAULT_PROJECT_CONFIG_FILENAME = 'projects.json'
+let DEFAULT_PROJECT_CONFIG_LOCATION = `${DEFAULT_CONFIG_PATH}/${DEFAULT_PROJECT_CONFIG_FILENAME}`
+
+const DEFAULT_BUILD_ORIGIN_CONFIG_FILENAME = 'build-origins.json'
+let DEFAULT_BUILD_ORIGINS_CONFIG_LOCATION = `${DEFAULT_CONFIG_PATH}/${DEFAULT_BUILD_ORIGIN_CONFIG_FILENAME}`
+
+if (!existsSync(DEFAULT_CONFIG_PATH)) {
+  mkdirSync(DEFAULT_CONFIG_PATH, {recursive: true, mode: 755})
 }
 
 if (!isEmpty(process.env.CLIW_PROJECT_CONFIG_LOCATION)) {
   DEFAULT_PROJECT_CONFIG_LOCATION = process.env.CLIW_PROJECT_CONFIG_LOCATION as string
+}
+
+if (!isEmpty(process.env.CLIW_BUILD_ORIGINS_CONFIG_LOCATION)) {
+  DEFAULT_BUILD_ORIGINS_CONFIG_LOCATION = process.env.CLIW_BUILD_ORIGINS_CONFIG_LOCATION as string
 }
 
 // tslint:disable-next-line no-unnecessary-class
@@ -49,6 +58,21 @@ export default class ConfigUtils {
     return ConfigUtils.delete(projectsConfigLocation)
   }
 
+  static buildOriginConfigLoadDefault(buildOriginConfigLocation: string = DEFAULT_BUILD_ORIGINS_CONFIG_LOCATION): ServicesBuildOrigin {
+    const projectConfig = ConfigUtils.projectsConfigLoadDefault()
+    const buildOriginConfig = ConfigUtils.buildOriginConfigLoad(buildOriginConfigLocation)
+
+    return buildOriginConfig[projectConfig.name]
+  }
+
+  static buildOriginConfigLoad(buildOriginConfigLocation: string = DEFAULT_BUILD_ORIGINS_CONFIG_LOCATION): BuildOriginsConfig {
+    return ConfigUtils.load(buildOriginConfigLocation, 'BuildOriginsConfig') as BuildOriginsConfig
+  }
+
+  static buildOriginsConfigSave(buildOriginsConfig: BuildOriginsConfig, buildOriginsConfigLocation: string = DEFAULT_BUILD_ORIGINS_CONFIG_LOCATION) {
+    return ConfigUtils.writeJson(buildOriginsConfig, buildOriginsConfigLocation)
+  }
+
   static mainConfigExists(mainConfigLocation: string) {
     return ConfigUtils.exists(mainConfigLocation)
   }
@@ -72,7 +96,7 @@ export default class ConfigUtils {
     return existsSync(fileLocation)
   }
 
-  private static load(fileLocation: string, configName: string): ProjectsConfig | MainConfig {
+  private static load(fileLocation: string, configName: string): ProjectsConfig | MainConfig | BuildOriginsConfig {
     if (existsSync(fileLocation)) {
       if (fileLocation.endsWith('yaml') || fileLocation.endsWith('yml')) {
         return safeLoad(readFileSync(fileLocation, 'utf8'))
@@ -92,7 +116,7 @@ export default class ConfigUtils {
     throw Error(`File '${fileLocation}' to delete does not exist`)
   }
 
-  private static writeJson(config: MainConfig | ProjectsConfig, fileLocation: string) {
+  private static writeJson(config: MainConfig | ProjectsConfig | BuildOriginsConfig, fileLocation: string) {
     return writeFileSync(fileLocation, JSON.stringify(config))
   }
 
