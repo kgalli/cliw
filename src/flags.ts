@@ -1,18 +1,18 @@
 import {flags} from '@oclif/command'
 
-import ConfigUtils from './config/config-utils'
+import {projectsConfigExists, projectsConfigLoad} from './config'
 
 function projects() {
-  if (ConfigUtils.projectsConfigExists()) {
-    return ConfigUtils.projectsConfigLoad().projects.map(p => p.name)
+  if (projectsConfigExists()) {
+    return projectsConfigLoad().projects.map(p => p.name)
   }
 
   return
 }
 
 function defaultProject(): string | undefined {
-  if (ConfigUtils.projectsConfigExists()) {
-    return ConfigUtils.projectsConfigLoad().default
+  if (projectsConfigExists()) {
+    return projectsConfigLoad().default
   }
 
   return

@@ -1,7 +1,7 @@
 import {cli} from 'cli-ux'
 
 import BaseCommand from '../../base-command'
-import ConfigUtils from '../../config/config-utils'
+import {projectsConfigLoad} from '../../config'
 
 const sortByName = (a: any, b: any) => {
   const nameA = a.name.toUpperCase()
@@ -25,7 +25,7 @@ export default class ProjectList extends BaseCommand {
 
   async run() {
     const {flags} = this.parse(ProjectList)
-    const projectsConfig = ConfigUtils.projectsConfigLoad()
+    const projectsConfig = projectsConfigLoad()
     cli.table(projectsConfig.projects.sort(sortByName), {
       name: {
         minWidth: 7,

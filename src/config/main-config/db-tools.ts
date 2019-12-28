@@ -1,4 +1,11 @@
-export default interface DataSource {
+
+export default interface DbTools {
+  environments: string[]
+  defaultEnvironment: string
+  dataSources: DataSource[]
+}
+
+export interface DataSource {
   name: string
   environments: {
     [key: string]: DataSourceParams

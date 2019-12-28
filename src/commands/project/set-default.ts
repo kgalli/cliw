@@ -1,7 +1,7 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../../base-command'
-import ConfigUtils from '../../config/config-utils'
+import {projectsConfigSetDefault} from '../../config'
 
 export default class ProjectSetDefault extends BaseCommand {
   static description = 'set default project'
@@ -20,17 +20,8 @@ export default class ProjectSetDefault extends BaseCommand {
 
   async run() {
     const {args} = this.parse(ProjectSetDefault)
-    const projectName = args.project
-    const projectsConfig = ConfigUtils.projectsConfigLoad()
-    const projectExists = projectsConfig.projects
-      .map(project => project.name)
-      .includes(projectName)
+    const project = args.project
 
-    if (!projectExists) {
-      return this.error(`Project with name ${projectName} does not exist. Default project did not change.`)
-    }
-
-    projectsConfig.default = projectName
-    ConfigUtils.projectsConfigSave(projectsConfig)
+    projectsConfigSetDefault(project)
   }
 }

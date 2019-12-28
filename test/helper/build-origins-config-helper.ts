@@ -1,18 +1,21 @@
 import {writeFileSync} from 'fs'
 
-import {BuildOrigin, BuildOriginsConfig} from '../../src/config/build-origins-config'
+import {BuildOrigin, ProjectBuildOriginConfig} from '../../src/config/build-origins-config'
 
 export function writeBuildOriginsConfig(buildOriginsConfigLocation: string,
                                         projectName: string) {
-  const buildOriginsConfig = {} as BuildOriginsConfig
-  const services = ['api', 'web', 'db']
+  const projectBuildOriginConfig = {} as ProjectBuildOriginConfig
+  const serviceNames = ['api', 'web', 'db']
   const environment = 'development'
 
-  buildOriginsConfig[projectName] = {}
-  services.forEach(service => {
-    buildOriginsConfig[projectName][service] = {}
-    buildOriginsConfig[projectName][service][environment] = BuildOrigin.REGISTRY
-  })
+  projectBuildOriginConfig.project = projectName
+  projectBuildOriginConfig.services = serviceNames.map(serviceName => ({
+    service: serviceName,
+    environments: [{
+      buildOrigin: BuildOrigin.REGISTRY,
+      environment
+    }]
+  }))
 
-  writeFileSync(buildOriginsConfigLocation, JSON.stringify(buildOriginsConfig))
+  writeFileSync(buildOriginsConfigLocation, JSON.stringify([projectBuildOriginConfig]))
 }

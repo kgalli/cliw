@@ -1,6 +1,6 @@
 import {writeFileSync} from 'fs'
 
-import ProjectsConfig from '../../src/config/projects-config'
+import {ProjectsConfig} from '../../src/config/projects-config'
 
 export function writeProjectsConfig(projectsConfigLocation: string,
                                     mainConfigLocation: string,

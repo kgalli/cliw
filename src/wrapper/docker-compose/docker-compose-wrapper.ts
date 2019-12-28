@@ -2,8 +2,8 @@ import {writeFileSync} from 'fs'
 import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
-import {BuildOrigin, ServicesBuildOrigin} from '../../config/build-origins-config'
-import {CodeSource, Service} from '../../config/main-config'
+import {BuildOrigin, ServiceBuildOrigin} from '../../config/build-origins-config'
+import {CodeSource, Service} from '../../config/main-config/compose'
 
 export default class DockerComposeWrapper {
   shellWrapper: any
@@ -12,15 +12,15 @@ export default class DockerComposeWrapper {
   projectName: string
   networkName: string
   dryRun: boolean
-  servicesBuildOrigin: ServicesBuildOrigin
+  serviceBuildOrigins: ServiceBuildOrigin[]
 
-  constructor(projectName: string, networkName: string, workDir: string, services: Service[], servicesBuildOrigin: ServicesBuildOrigin, dryRun: boolean, shellWrapper: any) {
+  constructor(projectName: string, networkName: string, workDir: string, services: Service[], serviceBuildOrigins: ServiceBuildOrigin[], dryRun: boolean, shellWrapper: any) {
     this.projectName = projectName
     this.networkName = networkName
     this.workDir = workDir
     this.services = services
     this.dryRun = dryRun
-    this.servicesBuildOrigin = servicesBuildOrigin
+    this.serviceBuildOrigins = serviceBuildOrigins
     this.shellWrapper = shellWrapper
   }
 
@@ -183,7 +183,7 @@ export default class DockerComposeWrapper {
     const dcCmd = this.constructDockerComposeCmd(this.projectName, environment, configFile, this.sanitizeCmd(cmd))
     const dcConfig = this.constructDockerComposeConfig(this.projectName, this.networkName, environment, this.services)
 
-    if (this.dryRun === false) {
+    if (!this.dryRun) {
       this.writeConfigFile(configFile, dcConfig)
     }
     this.shellWrapper.run(dcCmd)
@@ -205,12 +205,24 @@ export default class DockerComposeWrapper {
     return `${workDir}/docker-compose.${environment}.yaml`
   }
 
+  private extractBuildOrigin(service: string, environment: string): BuildOrigin {
+    const serviceBuildOrigin = this.serviceBuildOrigins.find(s => s.service === service)
+    const defaultEnvironmentBuildOrigin = {environment, buildOrigin: BuildOrigin.REGISTRY}
+    const environmentBuildOrigin = serviceBuildOrigin
+      ? serviceBuildOrigin.environments.find(e => e.environment === environment)
+      : defaultEnvironmentBuildOrigin
+
+    return environmentBuildOrigin
+      ? environmentBuildOrigin.buildOrigin
+      : BuildOrigin.REGISTRY
+  }
+
   private constructDockerComposeConfig(projectName: string, networkName: string, environment: string, services: Service[]): any {
     const servicesObject: any = {}
 
     services.forEach(s => {
       const defaultServiceConfig = s.environments.default
-      const runFromSrc = this.servicesBuildOrigin[s.name][environment] === BuildOrigin.SOURCE
+      const runFromSrc = this.extractBuildOrigin(s.name, environment) === BuildOrigin.SOURCE
       const buildOrigin = runFromSrc ? defaultServiceConfig.buildOrigin.source : defaultServiceConfig.buildOrigin.registry
       const environmentServiceConfig: any = s.environments[environment]
 

@@ -1,23 +1,27 @@
 import BaseCommand from '../../base-command'
-import ConfigUtils from '../../config/config-utils'
+import {
+  mainConfigLoad,
+  projectsBuildOriginConfigLoadDefault,
+  projectsConfigLoadDefault
+} from '../../config'
 import BashWrapper from '../bash'
 
 import DockerComposeWrapper from './docker-compose-wrapper'
 
 export default abstract class extends BaseCommand {
   dockerCompose(dryRun = false): DockerComposeWrapper {
-    const mainConfig = ConfigUtils.mainConfigLoadDefault()
+    const projectConfig = projectsConfigLoadDefault()
+    const mainConfig = mainConfigLoad(projectConfig.mainConfigLocation)
     const composeConfig = mainConfig.compose
-    const projectConfig = ConfigUtils.projectsConfigLoadDefault()
-    const buildOriginsConfig = ConfigUtils.buildOriginConfigLoad()
-    const servicesBuildOrigin = buildOriginsConfig[projectConfig.name]
+    const projectBuildOriginConfig = projectsBuildOriginConfigLoadDefault()
+    const serviceBuildOrigins = projectBuildOriginConfig.services
 
     return new DockerComposeWrapper(
       projectConfig.name,
       composeConfig.networkName,
       projectConfig.workDir,
       composeConfig.services,
-      servicesBuildOrigin,
+      serviceBuildOrigins,
       dryRun,
       new BashWrapper({...BashWrapper.defaultOptions(), dryRun})
     )

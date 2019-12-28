@@ -1,18 +1,18 @@
 import {flags} from '@oclif/command'
 
-import ConfigUtils from '../../config/config-utils'
+import {mainConfigLoadDefault, projectsConfigExists} from '../../config'
 
 function environments(): string[] {
-  if (ConfigUtils.projectsConfigExists()) {
-    return ConfigUtils.mainConfigLoadDefault().compose.environments
+  if (projectsConfigExists()) {
+    return mainConfigLoadDefault().compose.environments
   }
 
   return []
 }
 
 function defaultEnvironment(): string | undefined {
-  if (ConfigUtils.projectsConfigExists()) {
-    return ConfigUtils.mainConfigLoadDefault().compose.defaultEnvironment
+  if (projectsConfigExists()) {
+    return mainConfigLoadDefault().compose.defaultEnvironment
   }
 
   return

@@ -2,7 +2,7 @@ import {address} from 'ip'
 import {isEmpty} from 'lodash'
 
 import AwsKmsClient from '../../aws-kms'
-import DataSource, {DataSourceParams} from '../../config/data-source'
+import {DataSource, DataSourceParams} from '../../config/main-config/db-tools'
 
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'

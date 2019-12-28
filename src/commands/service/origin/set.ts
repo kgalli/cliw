@@ -1,8 +1,8 @@
 import {flags} from '@oclif/command'
 
 import BaseCommand from '../../../base-command'
+import {projectsBuildOriginConfigUpdateServiceBuildOrigin} from '../../../config'
 import {BuildOrigin} from '../../../config/build-origins-config'
-import ConfigUtils from '../../../config/config-utils'
 import {environmentFlag} from '../../../wrapper/docker-compose/flags'
 
 export default class BuildOriginSet extends BaseCommand {
@@ -33,13 +33,12 @@ export default class BuildOriginSet extends BaseCommand {
 
   async run() {
     const {args, flags} = this.parse(BuildOriginSet)
-    const serviceName = args.service
+    const service = args.service
     const environment = flags.environment
-    const buildOrigin = args.value === BuildOrigin.REGISTRY.toString() ? BuildOrigin.REGISTRY : BuildOrigin.SOURCE
-    const defaultProjectConfig = ConfigUtils.projectsConfigLoadDefault()
-    const buildOriginsConfig = ConfigUtils.buildOriginConfigLoad()
+    const buildOrigin = args.value === BuildOrigin.REGISTRY.toString()
+      ? BuildOrigin.REGISTRY
+      : BuildOrigin.SOURCE
 
-    buildOriginsConfig[defaultProjectConfig.name][serviceName][environment] = buildOrigin
-    ConfigUtils.buildOriginsConfigSave(buildOriginsConfig)
+    projectsBuildOriginConfigUpdateServiceBuildOrigin(service, environment, buildOrigin)
   }
 }
