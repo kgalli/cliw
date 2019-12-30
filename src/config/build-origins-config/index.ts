@@ -24,7 +24,7 @@ better maintenance even though more complex
   }
 ]
 */
-import FileUtils from '../file-utils'
+import FileUtils from '../../utils/file-utils'
 
 export type ProjectsBuildOriginConfig = ProjectBuildOriginConfig[]
 

@@ -1,4 +1,3 @@
-
 export default interface DbTools {
   environments: string[]
   defaultEnvironment: string

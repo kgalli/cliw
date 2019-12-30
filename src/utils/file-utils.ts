@@ -1,15 +1,11 @@
 import {existsSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
 import {safeLoad} from 'js-yaml'
 
-import {ProjectsBuildOriginConfig} from './build-origins-config'
-import {MainConfig} from './main-config'
-import {ProjectsConfig} from './projects-config'
-
 function exists(fileLocation: string): boolean {
   return existsSync(fileLocation)
 }
 
-function load(fileLocation: string, configName: string): MainConfig | ProjectsConfig | ProjectsBuildOriginConfig {
+function load(fileLocation: string, configName: string): any {
   if (existsSync(fileLocation)) {
     if (fileLocation.endsWith('yaml') || fileLocation.endsWith('yml')) {
       return safeLoad(readFileSync(fileLocation, 'utf8'))
@@ -21,7 +17,7 @@ function load(fileLocation: string, configName: string): MainConfig | ProjectsCo
   throw Error(`${configName} at '${fileLocation}' does not exist`)
 }
 
-function writeJson(config: MainConfig | ProjectsConfig | ProjectsBuildOriginConfig, fileLocation: string) {
+function writeJson(config: any, fileLocation: string) {
   return writeFileSync(fileLocation, JSON.stringify(config))
 }
 

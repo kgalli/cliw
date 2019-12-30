@@ -3,8 +3,9 @@ import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
 import ProjectsBuildOriginConfigHelper, {BuildOrigin} from './build-origins-config/index'
+import FileRepository from './file-repository'
 import {loadMainConfig} from './main-config'
-import ProjectsConfigHelper, {ProjectConfig, ProjectsConfig} from './projects-config/index'
+import ProjectsConfigHelper, {ProjectsConfig} from './projects-config/index'
 
 const DEFAULT_CONFIG_PATH = `${homedir()}/.config/cliw`
 
@@ -18,7 +19,8 @@ const projectsConfigLocation = isEmpty(process.env.CLIW_PROJECTS_CONFIG_LOCATION
   ? DEFAULT_PROJECTS_CONFIG_LOCATION
   : process.env.CLIW_PROJECTS_CONFIG_LOCATION as string
 
-const projectsConfigHelper = new ProjectsConfigHelper(projectsConfigLocation)
+const projectsConfigRepository = new FileRepository(projectsConfigLocation, 'ProjectsConfig')
+const projectsConfigHelper = new ProjectsConfigHelper(projectsConfigRepository)
 
 const DEFAULT_PROJECTS_BUILD_ORIGIN_CONFIG_FILENAME = 'projects-build-origins.json'
 const DEFAULT_PROJECTS_BUILD_ORIGINS_CONFIG_LOCATION = `${DEFAULT_CONFIG_PATH}/${DEFAULT_PROJECTS_BUILD_ORIGIN_CONFIG_FILENAME}`
@@ -48,8 +50,8 @@ export function projectsConfigExists() {
   return projectsConfigHelper.exists()
 }
 
-export function projectsConfigAddProject(project: string, mainConfigLocation: string, workDirLocation: string): ProjectConfig {
-  const projectConfig = projectsConfigHelper.addProject(project, workDirLocation, mainConfigLocation)
+export function projectsConfigAddProject(project: string, mainConfigLocation: string, workDirLocation: string): ProjectsConfig {
+  const projectsConfig = projectsConfigHelper.addProject(project, workDirLocation, mainConfigLocation)
 
   const mainConfig = loadMainConfig(mainConfigLocation)
   const services = mainConfig.compose.services.map(s => s.name)
@@ -57,7 +59,7 @@ export function projectsConfigAddProject(project: string, mainConfigLocation: st
 
   projectsBuildOriginConfigHelper.addProjectBuildOriginConfig(project, services, environments)
 
-  return projectConfig
+  return projectsConfig
 }
 
 export function projectsConfigRemoveProject(project: string) {

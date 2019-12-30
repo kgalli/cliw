@@ -1,4 +1,4 @@
-import FileUtils from '../file-utils'
+import FileRepository from '../file-repository'
 
 export interface ProjectsConfig {
   default: string,
@@ -12,26 +12,26 @@ export interface ProjectConfig {
 }
 
 export default class ProjectsConfigHelper {
-  projectsConfigLocation: string
-  configName: string
+  fileRepository: FileRepository
 
-  constructor(projectsConfigLocation: string) {
-    this.projectsConfigLocation = projectsConfigLocation
-    this.configName = 'ProjectsConfig'
+  constructor(fileRepository: FileRepository) {
+    this.fileRepository = fileRepository
   }
 
   initialize(project: string, workDirLocation: string, mainConfigLocation: string): ProjectsConfig {
+    const projectConfig = this.constructProjectConfig(project, workDirLocation, mainConfigLocation)
+
+    this.validate(projectConfig)
+
     const projectsConfig = {
       default: project,
-      projects: [this.constructProjectConfig(project, workDirLocation, mainConfigLocation)]
+      projects: [projectConfig]
     } as ProjectsConfig
 
-    this.save(projectsConfig)
-
-    return projectsConfig
+    return this.save(projectsConfig)
   }
 
-  setDefaultProject(project: string): void {
+  setDefaultProject(project: string): ProjectsConfig {
     const projectsConfig = this.load()
     const projects = projectsConfig.projects.map(project => project.name)
 
@@ -40,18 +40,18 @@ export default class ProjectsConfigHelper {
     }
 
     projectsConfig.default = project
-    this.save(projectsConfig)
+
+    return this.save(projectsConfig)
   }
 
-  addProject(project: string, workDirLocation: string, mainConfigLocation: string): ProjectConfig {
+  addProject(project: string, workDirLocation: string, mainConfigLocation: string): ProjectsConfig {
     const projectsConfig = this.load()
     const projectConfig = this.constructProjectConfig(project, workDirLocation, mainConfigLocation)
 
     this.validate(projectConfig)
     projectsConfig.projects.push(projectConfig)
-    this.save(projectsConfig)
 
-    return projectConfig
+    return this.save(projectsConfig)
   }
 
   removeProject(project: string) {
@@ -73,15 +73,15 @@ export default class ProjectsConfigHelper {
       }
     }
 
-    throw new Error(`Project ${project} could not be found in ${this.projectsConfigLocation}`)
+    throw new Error(`Project ${project} could not be found in ${this.fileRepository.fileLocation}`)
   }
 
   exists() {
-    return FileUtils.exists(this.projectsConfigLocation)
+    return this.fileRepository.exists()
   }
 
   load(): ProjectsConfig {
-    return FileUtils.load(this.projectsConfigLocation, this.configName) as ProjectsConfig
+    return this.fileRepository.load() as ProjectsConfig
   }
 
   loadDefaultProjectConfig(): ProjectConfig {
@@ -91,15 +91,15 @@ export default class ProjectsConfigHelper {
   }
 
   delete() {
-    return FileUtils.remove(this.projectsConfigLocation)
+    this.fileRepository.remove()
   }
 
   private validate(projectConfig: ProjectConfig) {
-    if (!FileUtils.exists(projectConfig.mainConfigLocation)) {
-      throw new Error(`File at location ${projectConfig.mainConfigLocation} does not exist`)
+    if (!FileRepository.exists(projectConfig.mainConfigLocation)) {
+      throw new Error(`Configuration file '${projectConfig.mainConfigLocation}' could not be found`)
     }
-    if (!FileUtils.exists(projectConfig.workDir)) {
-      throw new Error('Working directory could not be found with at the provided location')
+    if (!FileRepository.exists(projectConfig.workDir)) {
+      throw new Error(`Working directory '${projectConfig.workDir}' does not exist`)
     }
   }
 
@@ -111,8 +111,10 @@ export default class ProjectsConfigHelper {
     } as ProjectConfig
   }
 
-  private save(projectsConfig: ProjectsConfig): void {
-    FileUtils.writeJson(projectsConfig, this.projectsConfigLocation)
+  private save(projectsConfig: ProjectsConfig): ProjectsConfig {
+    this.fileRepository.writeJson(projectsConfig)
+
+    return projectsConfig
   }
 
   private extractProjectConfig(projectsConfig: ProjectsConfig, name: string): ProjectConfig {
@@ -122,6 +124,6 @@ export default class ProjectsConfigHelper {
       return projectConfig
     }
 
-    throw new Error(`Project ${name} could not be found in ${this.projectsConfigLocation}`)
+    throw new Error(`Project ${name} could not be found in ${this.fileRepository.fileLocation}`)
   }
 }

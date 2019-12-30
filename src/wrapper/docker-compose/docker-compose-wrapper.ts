@@ -3,7 +3,8 @@ import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
 import {BuildOrigin, ServiceBuildOrigin} from '../../config/build-origins-config'
-import {CodeSource, Service} from '../../config/main-config/compose'
+
+import {CodeSource, Service} from './config/compose'
 
 export default class DockerComposeWrapper {
   shellWrapper: any

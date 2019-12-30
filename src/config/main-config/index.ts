@@ -1,7 +1,6 @@
-import FileUtils from '../file-utils'
-
-import Compose from './compose'
-import DbTools from './db-tools'
+import FileUtils from '../../utils/file-utils'
+import DbTools from '../../wrapper/db-tools/config/db-tools'
+import Compose from '../../wrapper/docker-compose/config/compose'
 
 export interface MainConfig {
   compose: Compose
