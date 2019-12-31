@@ -1,11 +1,11 @@
 import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
-import DockerComposeCommand from '../../wrapper/docker-compose'
-import {serviceArg} from '../../wrapper/docker-compose/args'
-import {environmentFlag} from '../../wrapper/docker-compose/flags'
+import ServiceCommand from '../../wrapper/service'
+import {serviceArg} from '../../wrapper/service/args'
+import {environmentFlag} from '../../wrapper/service/flags'
 
-export default class Run extends DockerComposeCommand {
+export default class Run extends ServiceCommand {
   static description = 'run a one-off command on a service'
 
   static flags = {
@@ -34,7 +34,7 @@ export default class Run extends DockerComposeCommand {
 
     try {
       this
-        .dockerCompose(dryRun)
+        .service(dryRun)
         .run({}, service, environment, cmd)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)

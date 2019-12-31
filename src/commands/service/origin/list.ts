@@ -1,38 +1,34 @@
 import {flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 
-import BaseCommand from '../../../base-command'
-import {
-  extractBuildOrigin,
-  mainConfigLoad,
-  projectsBuildOriginConfigLoadDefault,
-  projectsConfigLoadDefault
-} from '../../../config'
-import {environmentFlag, servicesFlag} from '../../../wrapper/docker-compose/flags'
+import {dryRunFlag} from '../../../flags'
+import DockerComposeCommand from '../../../wrapper/service'
+import {environmentFlag, servicesFlag} from '../../../wrapper/service/flags'
 
-export default class BuildOriginList extends BaseCommand {
+export default class BuildOriginList extends DockerComposeCommand {
   static description = 'list service(s) origin SOURCE|REGISTRY'
 
   static flags = {
     help: flags.help({char: 'h'}),
     services: {...servicesFlag, required: false},
+    'dry-run': dryRunFlag,
     environment: environmentFlag,
   }
 
   async run() {
     const {flags} = this.parse(BuildOriginList)
     const environment = flags.environment
-    const defaultProjectConfig = projectsConfigLoadDefault()
-    const buildOriginsConfig = projectsBuildOriginConfigLoadDefault()
+    const dryRun = flags['dry-run']
+    const serviceNames = this
+      .service(dryRun)
+      .serviceNames()
 
-    const mainConfig = mainConfigLoad(defaultProjectConfig.mainConfigLocation)
-    const services = mainConfig.compose.services
     const data = [] as any
-    services.forEach(s => {
-      const buildOrigin = extractBuildOrigin(buildOriginsConfig.services, s.name, environment)
+    serviceNames.forEach(serviceName => {
+      const buildOrigin = this.service().buildOrigin(serviceName, environment)
 
-      if (!flags.services || flags.services.includes(s.name)) {
-        data.push({name: s.name, buildOrigin: (buildOrigin).toUpperCase()})
+      if (!flags.services || flags.services.includes(serviceName)) {
+        data.push({name: serviceName, buildOrigin: (buildOrigin).toUpperCase()})
       }
     })
 

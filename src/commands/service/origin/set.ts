@@ -1,16 +1,17 @@
 import {flags} from '@oclif/command'
 
-import BaseCommand from '../../../base-command'
-import {projectsBuildOriginConfigUpdateServiceBuildOrigin} from '../../../config'
-import {BuildOrigin} from '../../../config/build-origins-config'
-import {environmentFlag} from '../../../wrapper/docker-compose/flags'
+import {dryRunFlag} from '../../../flags'
+import DockerComposeCommand from '../../../wrapper/service'
+import {BuildOrigin} from '../../../wrapper/service/config/build-origins-config'
+import {environmentFlag} from '../../../wrapper/service/flags'
 
-export default class BuildOriginSet extends BaseCommand {
+export default class BuildOriginSet extends DockerComposeCommand {
   static description = 'set service build origin SOURCE|REGISTRY'
 
   static flags = {
-    help: flags.help({char: 'h'}),
     environment: environmentFlag,
+    'dry-run': dryRunFlag,
+    help: flags.help({char: 'h'})
   }
 
   static args = [
@@ -33,12 +34,19 @@ export default class BuildOriginSet extends BaseCommand {
 
   async run() {
     const {args, flags} = this.parse(BuildOriginSet)
+    const dryRun = flags['dry-run']
     const service = args.service
     const environment = flags.environment
     const buildOrigin = args.value === BuildOrigin.REGISTRY.toString()
       ? BuildOrigin.REGISTRY
       : BuildOrigin.SOURCE
 
-    projectsBuildOriginConfigUpdateServiceBuildOrigin(service, environment, buildOrigin)
+    try {
+      this
+        .service(dryRun)
+        .buildOriginSet(service, environment, buildOrigin)
+    } catch (e) {
+      this.error(`${e.message}\nSee more help with --help`, e)
+    }
   }
 }

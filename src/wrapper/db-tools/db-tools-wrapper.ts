@@ -3,7 +3,7 @@ import {isEmpty} from 'lodash'
 
 import AwsKmsClient from '../../aws-kms'
 
-import {DataSource, DataSourceParams} from './config/db-tools'
+import {DataSource, DataSourceParams} from './config/index'
 import ConnectionParams from './connection-params'
 import DockerOptions from './docker-options'
 import PgdumpOptions from './pgdump-options'

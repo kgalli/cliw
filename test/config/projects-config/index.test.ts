@@ -30,6 +30,7 @@ describe('ProjectsConfigHelper', () => {
 
     const loadStub = sinon.stub(fileRepository, 'load')
 
+    sinon.stub(fileRepository, 'writeJson')
     projectsConfig = fakeProjectsConfig()
     loadStub.returns(projectsConfig)
 

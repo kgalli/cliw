@@ -17,6 +17,18 @@ function load(fileLocation: string, configName: string): any {
   throw Error(`${configName} at '${fileLocation}' does not exist`)
 }
 
+function loadWithFallback(fileLocation: string, fallback: any): any {
+  if (existsSync(fileLocation)) {
+    if (fileLocation.endsWith('yaml') || fileLocation.endsWith('yml')) {
+      return safeLoad(readFileSync(fileLocation, 'utf8'))
+    }
+
+    return JSON.parse(readFileSync(fileLocation, 'utf8').toString())
+  }
+
+  return fallback
+}
+
 function writeJson(config: any, fileLocation: string) {
   return writeFileSync(fileLocation, JSON.stringify(config))
 }
@@ -32,6 +44,7 @@ function remove(fileLocation: string) {
 export default {
   exists,
   load,
+  loadWithFallback,
   writeJson,
   remove
 }

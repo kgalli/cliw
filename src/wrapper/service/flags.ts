@@ -1,10 +1,18 @@
 import {flags} from '@oclif/command'
 
-import {mainConfigLoadDefault, projectsConfigExists} from '../../config'
+import {DEFAULT_CONFIG_PATH, defaultProject, projectsConfigExists} from '../../config'
+
+import ServiceConfigHelper from './config'
+
+const projectConfig = defaultProject
+const serviceConfigHelper = new ServiceConfigHelper(
+  DEFAULT_CONFIG_PATH,
+  projectConfig.mainConfigLocation
+)
 
 function environments(): string[] {
   if (projectsConfigExists()) {
-    return mainConfigLoadDefault().compose.environments
+    return serviceConfigHelper.loadServiceConfig().environments
   }
 
   return []
@@ -12,7 +20,7 @@ function environments(): string[] {
 
 function defaultEnvironment(): string | undefined {
   if (projectsConfigExists()) {
-    return mainConfigLoadDefault().compose.defaultEnvironment
+    return serviceConfigHelper.loadServiceConfig().defaultEnvironment
   }
 
   return

@@ -1,10 +1,12 @@
 import {flags} from '@oclif/command'
 
-import {mainConfigLoadDefault, projectsConfigExists} from '../../config'
+import {defaultProject, projectsConfigExists} from '../../config'
+
+import {loadDbToolsConfig} from './config'
 
 function environments(): string[] {
   if (projectsConfigExists()) {
-    return mainConfigLoadDefault().dbTools.environments
+    return loadDbToolsConfig(defaultProject.mainConfigLocation).environments
   }
 
   return []
@@ -12,7 +14,7 @@ function environments(): string[] {
 
 function defaultEnvironment(): string | undefined {
   if (projectsConfigExists()) {
-    return mainConfigLoadDefault().dbTools.defaultEnvironment
+    return loadDbToolsConfig(defaultProject.mainConfigLocation).defaultEnvironment
   }
 
   return

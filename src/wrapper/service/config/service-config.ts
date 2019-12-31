@@ -1,5 +1,4 @@
-export default interface Compose {
-  projectName: string
+export default interface ServiceConfig {
   networkName: string
   environments: string[],
   defaultEnvironment: string

@@ -60,11 +60,9 @@ compose:
         test:
           ports:
             - "9998:5432"
-
 dbTools:
   environments:
     - "development"
-    - "test"
   defaultEnvironment: "development"
   dataSources:
     - name: "api"
