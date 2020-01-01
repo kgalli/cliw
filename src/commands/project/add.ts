@@ -34,6 +34,10 @@ export default class ProjectAdd extends BaseCommand {
     const mainConfigLocation = flags.config
     const workDir = flags['working-directory']
 
-    projectsConfigAddProject(projectName, mainConfigLocation, workDir)
+    try {
+      projectsConfigAddProject(projectName, mainConfigLocation, workDir)
+    } catch (e) {
+      this.error(e.message, e)
+    }
   }
 }

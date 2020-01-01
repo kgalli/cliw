@@ -21,6 +21,10 @@ export default class ProjectRemove extends BaseCommand {
     const {args} = this.parse(ProjectRemove)
     const projectToRemove = args.project
 
-    projectsConfigRemoveProject(projectToRemove)
+    try {
+      projectsConfigRemoveProject(projectToRemove)
+    } catch (e) {
+      this.error(e.message, e)
+    }
   }
 }

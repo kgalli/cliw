@@ -22,6 +22,10 @@ export default class ProjectSetDefault extends BaseCommand {
     const {args} = this.parse(ProjectSetDefault)
     const project = args.project
 
-    projectsConfigSetDefault(project)
+    try {
+      projectsConfigSetDefault(project)
+    } catch (e) {
+      this.error(e.message, e)
+    }
   }
 }
