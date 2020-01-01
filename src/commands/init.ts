@@ -49,6 +49,10 @@ identifier (project name) at: ~/.config/projects-config.json.
       ? await cli.prompt('Please enter the absolute path to your working directory')
       : flags['working-directory']
 
-    projectsConfigInitialize(projectName, mainConfigLocation, workDirLocation)
+    try {
+      projectsConfigInitialize(projectName, mainConfigLocation, workDirLocation)
+    } catch (e) {
+      this.error(e.message, e)
+    }
   }
 }

@@ -30,7 +30,7 @@ if (projectsConfigHelper.exists()) {
 }
 
 export function projectsConfigInitialize(project: string, mainConfigLocation: string, workDirLocation: string): ProjectsConfig {
-  return projectsConfigHelper.initialize(project, mainConfigLocation, workDirLocation)
+  return projectsConfigHelper.initialize(project, workDirLocation, mainConfigLocation)
 }
 
 export function projectsConfigLoad(): ProjectsConfig {
