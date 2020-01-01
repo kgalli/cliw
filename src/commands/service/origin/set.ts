@@ -1,11 +1,11 @@
 import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../../flags'
-import DockerComposeCommand from '../../../wrapper/service'
+import ServiceCommand from '../../../wrapper/service'
 import {BuildOrigin} from '../../../wrapper/service/config/build-origins-config'
 import {environmentFlag} from '../../../wrapper/service/flags'
 
-export default class BuildOriginSet extends DockerComposeCommand {
+export default class BuildOriginSet extends ServiceCommand {
   static description = 'set service build origin SOURCE|REGISTRY'
 
   static flags = {
