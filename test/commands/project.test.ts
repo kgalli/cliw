@@ -1,13 +1,20 @@
 import {expect, test} from '@oclif/test'
 
-import {env, TEST_MAIN_CONFIG_LOCATION, TEST_WORK_DIR_LOCATION, writeProjectsAndBuildOriginsConfig} from '../helper/test-helper'
+import {
+  env, removeProjectsConfigDefault,
+  TEST_MAIN_CONFIG_LOCATION,
+  TEST_WORK_DIR_LOCATION,
+  writeProjectsConfigDefault
+} from '../helper/test-helper'
 
 describe('project', () => {
+  beforeEach(() => writeProjectsConfigDefault())
+  afterEach(() => removeProjectsConfigDefault())
+
   context('project:list', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsAndBuildOriginsConfig())
       .command(['project:list', '--csv'])
       .it('lists projects', ctx => {
         const csvOutput = ctx.stdout.split('\n')
@@ -35,7 +42,6 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsAndBuildOriginsConfig())
       .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION, '-w', TEST_WORK_DIR_LOCATION])
       .command(['project:list', '--csv'])
       .it('adds the project', ctx => {
@@ -69,7 +75,6 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsAndBuildOriginsConfig())
       .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION, '-w', TEST_WORK_DIR_LOCATION])
       .command(['project:remove', 'project1'])
       .command(['project:list', '--csv'])
@@ -93,7 +98,6 @@ describe('project', () => {
     test
       .env(env)
       .stdout()
-      .do(() => writeProjectsAndBuildOriginsConfig())
       .command(['project:add', 'project1', '-c', TEST_MAIN_CONFIG_LOCATION, '-w', TEST_WORK_DIR_LOCATION])
       .command(['project:set-default', 'project1'])
       .command(['project:list', '--csv'])

@@ -1,8 +1,17 @@
 import {expect, test} from '@oclif/test'
 
-import {env, expectedStdOutForCmd, mainConfig} from '../../helper/test-helper'
+import {
+  env,
+  expectedStdOutForCmd,
+  mainConfig,
+  removeProjectsConfigDefault,
+  writeProjectsConfigDefault
+} from '../../helper/test-helper'
 
 describe('start', () => {
+  before(() => writeProjectsConfigDefault())
+  after(() => removeProjectsConfigDefault())
+
   test
     .env(env)
     //.stdout({print: true})
@@ -17,5 +26,5 @@ describe('start', () => {
     .stdout()
     .command(['service:start', 'demoTest', '--dry-run'])
     .catch(err => expect(err.message).to.match(/Expected service demoTest to be one of:/))
-    .it('does not invoke start with unknown service')
+    .it('does not invoke start with unknown service', () => {})
 })

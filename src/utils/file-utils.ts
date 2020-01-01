@@ -1,8 +1,14 @@
-import {existsSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
+import {existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
 import {safeLoad} from 'js-yaml'
 
 function exists(fileLocation: string): boolean {
   return existsSync(fileLocation)
+}
+
+function mkdir(path: string) {
+  if (!existsSync(path)) {
+    mkdirSync(path, {recursive: true, mode: 0o755})
+  }
 }
 
 function load(fileLocation: string, configName: string): any {
@@ -46,5 +52,6 @@ export default {
   load,
   loadWithFallback,
   writeJson,
-  remove
+  remove,
+  mkdir
 }
