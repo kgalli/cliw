@@ -47,10 +47,6 @@ compose:
           ports:
             - "9999:5432"
           buildOrigin:
-            source:
-              build:
-                context: "./demo"
-                dockerfile: "Dockerfile"
             registry:
               image: "postgres"
           environment:
