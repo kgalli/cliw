@@ -1,7 +1,7 @@
 import FileUtils from '../../../utils/file-utils'
 
 import {BuildOrigin, BuildOriginConfig} from './build-origins-config'
-import ServiceConfig from './service-config'
+import ServiceConfig, {CodeSource} from './service-config'
 
 export default class ServiceConfigHelper {
   mainConfigLocation: string
@@ -40,15 +40,23 @@ export default class ServiceConfigHelper {
     return BuildOrigin.REGISTRY
   }
 
-  updateBuildOrigin(service: string, environment: string, buildOrigin: BuildOrigin): BuildOriginConfig {
-    const buildOriginConfig = this.loadBuildOriginConfig()
-    const serviceBuildOriginConfig = buildOriginConfig[service]
+  updateBuildOrigin(serviceName: string, environment: string, buildOrigin: BuildOrigin): BuildOriginConfig {
+    const externalServiceNames = this.loadServiceConfig().services
+      .filter(service => service.source === CodeSource.EXTERNAL)
+      .map(service => service.name)
 
-    if (!serviceBuildOriginConfig) {
-      buildOriginConfig[service] = {}
+    if (externalServiceNames.includes(serviceName)) {
+      throw new Error(`Can not set build origin for service '${serviceName}' as it is flagged as 'external'.`)
     }
 
-    buildOriginConfig[service][environment] = buildOrigin
+    const buildOriginConfig = this.loadBuildOriginConfig()
+    const serviceBuildOriginConfig = buildOriginConfig[serviceName]
+
+    if (!serviceBuildOriginConfig) {
+      buildOriginConfig[serviceName] = {}
+    }
+
+    buildOriginConfig[serviceName][environment] = buildOrigin
 
     return this.saveBuildOriginConfig(buildOriginConfig)
   }

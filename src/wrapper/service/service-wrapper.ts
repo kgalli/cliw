@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash'
 
 import ServiceConfigHelper from './config'
 import {BuildOrigin, BuildOriginConfig} from './config/build-origins-config'
-import {CodeSource, Service} from './config/service-config'
+import {Service} from './config/service-config'
 
 export default class ServiceWrapper {
   serviceConfigHelper: ServiceConfigHelper
@@ -29,18 +29,6 @@ export default class ServiceWrapper {
 
   serviceNames(): string[] {
     return this.services.map(s => s.name)
-  }
-
-  internalServiceNames() {
-    return this.services
-      .filter(s => s.source === CodeSource.internal)
-      .map(s => s.name)
-  }
-
-  externalServiceNames() {
-    return this.services
-      .filter(s => s.source === CodeSource.external)
-      .map(s => s.name)
   }
 
   validate(serviceNames: string[]) {
@@ -225,7 +213,7 @@ export default class ServiceWrapper {
 
     services.forEach(s => {
       const defaultServiceConfig = s.environments.default
-      const runFromSrc = this.serviceConfigHelper.loadBuildOrigin(s.name, environment)
+      const runFromSrc = BuildOrigin.SOURCE === this.serviceConfigHelper.loadBuildOrigin(s.name, environment)
       const buildOrigin = runFromSrc ? defaultServiceConfig.buildOrigin.source : defaultServiceConfig.buildOrigin.registry
       const environmentServiceConfig: any = s.environments[environment]
 

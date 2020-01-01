@@ -16,7 +16,7 @@ export interface Service {
 }
 
 export const enum CodeSource {
-  internal, external
+  INTERNAL = 'internal', EXTERNAL = 'external'
 }
 
 interface BuildOrigin {
