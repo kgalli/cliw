@@ -22,7 +22,6 @@ compose:
               image: "kgalli/javalin-playground"
         development:
           environment:
-            API_URL: "http://localhost:3000"
             DB_HOST: "db"
             DB_PORT: "5432"
             DB_USER: "kgalli"
@@ -32,12 +31,12 @@ compose:
         test:
           ports:
             - "3010:3000"
-          API_URL: "http://localhost:3000"
-          DB_HOST: "db"
-          DB_PORT: "9998"
-          DB_USER: "kgalli"
-          DB_PASSWORD: "kgalli"
-          DB_ENGINE: "postgresql"
+          environment:
+            DB_HOST: "db"
+            DB_PORT: "5432"
+            DB_USER: "kgalli"
+            DB_PASSWORD: "kgalli"
+            DB_ENGINE: "postgresql"
 
     - name: "db"
       repositoryUrl: "github.com/kgalli/postgres"
