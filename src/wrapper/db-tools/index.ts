@@ -1,15 +1,17 @@
 import BaseCommand from '../../base-command'
-import ConfigUtils from '../../config/config-utils'
+import {defaultProject} from '../../config'
 import BashWrapper from '../bash'
 
+import {loadDbToolsConfig} from './config'
 import DbToolsWrapper from './db-tools-wrapper'
 
 export default abstract class extends BaseCommand {
   dbTools(dryRun = false): DbToolsWrapper {
-    const mainConfig = ConfigUtils.mainConfigLoadDefault()
+    const projectConfig = defaultProject
+    const dbToolsConfig = loadDbToolsConfig(projectConfig.mainConfigLocation)
 
     return new DbToolsWrapper(
-      mainConfig.dbTools.dataSources,
+      dbToolsConfig.dataSources,
       dryRun,
       new BashWrapper({...BashWrapper.defaultOptions(), dryRun})
     )

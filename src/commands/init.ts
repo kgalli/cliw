@@ -2,10 +2,7 @@ import {Command, flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
-import {BuildOrigin, BuildOriginsConfig} from '../config/build-origins-config'
-import ConfigUtils from '../config/config-utils'
-import ProjectConfig from '../config/project-config'
-import ProjectsConfig from '../config/projects-config'
+import {projectsConfigExists, projectsConfigInitialize} from '../config'
 
 export default class Init extends Command {
   static description = `initialize projects config
@@ -35,7 +32,7 @@ identifier (project name) at: ~/.config/projects-config.json.
   async run() {
     const {flags} = this.parse(Init)
 
-    if (ConfigUtils.projectsConfigExists()) {
+    if (projectsConfigExists()) {
       this.log('Initial project already exists. Use `cliw project:list` command for details')
       return
     }
@@ -44,48 +41,18 @@ identifier (project name) at: ~/.config/projects-config.json.
       ? await cli.prompt('Please enter the project name')
       : flags.name
 
-    let mainConfigLocation = flags.config
-    if (isEmpty(flags.config)) {
-      mainConfigLocation = await cli.prompt('Please enter the location of your <main-config>.json file')
+    const mainConfigLocation = isEmpty(flags.config)
+      ? await cli.prompt('Please enter the location of your <main-config>.json file')
+      : flags.config
+
+    const workDirLocation = isEmpty(flags['working-directory'])
+      ? await cli.prompt('Please enter the absolute path to your working directory')
+      : flags['working-directory']
+
+    try {
+      projectsConfigInitialize(projectName, mainConfigLocation, workDirLocation)
+    } catch (e) {
+      this.error(e.message, e)
     }
-
-    if (!ConfigUtils.exists(mainConfigLocation as string)) {
-      this.error('MainConfig could not be found with the provided location')
-    }
-
-    let workDirLocation = flags['working-directory']
-    if (isEmpty(flags['working-directory'])) {
-      workDirLocation = await cli.prompt('Please enter the absolute path to your working directory')
-    }
-
-    if (!ConfigUtils.exists(workDirLocation as string)) {
-      this.error('Working directory could not be found with at the provided location')
-    }
-
-    const projectConfig = {
-      name: projectName,
-      workDir: workDirLocation,
-      mainConfigLocation,
-    } as ProjectConfig
-
-    const projectsConfig = {
-      default: projectName,
-      projects: [projectConfig]
-    } as ProjectsConfig
-
-    ConfigUtils.projectsConfigSave(projectsConfig)
-
-    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
-    const buildOriginsConfig = {} as BuildOriginsConfig
-
-    buildOriginsConfig[projectName] = {}
-    mainConfig.compose.services.forEach(s => {
-      buildOriginsConfig[projectName][s.name] = {}
-      mainConfig.compose.environments.forEach(
-        environment => buildOriginsConfig[projectName][s.name][environment] = BuildOrigin.REGISTRY
-      )
-    })
-
-    ConfigUtils.buildOriginsConfigSave(buildOriginsConfig)
   }
 }

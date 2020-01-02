@@ -1,11 +1,11 @@
 import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
-import DockerComposeCommand from '../../wrapper/docker-compose'
-import {servicesArg} from '../../wrapper/docker-compose/args'
-import {environmentFlag} from '../../wrapper/docker-compose/flags'
+import ServiceCommand from '../../wrapper/service'
+import {servicesArg} from '../../wrapper/service/args'
+import {environmentFlag} from '../../wrapper/service/flags'
 
-export default class Build extends DockerComposeCommand {
+export default class Build extends ServiceCommand {
   static description = 'build or rebuild services'
 
   static flags = {
@@ -28,7 +28,7 @@ export default class Build extends DockerComposeCommand {
 
     try {
       this
-        .dockerCompose(dryRun)
+        .service(dryRun)
         .build({}, services, environment)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)

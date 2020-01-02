@@ -2,42 +2,33 @@ import {writeFileSync} from 'fs'
 import {safeDump} from 'js-yaml'
 import {isEmpty} from 'lodash'
 
-import {BuildOrigin, ServicesBuildOrigin} from '../../config/build-origins-config'
-import {CodeSource, Service} from '../../config/main-config'
+import ServiceConfigHelper from './config'
+import {BuildOrigin, BuildOriginConfig} from './config/build-origins-config'
+import {Service} from './config/service-config'
 
-export default class DockerComposeWrapper {
+export default class ServiceWrapper {
+  serviceConfigHelper: ServiceConfigHelper
   shellWrapper: any
   services: Service[]
   workDir: string
   projectName: string
   networkName: string
   dryRun: boolean
-  servicesBuildOrigin: ServicesBuildOrigin
 
-  constructor(projectName: string, networkName: string, workDir: string, services: Service[], servicesBuildOrigin: ServicesBuildOrigin, dryRun: boolean, shellWrapper: any) {
+  constructor(projectName: string, workDir: string, serviceConfigHelper: ServiceConfigHelper, dryRun: boolean, shellWrapper: any) {
+    const serviceConfig = serviceConfigHelper.loadServiceConfig()
+
     this.projectName = projectName
-    this.networkName = networkName
+    this.serviceConfigHelper = serviceConfigHelper
+    this.networkName = serviceConfig.networkName
     this.workDir = workDir
-    this.services = services
+    this.services = serviceConfig.services
     this.dryRun = dryRun
-    this.servicesBuildOrigin = servicesBuildOrigin
     this.shellWrapper = shellWrapper
   }
 
   serviceNames(): string[] {
     return this.services.map(s => s.name)
-  }
-
-  internalServiceNames() {
-    return this.services
-      .filter(s => s.source === CodeSource.internal)
-      .map(s => s.name)
-  }
-
-  externalServiceNames() {
-    return this.services
-      .filter(s => s.source === CodeSource.external)
-      .map(s => s.name)
   }
 
   validate(serviceNames: string[]) {
@@ -178,12 +169,24 @@ export default class DockerComposeWrapper {
     this.dockerComposeExec(pullCmd, environment)
   }
 
-  dockerComposeExec(cmd: string, environment: string) {
+  buildOriginSet(serviceName: string, environment: string, buildOrigin: BuildOrigin) {
+    this.serviceConfigHelper.updateBuildOrigin(serviceName, environment, buildOrigin)
+  }
+
+  buildOriginList(): BuildOriginConfig {
+    return this.serviceConfigHelper.loadBuildOriginConfig()
+  }
+
+  buildOrigin(serviceName: string, environment: string): BuildOrigin {
+    return this.serviceConfigHelper.loadBuildOrigin(serviceName, environment)
+  }
+
+  private dockerComposeExec(cmd: string, environment: string) {
     const configFile = this.constructConfigFilename(this.workDir, environment)
     const dcCmd = this.constructDockerComposeCmd(this.projectName, environment, configFile, this.sanitizeCmd(cmd))
     const dcConfig = this.constructDockerComposeConfig(this.projectName, this.networkName, environment, this.services)
 
-    if (this.dryRun === false) {
+    if (!this.dryRun) {
       this.writeConfigFile(configFile, dcConfig)
     }
     this.shellWrapper.run(dcCmd)
@@ -210,7 +213,7 @@ export default class DockerComposeWrapper {
 
     services.forEach(s => {
       const defaultServiceConfig = s.environments.default
-      const runFromSrc = this.servicesBuildOrigin[s.name][environment] === BuildOrigin.SOURCE
+      const runFromSrc = BuildOrigin.SOURCE === this.serviceConfigHelper.loadBuildOrigin(s.name, environment)
       const buildOrigin = runFromSrc ? defaultServiceConfig.buildOrigin.source : defaultServiceConfig.buildOrigin.registry
       const environmentServiceConfig: any = s.environments[environment]
 

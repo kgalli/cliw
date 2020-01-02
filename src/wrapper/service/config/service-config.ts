@@ -1,19 +1,8 @@
-import DataSource from './data-source'
-
-export interface MainConfig {
-  compose: {
-    projectName: string
-    networkName: string
-    environments: string[],
-    defaultEnvironment: string
-    services: Service[]
-  }
-
-  dbTools: {
-    environments: string[],
-    defaultEnvironment: string
-    dataSources: DataSource[]
-  },
+export default interface ServiceConfig {
+  networkName: string
+  environments: string[],
+  defaultEnvironment: string
+  services: Service[]
 }
 
 export interface Service {
@@ -27,7 +16,7 @@ export interface Service {
 }
 
 export const enum CodeSource {
-  internal, external
+  INTERNAL = 'internal', EXTERNAL = 'external'
 }
 
 interface BuildOrigin {

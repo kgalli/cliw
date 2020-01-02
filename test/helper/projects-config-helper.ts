@@ -1,6 +1,6 @@
-import {writeFileSync} from 'fs'
+import {unlinkSync, writeFileSync} from 'fs'
 
-import ProjectsConfig from '../../src/config/projects-config'
+import {ProjectsConfig} from '../../src/config/projects-config'
 
 export function writeProjectsConfig(projectsConfigLocation: string,
                                     mainConfigLocation: string,
@@ -16,4 +16,8 @@ export function writeProjectsConfig(projectsConfigLocation: string,
       }
     ]
   } as ProjectsConfig))
+}
+
+export function removeProjectsConfig(projectsConfigLocation: string) {
+  unlinkSync(projectsConfigLocation)
 }
