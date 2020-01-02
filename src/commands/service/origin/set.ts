@@ -1,6 +1,5 @@
 import {flags} from '@oclif/command'
 
-import {dryRunFlag} from '../../../flags'
 import ServiceCommand from '../../../wrapper/service'
 import {BuildOrigin} from '../../../wrapper/service/config/build-origins-config'
 import {environmentFlag} from '../../../wrapper/service/flags'
@@ -10,7 +9,6 @@ export default class BuildOriginSet extends ServiceCommand {
 
   static flags = {
     environment: environmentFlag,
-    'dry-run': dryRunFlag,
     help: flags.help({char: 'h'})
   }
 
@@ -34,7 +32,6 @@ export default class BuildOriginSet extends ServiceCommand {
 
   async run() {
     const {args, flags} = this.parse(BuildOriginSet)
-    const dryRun = flags['dry-run']
     const service = args.service
     const environment = flags.environment
     const buildOrigin = args.value === BuildOrigin.REGISTRY.toString()
@@ -43,7 +40,7 @@ export default class BuildOriginSet extends ServiceCommand {
 
     try {
       this
-        .service(dryRun)
+        .service()
         .buildOriginSet(service, environment, buildOrigin)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)

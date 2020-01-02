@@ -1,7 +1,6 @@
 import {flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 
-import {dryRunFlag} from '../../../flags'
 import ServiceCommand from '../../../wrapper/service'
 import {environmentFlag, servicesFlag} from '../../../wrapper/service/flags'
 
@@ -11,16 +10,14 @@ export default class BuildOriginList extends ServiceCommand {
   static flags = {
     help: flags.help({char: 'h'}),
     services: {...servicesFlag, required: false},
-    'dry-run': dryRunFlag,
     environment: environmentFlag,
   }
 
   async run() {
     const {flags} = this.parse(BuildOriginList)
     const environment = flags.environment
-    const dryRun = flags['dry-run']
     const serviceNames = this
-      .service(dryRun)
+      .service()
       .serviceNames()
 
     const data = [] as any
