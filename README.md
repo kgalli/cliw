@@ -39,13 +39,14 @@ USAGE
 
 ## `cliw init`
 
-The `init` is used to create the initial projects config file. This is needed because the `cliw` supports
-to manage several services and databases under a project. This way multiple `cliw` configurations can be
-maintained at the same time while `cliw` supports switching between those when needed. This functionality
+The `init` sub command is used to create the initial projects config file. This is needed because `cliw` supports
+the management of several services and databases under a project context. This way multiple `cliw` configurations
+can be maintained at the same time while `cliw` supports switching between those when needed. This functionality
 comes in very handy when work has to be done for several clients or to keep private and business projects separated.
 
-The location of the projects config file is `$HOME/.config/cliw`. An example for the actual configuration file
-which has to be passed to the `cliw init` can be found here:
+The location of the projects config file is `$HOME/.config/cliw` and can be overwritten via an environment variable
+`CLIW_DEFAULT_CONFIG_PATH`. An example for the actual configuration file
+which has to be passed to the `init` sub command can be found here:
 
 _config: [config-examples/main-config.yaml](https://github.com/kgalli/cliw/blob/master/config-examples/main-config.yaml)_
 
