@@ -1,18 +1,39 @@
-import {MainConfig} from '../../src/config/main-config'
-
 import {stdOutHelperForDockerComposeCmd} from './docker-compose-helper'
 import {loadMainConfig} from './main-config-helper'
-import {writeProjectsConfig} from './projects-config-helper'
+import {removeProjectsConfig, writeProjectsConfig} from './projects-config-helper'
 
-const TEST_PROJECTS_CONFIG_LOCATION = `${__dirname}/../config/test-projects-config.json`
-const TEST_MAIN_CONFIG_LOCATION = `${__dirname}/../config/test-main-config.json`
-
-writeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION)
+const TEST_DEFAULT_CONFIG_PATH = `${__dirname}/../tmp`
+const TEST_PROJECTS_CONFIG_LOCATION = `${TEST_DEFAULT_CONFIG_PATH}/projects.json`
+const TEST_MAIN_CONFIG_LOCATION = `${TEST_DEFAULT_CONFIG_PATH}/test-main-config.json`
+const TEST_WORK_DIR_LOCATION = '/tmp'
+const TEST_DEFAULT_PROJECT_NAME = 'test'
 
 // set TEST_OUTPUT: '1' to see console.log statements in tests
-const env = {CLIW_PROJECT_CONFIG_LOCATION: TEST_PROJECTS_CONFIG_LOCATION, TEST_OUTPUT: '0'}
+const env = {
+  CLIW_DEFAULT_CONFIG_PATH: TEST_DEFAULT_CONFIG_PATH,
+  TEST_OUTPUT: '0'}
 
-const mainConfig: MainConfig = loadMainConfig(TEST_MAIN_CONFIG_LOCATION)
-const expectedStdOutForCmd = stdOutHelperForDockerComposeCmd(mainConfig.compose.projectName, mainConfig.compose.workDir)
+const mainConfig = loadMainConfig(TEST_MAIN_CONFIG_LOCATION)
+const expectedStdOutForCmd = stdOutHelperForDockerComposeCmd(TEST_DEFAULT_PROJECT_NAME, TEST_WORK_DIR_LOCATION)
 
-export {mainConfig, expectedStdOutForCmd, env}
+function writeProjectsConfigDefault() {
+  writeProjectsConfig(
+    TEST_PROJECTS_CONFIG_LOCATION, TEST_MAIN_CONFIG_LOCATION, TEST_DEFAULT_PROJECT_NAME, TEST_WORK_DIR_LOCATION
+  )
+}
+
+function removeProjectsConfigDefault() {
+  removeProjectsConfig(TEST_PROJECTS_CONFIG_LOCATION)
+}
+
+export {
+  writeProjectsConfigDefault,
+  removeProjectsConfigDefault,
+  mainConfig,
+  expectedStdOutForCmd,
+  env,
+  TEST_DEFAULT_CONFIG_PATH,
+  TEST_DEFAULT_PROJECT_NAME,
+  TEST_MAIN_CONFIG_LOCATION,
+  TEST_WORK_DIR_LOCATION
+}

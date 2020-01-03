@@ -7,7 +7,17 @@ import PsqlOptions from './psql-options'
 
 const defaultDockerOptions: DockerOptions = {
   enabled: true,
-  volume: '/opt'
+  volume: '/opt',
+  tty: false,
+  interactive: false
+}
+
+function stripEnclosingDoubleQuotes(value: string): string {
+  if (value.startsWith('"') && value.endsWith('"')) {
+    return value.substr(1, value.length)
+  }
+
+  return value
 }
 
 export default class PostgreSql {
@@ -25,11 +35,15 @@ export default class PostgreSql {
     }
 
     if (options.command) {
-      cmd.push(`-c ${options.command}`)
+      cmd.push(`-c "${stripEnclosingDoubleQuotes(options.command)}"`)
+    }
+
+    if (options.file) {
+      cmd.push(`-f "${stripEnclosingDoubleQuotes(options.file)}"`)
     }
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
     }
 
     return cmd.join(' ')
@@ -43,7 +57,7 @@ export default class PostgreSql {
     cmd.push(`-h ${connectionParams.host}`)
     cmd.push(`-p ${connectionParams.port}`)
     cmd.push(`-U ${connectionParams.user}`)
-    cmd.push('--verbose --no-security-labels --no-owner --if-exists --clean --no-tablespaces --no-privileges')
+    cmd.push('--verbose --no-security-labels --no-owner --if-exists --clean --no-tablespaces --no-privileges --disable-dollar-quoting')
 
     if (options.schemaOnly) {
       cmd.push('--schema-only')
@@ -55,7 +69,7 @@ export default class PostgreSql {
     cmd.push(`-d ${connectionParams.database}`)
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
     }
 
     return cmd.join(' ')
@@ -75,21 +89,29 @@ export default class PostgreSql {
     cmd.push(options.restoreFileLocation)
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions.volume)
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
     }
 
     return cmd.join(' ')
   }
 
-  private static asDockerCmd(dbCmd: string, password: string, volume: string) {
+  private static asDockerCmd(dbCmd: string, password: string, options: DockerOptions) {
     const dockerRunOptions = []
 
     dockerRunOptions.push('--rm')
-    dockerRunOptions.push('-it')
+
+    if (options.interactive) {
+      dockerRunOptions.push('-i')
+    }
+
+    if (options.tty) {
+      dockerRunOptions.push('-t')
+    }
+
     dockerRunOptions.push('--net=host')
     dockerRunOptions.push(`-e PGPASSWORD=${password}`)
-    dockerRunOptions.push(`-v $PWD:${volume}`)
-    dockerRunOptions.push(`-w ${volume}`)
+    dockerRunOptions.push(`-v $PWD:${options.volume}`)
+    dockerRunOptions.push(`-w ${options.volume}`)
 
     return `docker run ${dockerRunOptions.join(' ')} postgres ${dbCmd}`
   }
@@ -106,13 +128,14 @@ export default class PostgreSql {
     const psqlOptions = {...options}
 
     psqlOptions.docker = this.dockerOptions
+    psqlOptions.docker.interactive = true
 
     return PostgreSql.psql(this.connectionParams, psqlOptions)
   }
 
   dbCreate() {
     const connectionParams = {...this.connectionParams}
-    const createStatement = `"CREATE DATABASE ${connectionParams.database} WITH OWNER ${connectionParams.user} ENCODING 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';"`
+    const createStatement = `CREATE DATABASE ${connectionParams.database} WITH OWNER ${connectionParams.user} ENCODING 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';`
     const psqlOptions = {command: createStatement, docker: this.dockerOptions}
 
     connectionParams.database = 'template1'
@@ -121,7 +144,7 @@ export default class PostgreSql {
 
   dbDrop() {
     const connectionParams = {...this.connectionParams}
-    const dropStatement = `"DROP DATABASE IF EXISTS ${connectionParams.database};"`
+    const dropStatement = `DROP DATABASE IF EXISTS ${connectionParams.database};`
     const psqlOptions = {command: dropStatement, docker: this.dockerOptions}
 
     connectionParams.database = 'template1'

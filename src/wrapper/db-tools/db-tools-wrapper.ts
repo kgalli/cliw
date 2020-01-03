@@ -2,7 +2,7 @@ import {address} from 'ip'
 import {isEmpty} from 'lodash'
 
 import AwsKmsClient from '../../aws-kms'
-import DataSource, {DataSourceParams, DbEngine} from '../../config/data-source'
+import DataSource, {DataSourceParams, DbEngine} from './config'
 
 import ConnectionParams from './connection-params'
 import DbDumpOptions from './db-dump-options'
@@ -93,7 +93,7 @@ export default class DbToolsWrapper {
     }
 
     const connectionParams = this.extractConnectionParams(dataSourceParams)
-    const dockerOptions = {enabled: true} as DockerOptions
+    const dockerOptions = {enabled: true, tty: Boolean(process.stdout.isTTY)} as DockerOptions
     const dbWrapper = this.dbWrapper(dataSourceParams.engine, connectionParams, dockerOptions)
 
     let shellCmdToExec

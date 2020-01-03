@@ -1,7 +1,7 @@
 {
   "name": "cliw",
   "description": "A cliw[rapper] to ease day to day command line tasks!",
-  "version": "0.5.0",
+  "version": "0.11.0",
   "author": "kgalli @kgalli",
   "bin": {
     "cliw": "./bin/run"
@@ -32,10 +32,12 @@
     "@types/js-yaml": "^3.12.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.14.13",
+    "@types/sinon": "^7.5.1",
     "chai": "^4.2.0",
     "globby": "^8.0.2",
     "mocha": "^5.2.0",
     "nyc": "^13.3.0",
+    "sinon": "^8.0.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
@@ -71,7 +73,7 @@
       "service": {
         "description": "manage services to run as docker containers"
       },
-      "service:buildorigin": {
+      "service:origin": {
         "description": "list or set services build origin"
       },
       "project": {

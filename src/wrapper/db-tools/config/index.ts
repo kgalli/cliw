@@ -1,4 +1,12 @@
-export default interface DataSource {
+import FileUtils from '../../../utils/file-utils'
+
+export default interface DbToolsConfig {
+  environments: string[]
+  defaultEnvironment: string
+  dataSources: DataSource[]
+}
+
+export interface DataSource {
   name: string
   environments: {
     [key: string]: DataSourceParams
@@ -29,4 +37,10 @@ export const enum PasswordEncryption {
 
 export enum DbEngine {
   POSTGRES = 'postgresql', MYSQL = 'mysql'
+}
+
+export function loadDbToolsConfig(dbToolsConfigLocation: string): DbToolsConfig {
+  const mainConfig = FileUtils.load(dbToolsConfigLocation, 'DbToolsConfig')
+
+  return mainConfig.dbTools as DbToolsConfig
 }

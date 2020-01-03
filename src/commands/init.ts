@@ -2,8 +2,7 @@ import {Command, flags} from '@oclif/command'
 import {cli} from 'cli-ux'
 import {isEmpty} from 'lodash'
 
-import ConfigUtils from '../config/config-utils'
-import ProjectConfig, {BuildOrigin, ServicesBuildOrigin} from '../config/project-config'
+import {projectsConfigExists, projectsConfigInitialize} from '../config'
 
 export default class Init extends Command {
   static description = `initialize projects config
@@ -17,11 +16,15 @@ identifier (project name) at: ~/.config/projects-config.json.
   static flags = {
     name: flags.string({
       char: 'n',
-      description: 'name used as identifier for project'
+      description: 'project unique identifier (name)'
     }),
-    mainConfig: flags.string({
-      char: 'm',
-      description: 'location of the main-config.json file'
+    config: flags.string({
+      char: 'c',
+      description: 'location of the configuration file (*.json)'
+    }),
+    'working-directory': flags.string({
+      char: 'w',
+      description: 'absolute location of the working directory'
     }),
     help: flags.help({char: 'h'})
   }
@@ -29,41 +32,27 @@ identifier (project name) at: ~/.config/projects-config.json.
   async run() {
     const {flags} = this.parse(Init)
 
-    if (ConfigUtils.projectsConfigExists()) {
-      this.log('Init config already exists')
+    if (projectsConfigExists()) {
+      this.log('Initial project already exists. Use `cliw project:list` command for details')
       return
     }
 
-    let projectName = flags.name
-    if (isEmpty(flags.name)) {
-      projectName = await cli.prompt('Please enter the project name')
+    const projectName = isEmpty(flags.name)
+      ? await cli.prompt('Please enter the project name')
+      : flags.name
+
+    const mainConfigLocation = isEmpty(flags.config)
+      ? await cli.prompt('Please enter the location of your <main-config>.json file')
+      : flags.config
+
+    const workDirLocation = isEmpty(flags['working-directory'])
+      ? await cli.prompt('Please enter the absolute path to your working directory')
+      : flags['working-directory']
+
+    try {
+      projectsConfigInitialize(projectName, mainConfigLocation, workDirLocation)
+    } catch (e) {
+      this.error(e.message, e)
     }
-
-    let mainConfigLocation = flags.mainConfig
-    if (isEmpty(flags.mainConfig)) {
-      mainConfigLocation = await cli.prompt('Please enter the location of your <main-config>.json file')
-    }
-
-    if (!ConfigUtils.exists(mainConfigLocation as string)) {
-      this.error('MainConfig could not be found with the provided location')
-    }
-
-    // TODO validate main config
-    const mainConfig = ConfigUtils.mainConfigLoad(mainConfigLocation as string)
-    const servicesBuildOrigin = {} as ServicesBuildOrigin
-
-    mainConfig.compose.services.forEach(s => servicesBuildOrigin[s.name] = BuildOrigin.REGISTRY)
-
-    const projectConfig = {
-      name: projectName,
-      mainConfigLocation,
-      defaultBuildOrigin: BuildOrigin.REGISTRY,
-      servicesBuildOrigin
-    } as ProjectConfig
-
-    ConfigUtils.projectsConfigSave({
-      default: projectConfig.name,
-      projects: [projectConfig]
-    })
   }
 }

@@ -1,14 +1,14 @@
 import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
-import DockerComposeCommand from '../../wrapper/docker-compose'
-import {environmentFlag, servicesFlag} from '../../wrapper/docker-compose/flags'
+import ServiceCommand from '../../wrapper/service'
+import {servicesArg} from '../../wrapper/service/args'
+import {environmentFlag} from '../../wrapper/service/flags'
 
-export default class Logs extends DockerComposeCommand {
+export default class Logs extends ServiceCommand {
   static description = 'show service logs'
 
   static flags = {
-    services: servicesFlag,
     environment: environmentFlag,
     'dry-run': dryRunFlag,
     help: flags.help({char: 'h'}),
@@ -24,9 +24,15 @@ export default class Logs extends DockerComposeCommand {
     }),
   }
 
+  static strict = false
+
+  static args = [
+    servicesArg,
+  ]
+
   async run() {
-    const {flags} = this.parse(Logs)
-    const services = flags.services
+    const {argv, flags} = this.parse(Logs)
+    const services = argv
     const environment = flags.environment
     const dryRun = flags['dry-run']
     const options = {
@@ -36,7 +42,7 @@ export default class Logs extends DockerComposeCommand {
 
     try {
       this
-        .dockerCompose(dryRun)
+        .service(dryRun)
         .logs(options, services, environment)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)

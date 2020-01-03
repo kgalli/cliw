@@ -2,14 +2,14 @@ import {flags} from '@oclif/command'
 
 import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
-import {connectionFlag, environmentFlag} from '../../wrapper/db-tools/flags'
-import PgdumpOptions from '../../wrapper/db-tools/postgre-sql/pgdump-options'
+import {dataSourceNameArg} from '../../wrapper/db-tools/args'
+import {environmentFlag} from '../../wrapper/db-tools/flags'
+import PgdumpOptions from '../../wrapper/db-tools/pgdump-options'
 
 export default class Dump extends DbToolsWrapper {
   static description = 'create database'
 
   static flags = {
-    service: connectionFlag,
     environment: environmentFlag,
     'dry-run': dryRunFlag,
     'schema-only': flags.boolean({
@@ -26,9 +26,13 @@ export default class Dump extends DbToolsWrapper {
     help: flags.help({char: 'h'})
   }
 
+  static args = [
+    dataSourceNameArg
+  ]
+
   async run() {
-    const {flags} = this.parse(Dump)
-    const service = flags.service
+    const {args, flags} = this.parse(Dump)
+    const service = args.datasource
     const environment = flags.environment
     const dryRun = flags['dry-run']
     const options: PgdumpOptions = {

@@ -1,21 +1,23 @@
-import {writeFileSync} from 'fs'
+import {unlinkSync, writeFileSync} from 'fs'
 
-import {BuildOrigin} from '../../src/config/project-config'
-import ProjectsConfig from '../../src/config/projects-config'
+import {ProjectsConfig} from '../../src/config/projects-config'
 
-export function writeProjectsConfig(projectsConfigLocation: string, mainConfigLocation: string) {
+export function writeProjectsConfig(projectsConfigLocation: string,
+                                    mainConfigLocation: string,
+                                    projectName: string,
+                                    workDir: string) {
   writeFileSync(projectsConfigLocation, JSON.stringify({
-    default: 'test',
+    default: projectName,
     projects: [
       {
-        name: 'test',
+        name: projectName,
+        workDir,
         mainConfigLocation,
-        defaultBuildOrigin: BuildOrigin.REGISTRY,
-        servicesBuildOrigin: {
-          api: BuildOrigin.REGISTRY,
-          web: BuildOrigin.REGISTRY
-        }
       }
     ]
   } as ProjectsConfig))
+}
+
+export function removeProjectsConfig(projectsConfigLocation: string) {
+  unlinkSync(projectsConfigLocation)
 }
