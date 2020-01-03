@@ -2,9 +2,10 @@ import {address} from 'ip'
 import {isEmpty} from 'lodash'
 
 import AwsKmsClient from '../../aws-kms'
-import DataSource, {DataSourceParams, DbEngine} from './config'
 
+import {DataSource, DataSourceParams, DbEngine} from './config'
 import ConnectionParams from './connection-params'
+import DbConsoleOptions from './db-console-options'
 import DbDumpOptions from './db-dump-options'
 import DbRestoreOptions from './db-restore-options'
 import DockerOptions from './docker-options'
@@ -22,7 +23,7 @@ export default class DbToolsWrapper {
     this.shellWrapper = shellWrapper
   }
 
-  async console(options: any, dataSourceName: string, environment: string) {
+  async console(options: DbConsoleOptions, dataSourceName: string, environment: string) {
     return this.runDbCmd(dataSourceName, environment, 'console', options)
   }
 

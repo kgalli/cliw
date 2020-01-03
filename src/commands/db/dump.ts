@@ -3,8 +3,8 @@ import {flags} from '@oclif/command'
 import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
 import {dataSourceNameArg} from '../../wrapper/db-tools/args'
+import DbDumpOptions from '../../wrapper/db-tools/db-dump-options'
 import {environmentFlag} from '../../wrapper/db-tools/flags'
-import PgdumpOptions from '../../wrapper/db-tools/pgdump-options'
 
 export default class Dump extends DbToolsWrapper {
   static description = 'create database'
@@ -32,10 +32,10 @@ export default class Dump extends DbToolsWrapper {
 
   async run() {
     const {args, flags} = this.parse(Dump)
-    const service = args.datasource
+    const dataSource = args.datasource
     const environment = flags.environment
     const dryRun = flags['dry-run']
-    const options: PgdumpOptions = {
+    const options: DbDumpOptions = {
       target: flags.target,
       schemaOnly: flags['schema-only']
     }
@@ -43,7 +43,7 @@ export default class Dump extends DbToolsWrapper {
     try {
       await this
         .dbTools(dryRun)
-        .dump(options, service, environment)
+        .dump(options, dataSource, environment)
     } catch (e) {
       this.error(e.message, e)
     }

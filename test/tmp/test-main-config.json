@@ -121,6 +121,29 @@
             "readonly": true
           }
         }
+      },
+      {
+        "name": "api-mysql",
+        "environments": {
+          "development": {
+            "host": "127.0.0.1",
+            "port": "3306",
+            "user": "kgalli_us",
+            "password": "kgalli_pw",
+            "database": "kgalli_db",
+            "engine": "mysql",
+            "readonly": false
+          },
+          "production": {
+            "host": "127.0.0.1",
+            "port": "3306",
+            "user": "kgalli_us",
+            "password": "kgalli_pw",
+            "database": "kgalli_db",
+            "engine": "mysql",
+            "readonly": true
+          }
+        }
       }
     ]
   }

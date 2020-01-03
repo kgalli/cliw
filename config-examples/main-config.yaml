@@ -39,7 +39,7 @@ compose:
             DB_ENGINE: "postgresql"
 
     - name: "db"
-      repositoryUrl: "github.com/kgalli/postgres"
+      repositoryUrl: "https://github.com/docker-library/postgres"
       source: "external"
       environments:
         default:
@@ -51,10 +51,29 @@ compose:
           environment:
             POSTGRES_PASSWORD: "kgalli"
             POSTGRES_USER: "kgalli"
-        development":
+        development:
         test:
           ports:
             - "9998:5432"
+    - name: "mysql"
+      repositoryUrl: "https://github.com/docker-library/mysql"
+      source: "external"
+      environments:
+        default:
+          ports:
+            - "8888:3306"
+          buildOrigin:
+            registry:
+              image: mysql
+              command: "--default-authentication-plugin=mysql_native_password"
+              restart: always
+          environment:
+            MYSQL_ROOT_PASSWORD: kgalli
+        development:
+        test:
+          ports:
+            - "8887:3306"
+
 dbTools:
   environments:
     - "development"
@@ -78,4 +97,22 @@ dbTools:
           password: "kgalli"
           database: "kgalli"
           engine: "postgresql"
+          readonly: false
+    - name: "mysql"
+      environments:
+        development:
+          host: "127.0.0.1"
+          port: "8888"
+          user: "root"
+          password: "kgalli"
+          database: "kgalli"
+          engine: "mysql"
+          readonly: false
+        test:
+          host: "127.0.0.1"
+          port: "8887"
+          user: "root"
+          password: "kgalli"
+          database: "kgalli"
+          engine: "mysql"
           readonly: false
