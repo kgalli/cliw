@@ -1,0 +1,15 @@
+environments:
+  - name: development
+    services:
+      - name: web
+        image_origin_type: image
+      - name: api
+        image_origin_type: source
+
+  - name: test
+    services:
+      - name: web
+        image_origin_type: image
+      - name: api
+        image_origin_type: image
+

@@ -1,0 +1,22 @@
+parameters:
+  default_environment: "development"
+  environments:
+    - development:
+        api:
+          host: "127.0.0.1"
+          port: "9999"
+          user: "kgalli"
+          password: "kgalli"
+          database: "kgalli"
+          engine: "postgresql"
+          readonly: false
+
+    - test:
+        api:
+          host: "127.0.0.1"
+          port: "9998"
+          user: "kgalli"
+          password: "kgalli"
+          database: "kgalli"
+          engine: "postgresql"
+          readonly: false

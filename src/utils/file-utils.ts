@@ -1,17 +1,18 @@
 import {existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync} from 'fs'
-import {safeLoad} from 'js-yaml'
+import {safeLoad, safeDump} from 'js-yaml'
+import {join} from 'path'
 
-function exists(fileLocation: string): boolean {
+export function exists(fileLocation: string): boolean {
   return existsSync(fileLocation)
 }
 
-function mkdir(path: string) {
+export function mkdir(path: string) {
   if (!existsSync(path)) {
     mkdirSync(path, {recursive: true, mode: 0o755})
   }
 }
 
-function load(fileLocation: string, configName: string): any {
+export function load(fileLocation: string, configName: string): any {
   if (existsSync(fileLocation)) {
     if (fileLocation.endsWith('yaml') || fileLocation.endsWith('yml')) {
       return safeLoad(readFileSync(fileLocation, 'utf8'))
@@ -23,7 +24,7 @@ function load(fileLocation: string, configName: string): any {
   throw Error(`${configName} at '${fileLocation}' does not exist`)
 }
 
-function loadWithFallback(fileLocation: string, fallback: any): any {
+export function loadWithFallback(fileLocation: string, fallback: any): any {
   if (existsSync(fileLocation)) {
     if (fileLocation.endsWith('yaml') || fileLocation.endsWith('yml')) {
       return safeLoad(readFileSync(fileLocation, 'utf8'))
@@ -35,11 +36,11 @@ function loadWithFallback(fileLocation: string, fallback: any): any {
   return fallback
 }
 
-function writeJson(config: any, fileLocation: string) {
+export function writeJson(config: any, fileLocation: string) {
   return writeFileSync(fileLocation, JSON.stringify(config))
 }
 
-function remove(fileLocation: string) {
+export function remove(fileLocation: string) {
   if (existsSync(fileLocation)) {
     return unlinkSync(fileLocation)
   }
@@ -47,11 +48,11 @@ function remove(fileLocation: string) {
   throw Error(`File '${fileLocation}' to delete does not exist`)
 }
 
-export default {
-  exists,
-  load,
-  loadWithFallback,
-  writeJson,
-  remove,
-  mkdir
+export function loadYamlFile(filePath: string, fileName: string) {
+  const fileLocation = join(filePath, fileName)
+  return safeLoad(readFileSync(fileLocation, 'utf8'))
+}
+
+export function writeYamlFile(fileLocation: string, data: any): void {
+  return writeFileSync(fileLocation, safeDump(data), 'utf8')
 }

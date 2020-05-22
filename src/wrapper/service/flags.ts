@@ -1,29 +1,11 @@
 import {flags} from '@oclif/command'
 
-import {DEFAULT_CONFIG_PATH, defaultProject, projectsConfigExists} from '../../config'
-
-import ServiceConfigHelper from './config'
-
-const projectConfig = defaultProject
-const serviceConfigHelper = new ServiceConfigHelper(
-  DEFAULT_CONFIG_PATH,
-  projectConfig.mainConfigLocation
-)
-
 function environments(): string[] {
-  if (projectsConfigExists()) {
-    return serviceConfigHelper.loadServiceConfig().environments
-  }
-
-  return []
+  return ['development']
 }
 
-function defaultEnvironment(): string | undefined {
-  if (projectsConfigExists()) {
-    return serviceConfigHelper.loadServiceConfig().defaultEnvironment
-  }
-
-  return
+function defaultEnvironment(): string {
+  return 'development'
 }
 
 export const servicesFlag = flags.string({
@@ -41,5 +23,10 @@ export const environmentFlag = flags.string({
   char: 'e',
   required: true,
   options: environments(),
-  default: defaultEnvironment()
+  default: defaultEnvironment(),
+})
+
+export const dryRunFlag = flags.boolean({
+  description: 'Print command(s) to STDOUT without actually executing.',
+  default: false,
 })

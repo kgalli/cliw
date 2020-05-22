@@ -1,4 +1,4 @@
-import FileUtils from '../../../utils/file-utils'
+import {load} from '../../../utils/file-utils'
 
 export default interface DbToolsConfig {
   environments: string[]
@@ -40,7 +40,7 @@ const enum DbEngine {
 }
 
 export function loadDbToolsConfig(dbToolsConfigLocation: string): DbToolsConfig {
-  const mainConfig = FileUtils.load(dbToolsConfigLocation, 'DbToolsConfig')
+  const mainConfig = load(dbToolsConfigLocation, 'DbToolsConfig')
 
   return mainConfig.dbTools as DbToolsConfig
 }

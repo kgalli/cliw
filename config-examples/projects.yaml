@@ -1,0 +1,5 @@
+default: demo
+projects:
+  - name: demo
+    workDir: "/Users/kgalli/dev"
+    main_config_path: "/Users/kgalli/dev/cliw/config-examples"

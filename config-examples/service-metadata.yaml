@@ -1,0 +1,15 @@
+# Services metadata - equivalent to service-metadata.yml.
+services:
+  - name: web
+    description: Web-Client
+    repository_url: "github.com/kgalli/javalin-playground"
+    source: "internal"
+
+  - name: api
+    description: API service
+    repository_url: "github.com/kgalli/javalin-playground"
+    source: "internal"
+
+  - name: db
+    description: PostgreSQL database
+    source: "external"

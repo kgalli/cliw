@@ -1,12 +1,11 @@
 import {flags as flagsHelper} from '@oclif/command'
 
-import {StatusOptions} from '../../types'
 import BaseCommand from '../../wrapper/service'
 import {servicesArg} from '../../wrapper/service/args'
 import {dryRunFlag, environmentFlag, servicesFlag} from '../../wrapper/service/flags'
 
-export default class Status extends BaseCommand {
-  static description = 'Show service(s) run status.'
+export default class Checkout extends BaseCommand {
+  static description = 'Checkout service(s) from version control.'
 
   static flags = {
     services: servicesFlag,
@@ -21,19 +20,12 @@ export default class Status extends BaseCommand {
     servicesArg,
   ]
 
-  async run(): Promise<void> {
-    const {argv, flags} = this.parse(Status)
+  async run() {
+    const {argv, flags} = this.parse(Checkout)
     const services = argv
     const {environment} = flags
     const dryRun = flags['dry-run']
-    const statusOptions: StatusOptions = {showAll: true}
 
-    try {
-      this
-        .service(dryRun, environment)
-        .status(statusOptions, services)
-    } catch (e) {
-      this.error(`${e.message}\nSee more help with --help`, e)
-    }
+    throw new Error('Not implemented exception!')
   }
 }

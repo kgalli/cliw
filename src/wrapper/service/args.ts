@@ -1,7 +1,7 @@
 export const servicesArg = {
   name: 'services',
   required: false,
-  description: 'list of service names [default: all]',
+  description: 'List of services [default: ALL...].',
 }
 
 export const serviceArg = {

@@ -1,17 +1,17 @@
-import {flags} from '@oclif/command'
+import {flags as flagsHelper} from '@oclif/command'
 
-import {dryRunFlag} from '../../flags'
-import ServiceCommand from '../../wrapper/service'
+import BaseCommand from '../../wrapper/service'
 import {servicesArg} from '../../wrapper/service/args'
-import {environmentFlag} from '../../wrapper/service/flags'
+import {dryRunFlag, environmentFlag} from '../../wrapper/service/flags'
 
-export default class Start extends ServiceCommand {
-  static description = '(re)create and start services in daemon mode'
+export default class Start extends BaseCommand {
+  static description = 'Start service(s) in daemon mode.'
 
   static flags = {
     environment: environmentFlag,
     'dry-run': dryRunFlag,
-    help: flags.help({char: 'h'})
+    help: flagsHelper.help({char: 'h'}),
+    build: flagsHelper.boolean({default: true, allowNo: true, description: 'Build images before starting containers.'}),
   }
 
   static strict = false
@@ -20,18 +20,21 @@ export default class Start extends ServiceCommand {
     servicesArg,
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const {argv, flags} = this.parse(Start)
     const services = argv
-    const environment = flags.environment
+    const {environment} = flags
     const dryRun = flags['dry-run']
+    const startOptions = {
+      build: flags.build,
+    }
 
     try {
       this
-        .service(dryRun)
-        .start({}, services, environment)
-    } catch (e) {
-      this.error(e.message, e)
+        .service(dryRun, environment)
+        .start(startOptions, services)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

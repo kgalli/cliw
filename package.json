@@ -65,19 +65,16 @@
     ],
     "topics": {
       "secret": {
-        "description": "encrypt, decrypt secret via AWS KMS"
+        "description": "Encrypt, decrypt secret via Amazon Web Services KMS."
       },
       "db": {
-        "description": "dump, restore or run a database console"
+        "description": "Dump, restore or run a database console."
       },
       "service": {
-        "description": "manage services to run as docker containers"
-      },
-      "service:origin": {
-        "description": "list or set services build origin"
+        "description": "Manage service(s) lifecycle using a container runtime."
       },
       "project": {
-        "description": "list, add, remove projects and set the default"
+        "description": "List, add, remove project(s) and set the default."
       }
     }
   },
@@ -87,7 +84,8 @@
     "posttest": "tslint -p test -t stylish",
     "prepack": "rm -rf lib tsconfig.tsbuildinfo && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && git add README.md"
+    "version": "oclif-dev readme && git add README.md",
+    "compile": "tsc"
   },
   "types": "lib/index.d.ts"
 }

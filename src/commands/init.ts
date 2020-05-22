@@ -5,7 +5,7 @@ import {isEmpty} from 'lodash'
 import {projectsConfigExists, projectsConfigInitialize} from '../config'
 
 export default class Init extends Command {
-  static description = `initialize projects config
+  static description = `Create and setup default project and configuration.
 
   The cli supports the 'orchestration' of multiple projects.
 Therefore it needs to know the location of the corresponding
