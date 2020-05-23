@@ -20,27 +20,31 @@ function camelCaseToSnakeCase(value: string) {
 
 type TransFormFunc = (value: string) => string
 
-function transformKeys(o: any, transformFunc: TransFormFunc): any {
+function transformKeys(o: any, transformFunc: TransFormFunc, keysToSkipForCaseTransformation: Set<string>): any {
   if (isObject(o)) {
     const n: any = {}
 
     Object.keys(o)
       .forEach(key => {
-        n[transformFunc(key)] = transformKeys(o[key], transformFunc)
+        if (keysToSkipForCaseTransformation.has(key)) {
+          n[key] = o[key]
+        } else {
+          n[transformFunc(key)] = transformKeys(o[key], transformFunc, keysToSkipForCaseTransformation)
+        }
       })
 
     return n
   } else if (isArray(o)) {
-    return o.map((item: any) => transformKeys(item, transformFunc))
+    return o.map((item: any) => transformKeys(item, transformFunc, keysToSkipForCaseTransformation))
   }
 
   return o
 }
 
-export function toCamelCase(o: any) {
-  return transformKeys(o, snakeCaseToCamelCase)
+export function toCamelCase(o: any, keysToSkipForCaseTransformation: Set<string> = new Set<string>()) {
+  return transformKeys(o, snakeCaseToCamelCase, keysToSkipForCaseTransformation)
 }
 
-export function toSnakeCase(o: any) {
-  return transformKeys(o, camelCaseToSnakeCase)
+export function toSnakeCase(o: any, keysToSkipForCaseTransformation: Set<string> = new Set<string>()) {
+  return transformKeys(o, camelCaseToSnakeCase, keysToSkipForCaseTransformation)
 }

@@ -8,6 +8,21 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
     super(configLocation, configFileName)
   }
 
+  init(environments: string[], services: string[]): void {
+    const serviceImageOriginTypesConfig = {
+      environments: environments
+        .map(environment => ({
+          name: environment,
+          services: services
+            .map(service => ({
+              name: service, imageOriginType: ImageOriginType.REGISTRY
+            }))
+        }))
+    }
+
+    this.write(serviceImageOriginTypesConfig)
+  }
+
   // TODO implement validation logic and return errors if needed
   validate() {
     return true
@@ -19,7 +34,13 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
       .environments
       .findIndex(env => env.name === environment)
 
-    if (index) {
+    if (index === undefined) {
+      serviceImageOriginTypesConfig.environments = []
+      serviceImageOriginTypesConfig.environments.push({
+        name: environment,
+        services: services.map(service => ({name: service, imageOriginType}))
+      })
+    } else {
       const environmentServiceImageOriginTypesPairs = serviceImageOriginTypesConfig.environments[index]
       const serviceSet = new Set(services)
 
@@ -30,12 +51,6 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
       })
 
       serviceImageOriginTypesConfig.environments[index] = environmentServiceImageOriginTypesPairs
-    } else {
-      serviceImageOriginTypesConfig.environments = []
-      serviceImageOriginTypesConfig.environments.push({
-        name: environment,
-        services: services.map(service => ({name: service, imageOriginType}))
-      })
     }
 
     this

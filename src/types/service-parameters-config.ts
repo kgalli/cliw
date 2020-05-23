@@ -10,5 +10,5 @@ export interface ServiceParametersPair {
 
 interface Parameter {
   name: string
-  value: string | number
+  value: string
 }

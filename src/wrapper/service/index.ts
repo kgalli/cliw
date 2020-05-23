@@ -1,7 +1,10 @@
+import {join} from 'path'
+
 import BaseCommand from '../../base-command'
 import {DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, defaultProject} from '../../config'
 import ServiceWrapper from '../../types'
 import ServiceRuntimeConfigRepo from '../service/config/service-runtime-config-repo'
+import {shellCallback} from '../shell'
 
 import DockerComposeConfigRepo from './config/docker-compose-config-repo'
 import ServiceImageOriginTypeConfigRepo from './config/service-image-origin-types-config-repo'
@@ -14,10 +17,12 @@ export default abstract class extends BaseCommand {
   service(dryRun: boolean, environment: string): ServiceWrapper {
     const projectConfig = defaultProject
 
+    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, projectConfig.mainConfigPath)
+
     const runtimeConfig = new ServiceRuntimeConfigRepo(projectConfig.mainConfigPath).load()
     const parameterConfig = new ServiceParameterConfigRepo(projectConfig.mainConfigPath).load()
-    const serviceImageOriginTypesConfig = new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT).load()
     const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.mainConfigPath).load()
+    const serviceImageOriginTypesConfig = new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT).load()
 
     const serviceParametersPairs = parameterConfig.services
     const serviceImageOriginPairs = runtimeConfig.services
@@ -38,19 +43,34 @@ export default abstract class extends BaseCommand {
       serviceImageOriginTypePairs,
       dockerComposeConfig
     )
-    const dockerComposeCmdConstructor = new DockerComposeCmdConstructor(projectConfig.name, projectConfig.workDir)
+
+    const dockerComposeConfigFileName = `docker-compose.${defaultProject.name}.${environment}.yaml`
+    const dockerComposeCmdConstructor = new DockerComposeCmdConstructor(projectConfig.name, join(projectConfig.workDir, dockerComposeConfigFileName))
 
     return new DockerComposeWrapper(
       projectConfig.workDir,
-      `docker-compose.${defaultProject.name}.${environment}.yaml`,
+      dockerComposeConfigFileName,
       dockerComposeCmdConstructor,
       dockerComposeConfigConstructor,
       // tslint:disable-next-line:no-console
-      cmd => { console.log(`TODO: Use acutal shell callback! \nDryRun: (${dryRun})\nCmd: ${cmd}`) },
+      shellCallback({dryRun, logger: this.log})
     )
   }
 
   imageOriginConfig(): ServiceImageOriginTypeConfigRepo {
+    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, defaultProject.mainConfigPath)
+
     return new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT)
+  }
+
+  private initializeImageOriginTypesConfig(configPathActiveProject: string, mainConfigPath: string) {
+    const serviceImageOriginTypesConfigRepo = new ServiceImageOriginTypeConfigRepo(configPathActiveProject)
+
+    if (!serviceImageOriginTypesConfigRepo.exists()) {
+      const runtimeConfig = new ServiceRuntimeConfigRepo(mainConfigPath).load()
+      serviceImageOriginTypesConfigRepo.init(
+        runtimeConfig.environments, runtimeConfig.services.map(service => service.name)
+      )
+    }
   }
 }

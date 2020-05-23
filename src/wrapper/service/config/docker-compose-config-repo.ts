@@ -5,7 +5,7 @@ const CONFIG_FILE_LOCATION = 'docker-compose.yaml'
 
 export default class DockerComposeConfigRepo extends YamlConfigFileRepo<DockerComposeConfig> {
   constructor(configLocation: string, configFileName: string = CONFIG_FILE_LOCATION) {
-    super(configLocation, configFileName)
+    super(configLocation, configFileName, new Set<string>(['environment']))
   }
 
   // TODO implement validation logic and return errors if needed

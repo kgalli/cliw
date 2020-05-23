@@ -18,9 +18,9 @@ export default class DockerComposeCmdConstructor {
   project: string
   configFileLocation: string
 
-  constructor(project: string, configFileLocaiton: string) {
+  constructor(project: string, configFileLocation: string) {
     this.project = project
-    this.configFileLocation = configFileLocaiton
+    this.configFileLocation = configFileLocation
   }
 
   exec(options: ExecOptions, service: string, cmd: string): string {

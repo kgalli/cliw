@@ -36,7 +36,7 @@ export default class DockerComposeConfigConstructor {
     this.dockerComposeConfig = dockerComposeConfig
   }
 
-  constructDockerComposeConfig(): any {
+  constructDockerComposeConfig(): DockerComposeConfig {
     const services = {...this.dockerComposeConfig.services}
     const serviceImageOriginMap = {} as ServiceImageOriginMap
     const serviceImageOriginTypeMap = {} as ServiceImageOriginTypeMap
@@ -50,27 +50,29 @@ export default class DockerComposeConfigConstructor {
     })
 
     Object.keys(services).forEach(service => {
-      const imageOriginType = serviceImageOriginTypeMap[service]
+      const imageOriginType = serviceImageOriginTypeMap[service] || ImageOriginType.REGISTRY
       const serviceImageOrigin = serviceImageOriginMap[service]
 
-      if (imageOriginType === ImageOriginType.SOURCE) {
-        const serviceBuildProperties = {...serviceImageOrigin.source}
+      if (serviceImageOrigin) {
+        if (imageOriginType === ImageOriginType.SOURCE) {
+          const serviceBuildProperties = {...serviceImageOrigin.source}
 
-        delete serviceBuildProperties.mergeProperties
+          delete serviceBuildProperties.mergeProperties
 
-        services[service] = {
-          ...services[service],
-          ...serviceBuildProperties,
-          ...serviceImageOrigin.source.mergeProperties
+          services[service] = {
+            ...services[service],
+            ...serviceBuildProperties,
+            ...serviceImageOrigin.source.mergeProperties
+          }
+        } else {
+          services[service].image = serviceImageOrigin.registry.image
         }
-      } else {
-        services[service].image = serviceImageOrigin.registry.image
       }
 
       services[service].container_name = this.constructContainerName(service)
     })
 
-    return {
+    const dockerComposeConfigTmp = {
       version: '3',
       services,
       networks: {
@@ -81,9 +83,33 @@ export default class DockerComposeConfigConstructor {
         }
       }
     }
+
+    return this.replaceParameters(dockerComposeConfigTmp)
+  }
+
+  private replaceParameters(dockerComposeConfig: DockerComposeConfig): DockerComposeConfig {
+    const dockerComposeConfigCopy = {...dockerComposeConfig}
+
+    this.serviceParametersPairs.forEach(pair => {
+      if (pair.name && pair.parameters) {
+        let serviceConfig = JSON.stringify(dockerComposeConfigCopy.services[pair.name])
+
+        pair.parameters.forEach(parameter => {
+          serviceConfig = this.replaceTemplateKeyWithValue(serviceConfig, parameter.name, parameter.value)
+        })
+
+        dockerComposeConfigCopy.services[pair.name] = JSON.parse(serviceConfig)
+      }
+    })
+
+    return dockerComposeConfigCopy
   }
 
   private constructContainerName(service: string): string {
     return this.containerNameTemplate.replace('{{{service}}}', service)
+  }
+
+  private replaceTemplateKeyWithValue(config: string, key: string, value: string) {
+    return config.replace(`{${key}}`, value)
   }
 }

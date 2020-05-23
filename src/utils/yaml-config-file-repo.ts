@@ -7,17 +7,19 @@ import {toCamelCase, toSnakeCase} from './object-key-utils'
 export default class YamlConfigFileRepo<T> {
   configFilePath: string
   configFileName: string
+  keysToSkipForCaseTransformation: Set<string>
 
-  constructor(configFilePath: string, configName: string) {
+  constructor(configFilePath: string, configName: string, keysToSkipForCaseTransformation: Set<string> = new Set<string>()) {
     this.configFilePath = configFilePath
     this.configFileName = configName
+    this.keysToSkipForCaseTransformation = keysToSkipForCaseTransformation
   }
 
   load(): T {
     if (this.exists()) {
       const yamlObject = safeLoad(readFileSync(this.configFileLocation(), 'utf8'))
 
-      return toCamelCase(yamlObject)
+      return toCamelCase(yamlObject, this.keysToSkipForCaseTransformation)
     }
 
     throw Error(`${this.configFileName} at '${this.configFilePath}' does not exist`)
@@ -31,8 +33,8 @@ export default class YamlConfigFileRepo<T> {
     throw Error(`File '${this.configFileLocation()}' to delete does not exist`)
   }
 
-  write(data: any): void {
-    const dataWithSnakeCaseKeys = toSnakeCase(data)
+  write(data: T): void {
+    const dataWithSnakeCaseKeys = toSnakeCase(data, this.keysToSkipForCaseTransformation)
     const yamlObject = safeDump(dataWithSnakeCaseKeys)
 
     return writeFileSync(this.configFileLocation(), yamlObject, 'utf8')

@@ -1,6 +1,6 @@
 export interface ServiceRuntimeConfig {
   version: string
-  environments: string
+  environments: string[]
   defaultEnvironment: string
   services: ServiceImageOriginPair[]
 }

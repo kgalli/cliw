@@ -3,4 +3,5 @@ export interface DockerComposeConfig {
   services: {
     [key: string]: any
   }
+  networks?: any
 }

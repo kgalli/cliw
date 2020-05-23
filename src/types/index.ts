@@ -70,3 +70,4 @@ const enum DbEngine {
 }
 
 export type ShellCallback = (cmd: string) => void
+export type ShellCallbackPromise = (cmd: string) => Promise<string>
