@@ -62,7 +62,6 @@ export default abstract class extends BaseCommand {
       dockerComposeConfigFileName,
       dockerComposeCmdConstructor,
       dockerComposeConfigConstructor,
-      // tslint:disable-next-line:no-console
       shellCallback({dryRun, logger: this.log})
     )
   }
