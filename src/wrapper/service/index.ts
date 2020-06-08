@@ -20,7 +20,13 @@ export default abstract class extends BaseCommand {
     this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, projectConfig.configDir)
 
     const runtimeConfig = new ServiceRuntimeConfigRepo(projectConfig.configDir).load()
-    const parameterConfig = new ServiceParameterConfigRepo(projectConfig.configDir).load()
+
+    const parameterConfig = (
+      environment === runtimeConfig.defaultEnvironment
+      ? new ServiceParameterConfigRepo(projectConfig.configDir)
+      : new ServiceParameterConfigRepo(projectConfig.configDir, `service-parameters.${environment}.yaml`)
+    ).load()
+
     const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.configDir).load()
     const serviceImageOriginTypesConfig = new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT).load()
 
@@ -44,8 +50,12 @@ export default abstract class extends BaseCommand {
       dockerComposeConfig
     )
 
+    const dockerComposeProjectName = `${projectConfig.name}_${environment}`
     const dockerComposeConfigFileName = `docker-compose.${defaultProject.name}.${environment}.yaml`
-    const dockerComposeCmdConstructor = new DockerComposeCmdConstructor(projectConfig.name, join(projectConfig.workDir, dockerComposeConfigFileName))
+    const dockerComposeConfigFileLocation = join(projectConfig.workDir, dockerComposeConfigFileName)
+    const dockerComposeCmdConstructor = new DockerComposeCmdConstructor(
+      dockerComposeProjectName, dockerComposeConfigFileLocation
+    )
 
     return new DockerComposeWrapper(
       projectConfig.workDir,

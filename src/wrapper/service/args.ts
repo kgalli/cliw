@@ -1,9 +1,9 @@
 import {defaultProject} from '../../config'
 
-import ServiceRuntimeConfigRepo from './config/service-runtime-config-repo'
+import DockerComposeConfigRepo from './config/docker-compose-config-repo'
 
-const runtimeConfig = new ServiceRuntimeConfigRepo(defaultProject.configDir).load()
-const services = runtimeConfig.services.map(service => service.name)
+const dockerComposeConfig = new DockerComposeConfigRepo(defaultProject.configDir).load()
+const services = Object.keys(dockerComposeConfig.services)
 
 export const servicesArg = {
   name: 'services',
