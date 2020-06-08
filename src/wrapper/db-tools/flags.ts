@@ -6,7 +6,7 @@ import {loadDbToolsConfig} from './config'
 
 function environments(): string[] {
   if (projectsConfigExists()) {
-    return loadDbToolsConfig(defaultProject.mainConfigPath).environments
+    return loadDbToolsConfig(defaultProject.configDir).environments
   }
 
   return []
@@ -14,7 +14,7 @@ function environments(): string[] {
 
 function defaultEnvironment(): string | undefined {
   if (projectsConfigExists()) {
-    return loadDbToolsConfig(defaultProject.mainConfigPath).defaultEnvironment
+    return loadDbToolsConfig(defaultProject.configDir).defaultEnvironment
   }
 
   return

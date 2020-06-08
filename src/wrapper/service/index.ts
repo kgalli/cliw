@@ -17,11 +17,11 @@ export default abstract class extends BaseCommand {
   service(dryRun: boolean, environment: string): ServiceWrapper {
     const projectConfig = defaultProject
 
-    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, projectConfig.mainConfigPath)
+    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, projectConfig.configDir)
 
-    const runtimeConfig = new ServiceRuntimeConfigRepo(projectConfig.mainConfigPath).load()
-    const parameterConfig = new ServiceParameterConfigRepo(projectConfig.mainConfigPath).load()
-    const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.mainConfigPath).load()
+    const runtimeConfig = new ServiceRuntimeConfigRepo(projectConfig.configDir).load()
+    const parameterConfig = new ServiceParameterConfigRepo(projectConfig.configDir).load()
+    const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.configDir).load()
     const serviceImageOriginTypesConfig = new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT).load()
 
     const serviceParametersPairs = parameterConfig.services
@@ -58,7 +58,7 @@ export default abstract class extends BaseCommand {
   }
 
   imageOriginConfig(): ServiceImageOriginTypeConfigRepo {
-    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, defaultProject.mainConfigPath)
+    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, defaultProject.configDir)
 
     return new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT)
   }

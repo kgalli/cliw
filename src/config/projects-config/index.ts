@@ -9,8 +9,8 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
     super(configFilePath, fileName)
   }
 
-  initialize(project: string, workDirLocation: string, mainConfigPath: string): ProjectsConfig {
-    const projectConfig = this.constructProjectConfig(project, workDirLocation, mainConfigPath)
+  initialize(project: string, workDir: string, configDir: string): ProjectsConfig {
+    const projectConfig = this.constructProjectConfig(project, workDir, configDir)
 
     this.validate(projectConfig)
 
@@ -37,9 +37,9 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
     return projectsConfig
   }
 
-  addProject(project: string, workDirLocation: string, mainConfigLocation: string): ProjectsConfig {
+  addProject(project: string, workDir: string, configDir: string): ProjectsConfig {
     const projectsConfig = this.load()
-    const projectConfig = this.constructProjectConfig(project, workDirLocation, mainConfigLocation)
+    const projectConfig = this.constructProjectConfig(project, workDir, configDir)
 
     this.validate(projectConfig)
     projectsConfig.projects.push(projectConfig)
@@ -75,19 +75,19 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
   }
 
   private validate(projectConfig: ProjectConfig) {
-    if (!exists(projectConfig.mainConfigPath)) {
-      throw new Error(`Configuration directory '${projectConfig.mainConfigPath}' does not exist`)
+    if (!exists(projectConfig.configDir)) {
+      throw new Error(`Configuration directory '${projectConfig.configDir}' does not exist`)
     }
     if (!exists(projectConfig.workDir)) {
       throw new Error(`Working directory '${projectConfig.workDir}' does not exist`)
     }
   }
 
-  private constructProjectConfig(project: string, workDirLocation: string, mainConfigPath: string): ProjectConfig {
+  private constructProjectConfig(project: string, workDir: string, configDir: string): ProjectConfig {
     return {
       name: project,
-      workDir: workDirLocation,
-      mainConfigPath
+      workDir,
+      configDir
     } as ProjectConfig
   }
 

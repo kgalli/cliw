@@ -8,7 +8,7 @@ import DbToolsWrapper from './db-tools-wrapper'
 export default abstract class extends BaseCommand {
   dbTools(dryRun = false): DbToolsWrapper {
     const projectConfig = defaultProject
-    const dbToolsConfig = loadDbToolsConfig(projectConfig.mainConfigPath)
+    const dbToolsConfig = loadDbToolsConfig(projectConfig.configDir)
 
     return new DbToolsWrapper(
       dbToolsConfig.dataSources,

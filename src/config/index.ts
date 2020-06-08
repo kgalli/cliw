@@ -26,8 +26,8 @@ if (projectsConfigRepo.exists()) {
   mkdir(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT)
 }
 
-export function projectsConfigInitialize(project: string, mainConfigLocation: string, workDirLocation: string): ProjectsConfig {
-  return projectsConfigRepo.initialize(project, workDirLocation, mainConfigLocation)
+export function projectsConfigInitialize(project: string, configDir: string, workDir: string): ProjectsConfig {
+  return projectsConfigRepo.initialize(project, workDir, configDir)
 }
 
 export function projectsConfigLoad(): ProjectsConfig {
@@ -38,8 +38,8 @@ export function projectsConfigExists(): boolean {
   return projectsConfigRepo.exists()
 }
 
-export function projectsConfigAddProject(project: string, mainConfigLocation: string, workDirLocation: string): ProjectsConfig {
-  return projectsConfigRepo.addProject(project, workDirLocation, mainConfigLocation)
+export function projectsConfigAddProject(project: string, configDir: string, workDir: string): ProjectsConfig {
+  return projectsConfigRepo.addProject(project, workDir, configDir)
 }
 
 export function projectsConfigRemoveProject(project: string) {

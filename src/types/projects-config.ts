@@ -6,5 +6,5 @@ export interface ProjectsConfig {
 export interface ProjectConfig {
   name: string
   workDir: string
-  mainConfigPath: string
+  configDir: string
 }
