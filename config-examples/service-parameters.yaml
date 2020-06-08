@@ -15,7 +15,7 @@ services:
   - name: db
     parameters:
       - name: DB_PORT
-        value: 9999
+        value: 7777
       - name: POSTGRES_PASSWORD
         value: "kgalli"
       - name: POSTGRES_USER
