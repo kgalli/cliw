@@ -35,7 +35,7 @@ export const enum PasswordEncryption {
   NONE = 'none', AWSKMS = 'amskms'
 }
 
-const enum DbEngine {
+export enum DbEngine {
   POSTGRES = 'postgresql', MYSQL = 'mysql'
 }
 

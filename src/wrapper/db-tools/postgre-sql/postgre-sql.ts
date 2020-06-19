@@ -1,8 +1,8 @@
-import ConnectionParams from './connection-params'
-import DockerOptions from './docker-options'
-import PgDumpOptions from './pgdump-options'
-import PgRestoreOptions from './pgrestore-options'
-import PsqlOptions from './psql-options'
+import ConnectionParams from '../connection-params'
+import DbConsoleOptions from '../db-console-options'
+import DbDumpOptions from '../db-dump-options'
+import DbRestoreOptions from '../db-restore-options'
+import DockerOptions from '../docker-options'
 
 const defaultDockerOptions: DockerOptions = {
   enabled: true,
@@ -20,8 +20,7 @@ function stripEnclosingDoubleQuotes(value: string): string {
 }
 
 export default class PostgreSql {
-  static psql(connectionParams: ConnectionParams, options: PsqlOptions) {
-    const dockerOptions = {...defaultDockerOptions, ...options.docker}
+  static console(connectionParams: ConnectionParams, dbConsoleOptions: DbConsoleOptions, dockerOptions: DockerOptions) {
     const cmd = []
 
     cmd.push('psql')
@@ -33,23 +32,31 @@ export default class PostgreSql {
       cmd.push(`-d ${connectionParams.database}`)
     }
 
-    if (options.command) {
-      cmd.push(`-c "${stripEnclosingDoubleQuotes(options.command)}"`)
+    if (dbConsoleOptions.command) {
+      cmd.push(`-c "${stripEnclosingDoubleQuotes(dbConsoleOptions.command)}"`)
     }
 
-    if (options.file) {
-      cmd.push(`-f "${stripEnclosingDoubleQuotes(options.file)}"`)
+    if (dbConsoleOptions.file) {
+      cmd.push(`-f "${stripEnclosingDoubleQuotes(dbConsoleOptions.file)}"`)
     }
 
     if (dockerOptions.enabled) {
-      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
+      const changedDockerOptions = {...dockerOptions}
+
+      if (dbConsoleOptions.file || dbConsoleOptions.command) {
+        changedDockerOptions.tty = false
+        changedDockerOptions.interactive = false
+      } else {
+        changedDockerOptions.interactive = true
+      }
+
+      return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, changedDockerOptions)
     }
 
     return cmd.join(' ')
   }
 
-  static pgDump(connectionParams: ConnectionParams, options: PgDumpOptions) {
-    const dockerOptions = {...defaultDockerOptions, ...options.docker}
+  static pgDump(connectionParams: ConnectionParams, dbDumpOptions: DbDumpOptions, dockerOptions: DockerOptions) {
     const cmd = []
 
     cmd.push('pg_dump')
@@ -58,13 +65,13 @@ export default class PostgreSql {
     cmd.push(`-U ${connectionParams.user}`)
     cmd.push('--verbose --no-security-labels --no-owner --if-exists --clean --no-tablespaces --no-privileges --disable-dollar-quoting')
 
-    if (options.schemaOnly) {
+    if (dbDumpOptions.schemaOnly) {
       cmd.push('--schema-only')
     } else {
       cmd.push('--format=custom')
     }
 
-    cmd.push(`--file ${options.target}`)
+    cmd.push(`--file ${dbDumpOptions.target}`)
     cmd.push(`-d ${connectionParams.database}`)
 
     if (dockerOptions.enabled) {
@@ -74,8 +81,7 @@ export default class PostgreSql {
     return cmd.join(' ')
   }
 
-  static pgRestore(connectionParams: ConnectionParams, options: PgRestoreOptions) {
-    const dockerOptions = {...defaultDockerOptions, ...options.docker}
+  static pgRestore(connectionParams: ConnectionParams, dbRestoreOptions: DbRestoreOptions, dockerOptions: DockerOptions) {
     const cmd = []
 
     cmd.push('pg_restore')
@@ -85,7 +91,7 @@ export default class PostgreSql {
     cmd.push('--verbose --no-owner --no-privileges --format=custom')
     cmd.push(`-d ${connectionParams.database}`)
 
-    cmd.push(options.restoreFileLocation)
+    cmd.push(dbRestoreOptions.restoreFileLocation)
 
     if (dockerOptions.enabled) {
       return PostgreSql.asDockerCmd(cmd.join(' '), connectionParams.password, dockerOptions)
@@ -120,47 +126,40 @@ export default class PostgreSql {
 
   constructor(connectionParams: ConnectionParams, dockerOptions: DockerOptions) {
     this.connectionParams = connectionParams
-    this.dockerOptions = dockerOptions
+    this.dockerOptions = {...defaultDockerOptions, ...dockerOptions}
   }
 
-  dbConsole(options: PsqlOptions) {
-    const psqlOptions = {...options}
-
-    psqlOptions.docker = this.dockerOptions
-    psqlOptions.docker.interactive = true
-
-    return PostgreSql.psql(this.connectionParams, psqlOptions)
+  dbConsole(options: DbConsoleOptions) {
+    return PostgreSql.console(this.connectionParams, options, this.dockerOptions)
   }
 
   dbCreate() {
     const connectionParams = {...this.connectionParams}
     const createStatement = `CREATE DATABASE ${connectionParams.database} WITH OWNER ${connectionParams.user} ENCODING 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';`
-    const psqlOptions = {command: createStatement, docker: this.dockerOptions}
+    const dbConsoleOptions: DbConsoleOptions = {command: createStatement}
 
     connectionParams.database = 'template1'
-    return PostgreSql.psql(connectionParams, psqlOptions)
+    return PostgreSql.console(connectionParams, dbConsoleOptions, this.dockerOptions)
   }
 
   dbDrop() {
     const connectionParams = {...this.connectionParams}
     const dropStatement = `DROP DATABASE IF EXISTS ${connectionParams.database};`
-    const psqlOptions = {command: dropStatement, docker: this.dockerOptions}
+    const dbConsoleOptions: DbConsoleOptions = {command: dropStatement}
 
     connectionParams.database = 'template1'
-    return PostgreSql.psql(connectionParams, psqlOptions)
+    return PostgreSql.console(connectionParams, dbConsoleOptions, this.dockerOptions)
   }
 
-  dbRestore(options: PgRestoreOptions) {
+  dbRestore(dbRestoreOptions: DbRestoreOptions) {
     const connectionParams = {...this.connectionParams}
-    const pgRestoreOptions = {...options, docker: this.dockerOptions}
 
-    return PostgreSql.pgRestore(connectionParams, pgRestoreOptions)
+    return PostgreSql.pgRestore(connectionParams, dbRestoreOptions, this.dockerOptions)
   }
 
-  dbDump(options: PgDumpOptions) {
+  dbDump(dbDumpOptions: DbDumpOptions) {
     const connectionParams = {...this.connectionParams}
-    const pgDumpOptions = {...options, docker: this.dockerOptions}
 
-    return PostgreSql.pgDump(connectionParams, pgDumpOptions)
+    return PostgreSql.pgDump(connectionParams, dbDumpOptions, this.dockerOptions)
   }
 }
