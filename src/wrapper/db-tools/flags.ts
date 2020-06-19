@@ -20,12 +20,6 @@ function defaultEnvironment(): string | undefined {
   return
 }
 
-export const connectionFlag = flags.string({
-  char: 's',
-  multiple: false,
-  required: true
-})
-
 export const environmentFlag = flags.string({
   char: 'e',
   required: true,

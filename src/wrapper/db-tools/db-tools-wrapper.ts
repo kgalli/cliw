@@ -3,12 +3,14 @@ import {isEmpty} from 'lodash'
 
 import AwsKmsClient from '../../aws-kms'
 
-import {DataSource, DataSourceParams} from './config/index'
+import {DataSource, DataSourceParams, DbEngine} from './config'
 import ConnectionParams from './connection-params'
+import DbConsoleOptions from './db-console-options'
+import DbDumpOptions from './db-dump-options'
+import DbRestoreOptions from './db-restore-options'
 import DockerOptions from './docker-options'
-import PgdumpOptions from './pgdump-options'
-import PgRestoreOptions from './pgrestore-options'
-import PostgreSql from './postgre-sql'
+import MySql from './my-sql/my-sql'
+import PostgreSql from './postgre-sql/postgre-sql'
 
 export default class DbToolsWrapper {
   shellWrapper: any
@@ -21,7 +23,7 @@ export default class DbToolsWrapper {
     this.shellWrapper = shellWrapper
   }
 
-  async console(options: any, dataSourceName: string, environment: string) {
+  async console(options: DbConsoleOptions, dataSourceName: string, environment: string) {
     return this.runDbCmd(dataSourceName, environment, 'console', options)
   }
 
@@ -33,11 +35,11 @@ export default class DbToolsWrapper {
     return this.runDbCmd(dataSourceName, environment, 'drop', null)
   }
 
-  async dump(options: PgdumpOptions, dataSourceName: string, environment: string) {
+  async dump(options: DbDumpOptions, dataSourceName: string, environment: string) {
     return this.runDbCmd(dataSourceName, environment, 'dump', options)
   }
 
-  async restore(options: PgRestoreOptions, dataSourceName: string, environment: string) {
+  async restore(options: DbRestoreOptions, dataSourceName: string, environment: string) {
     return this.runDbCmd(dataSourceName, environment, 'restore', options)
   }
 
@@ -93,7 +95,7 @@ export default class DbToolsWrapper {
 
     const connectionParams = this.extractConnectionParams(dataSourceParams)
     const dockerOptions = {enabled: true, tty: Boolean(process.stdout.isTTY)} as DockerOptions
-    const dbWrapper = this.dbWrapper(connectionParams, dockerOptions)
+    const dbWrapper = this.dbWrapper(dataSourceParams.engine, connectionParams, dockerOptions)
 
     let shellCmdToExec
 
@@ -136,8 +138,20 @@ export default class DbToolsWrapper {
     }
   }
 
-  private dbWrapper(connectionParams: ConnectionParams, dockerOptions: DockerOptions): PostgreSql {
-    return new PostgreSql(connectionParams, dockerOptions)
+  private dbWrapper(engine: DbEngine, connectionParams: ConnectionParams, dockerOptions: DockerOptions): PostgreSql {
+    let wrapper
+    switch (engine) {
+    case DbEngine.POSTGRES:
+      wrapper = new PostgreSql(connectionParams, dockerOptions)
+      break
+    case DbEngine.MYSQL:
+      wrapper = new MySql(connectionParams, dockerOptions)
+      break
+    default:
+      throw new Error(`Engine "${engine}" is not supported`)
+    }
+
+    return wrapper
   }
 
   private extractConnectionParams(dataSourceParams: DataSourceParams): ConnectionParams {

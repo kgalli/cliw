@@ -3,6 +3,7 @@ import {flags} from '@oclif/command'
 import {dryRunFlag} from '../../flags'
 import DbToolsWrapper from '../../wrapper/db-tools'
 import {dataSourceNameArg} from '../../wrapper/db-tools/args'
+import DbConsoleOptions from '../../wrapper/db-tools/db-console-options'
 import {environmentFlag} from '../../wrapper/db-tools/flags'
 
 export default class Console extends DbToolsWrapper {
@@ -39,7 +40,7 @@ export default class Console extends DbToolsWrapper {
     const dryRun = flags['dry-run']
     const command = flags.command
     const file = flags.file
-    const options = {
+    const options: DbConsoleOptions = {
       command,
       file
     }
