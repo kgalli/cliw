@@ -1,4 +1,4 @@
-import {exec, execSync, ExecSyncOptionsWithStringEncoding} from 'child_process'
+import {execSync, ExecSyncOptionsWithStringEncoding} from 'child_process'
 
 export interface ShellOptions {
   dryRun: boolean
@@ -20,6 +20,7 @@ export const shellCallback = (shellOptions: ShellOptions) => {
   }
 }
 
+/*
 type callback = (cmd: string) => Promise<string>
 
 export const shellCallbackPromise = (shellOptions: ShellOptions): callback => {
@@ -48,3 +49,4 @@ export const shellCallbackPromise = (shellOptions: ShellOptions): callback => {
     })
   }
 }
+*/

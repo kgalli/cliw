@@ -21,11 +21,12 @@ export default class Checkout extends BaseCommand {
   ]
 
   async run() {
+    /*
     const {argv, flags} = this.parse(Checkout)
     const services = argv
     const {environment} = flags
     const dryRun = flags['dry-run']
-
+    */
     throw new Error('Not implemented exception!')
   }
 }
