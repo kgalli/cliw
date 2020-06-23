@@ -26,8 +26,8 @@ export default class Drop extends DbToolsWrapper {
 
     try {
       await this
-        .dbTools(dryRun)
-        .drop(datasource, environment)
+        .dbTools(dryRun, environment)
+        .drop(datasource)
     } catch (e) {
       this.error(e.message, e)
     }

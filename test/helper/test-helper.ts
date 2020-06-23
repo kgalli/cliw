@@ -43,6 +43,8 @@ function removeConfigFile(filePath: string, fileName: string): void {
   }
 }
 
+console.log(`Running tests using '${TEST_CONFIG_DIR_PATH}' as config dir.`)
+
 export {
   env,
   TEST_CONFIG_DIR_PATH,

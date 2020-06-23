@@ -26,8 +26,8 @@ export default class Create extends DbToolsWrapper {
 
     try {
       await this
-        .dbTools(dryRun)
-        .create(datasource, environment)
+        .dbTools(dryRun, environment)
+        .create(datasource)
     } catch (e) {
       this.error(e.message, e)
     }

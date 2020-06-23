@@ -32,7 +32,7 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
     const serviceImageOriginTypesConfig = this.load()
     const index = serviceImageOriginTypesConfig
       .environments
-      .findIndex(env => env.name === environment)
+      .findIndex(env => env.name === environment) as number | undefined
 
     if (index === undefined) {
       serviceImageOriginTypesConfig.environments = []

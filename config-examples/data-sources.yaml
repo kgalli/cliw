@@ -1,0 +1,28 @@
+version: 2020-05-22
+environments:
+  - "development"
+  - "test"
+default_environment: "development"
+dataSources:
+  - name: api
+    environments:
+      - name: "development"
+        description:
+        host: "localhost"
+        port: "9999"
+        user: "kgalli"
+        database: "api_playground"
+        password: "kgalli"
+        passwordEncryptionType: "none"
+        engine: "postgresql"
+        readonly: false
+      - name: test
+        description:
+        host: "localhost"
+        port: "7777"
+        user: "kgalli"
+        database: "api_playground"
+        password: "kgalli"
+        passwordEncryptionType: "none"
+        engine: "postgresql"
+        readonly: false
