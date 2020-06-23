@@ -73,6 +73,9 @@
       "service": {
         "description": "Manage service(s) lifecycle using a container runtime."
       },
+      "service:image": {
+        "description": "Manage service(s) container image."
+      },
       "project": {
         "description": "List, add, remove project(s) and set the default."
       }

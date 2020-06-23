@@ -22,7 +22,7 @@ export default class YamlConfigFileRepo<T> {
       return toCamelCase(yamlObject, this.keysToSkipForCaseTransformation)
     }
 
-    throw Error(`${this.configFileName} at '${this.configFilePath}' does not exist`)
+    throw Error(`${this.configFileName} at '${this.configFilePath}' could not be found`)
   }
 
   remove() {
@@ -30,7 +30,7 @@ export default class YamlConfigFileRepo<T> {
       return this.delete()
     }
 
-    throw Error(`File '${this.configFileLocation()}' to delete does not exist`)
+    throw Error(`File '${this.configFileLocation()}' to delete could not be found`)
   }
 
   write(data: T): void {

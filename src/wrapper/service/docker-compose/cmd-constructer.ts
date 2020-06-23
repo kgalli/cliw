@@ -1,6 +1,6 @@
 import {
   ExecOptions,
-  LogOptions,
+  LogOptions, PullOptions,
   RunOptions,
   StartOptions,
   StatusOptions,
@@ -116,6 +116,24 @@ export default class DockerComposeCmdConstructor {
 
     if (options.showAll) {
       cmdWrapper.options.push('--all')
+    }
+
+    return this.constructDockerComposeCmd(cmdWrapper)
+  }
+
+  pull(options: PullOptions, services: string[]): string {
+    const cmdWrapper: CmdWrapper = {
+      subCmd: 'pull',
+      options: [],
+      services,
+    }
+
+    if (options.quiet) {
+      cmdWrapper.options.push('--quiet')
+    }
+
+    if (options.includeDeps) {
+      cmdWrapper.options.push('--include-deps')
     }
 
     return this.constructDockerComposeCmd(cmdWrapper)

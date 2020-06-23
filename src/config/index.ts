@@ -6,9 +6,9 @@ import {mkdir} from '../utils/file-utils'
 
 import ProjectsConfigRepo from './projects-config/index'
 
-export const DEFAULT_CONFIG_PATH = isEmpty(process.env.CLIW_DEFAULT_CONFIG_PATH)
+export const DEFAULT_CONFIG_PATH = isEmpty(process.env.CLIW_CONFIG_PATH)
   ? `${homedir()}/.config/cliw`
-  : process.env.CLIW_DEFAULT_CONFIG_PATH as string
+  : process.env.CLIW_CONFIG_PATH as string
 
 mkdir(DEFAULT_CONFIG_PATH)
 

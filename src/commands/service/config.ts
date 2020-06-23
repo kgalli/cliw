@@ -27,7 +27,7 @@ export default class Config extends BaseCommand {
       description: 'List service(s) configuration.',
       allowNo: false,
       default: true,
-      exclusive: ['image-origin', 'list'],
+      exclusive: ['image-origin', 'validate'],
     }),
   }
 
@@ -44,9 +44,11 @@ export default class Config extends BaseCommand {
     const imageOrigin = flags['image-origin'] as ImageOriginType
 
     try {
-      this
-        .imageOriginConfig()
-        .updateImageOriginType(services, environment, imageOrigin)
+      if (imageOrigin) {
+        this
+          .imageOriginConfig()
+          .updateImageOriginType(services, environment, imageOrigin)
+      }
     } catch (error) {
       this.error(error.message, error)
     }

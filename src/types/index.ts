@@ -5,6 +5,7 @@ export default interface ServiceWrapper {
   start(options: StartOptions, services: string[]): void
   status(options: StatusOptions, services: string[]): void
   stop(options: StopOptions, services: string[]): void
+  pull(options: PullOptions, services: string[]): void
 }
 
 export interface ExecOptions {
@@ -31,6 +32,11 @@ export interface StopOptions {
 
 export interface StatusOptions {
   showAll: boolean
+}
+
+export interface PullOptions {
+  quiet: boolean
+  includeDeps: boolean
 }
 
 export interface DbParameterConfig {

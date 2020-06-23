@@ -1,6 +1,6 @@
 import ServiceWrapper, {
   ExecOptions,
-  LogOptions,
+  LogOptions, PullOptions,
   RunOptions,
   ShellCallback,
   StartOptions,
@@ -75,6 +75,14 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   status(options: StatusOptions, services: string[]): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.status(
+      options, services
+    )
+
+    return this.execDockerCompose(dockerComposeCmd)
+  }
+
+  pull(options: PullOptions, services: string[]): void {
+    const dockerComposeCmd = this.dockerComposeCmdConstructor.pull(
       options, services
     )
 

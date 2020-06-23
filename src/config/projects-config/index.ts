@@ -28,7 +28,7 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
     const projects = projectsConfig.projects.map(project => project.name)
 
     if (!projects.includes(project)) {
-      throw new Error(`Project with name ${project} does not exist.`)
+      throw new Error(`Project with name ${project} could not be found.`)
     }
 
     projectsConfig.default = project
@@ -50,6 +50,10 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
 
   removeProject(project: string) {
     const projectsConfig = this.load()
+
+    if (project === projectsConfig.default && projectsConfig.projects.length === 1) {
+      throw new Error('Project is the only one defined and therefore can not be removed.')
+    }
 
     if (project === projectsConfig.default && projectsConfig.projects.length > 1) {
       throw new Error('Project is currently defined as default. Please set another default and try again.')
@@ -76,10 +80,10 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
 
   private validate(projectConfig: ProjectConfig) {
     if (!exists(projectConfig.configDir)) {
-      throw new Error(`Configuration directory '${projectConfig.configDir}' does not exist`)
+      throw new Error(`Configuration directory '${projectConfig.configDir}' could not be found`)
     }
     if (!exists(projectConfig.workDir)) {
-      throw new Error(`Working directory '${projectConfig.workDir}' does not exist`)
+      throw new Error(`Working directory '${projectConfig.workDir}' could not be found`)
     }
   }
 
