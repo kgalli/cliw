@@ -10,19 +10,9 @@ export function loadDbToolsConfig(): DataSourcesConfig {
 }
 
 export function loadDataSourcesByEnvironment(environment: string): DataSource[] {
-  return loadDbToolsConfig().dataSources
-    .map(item => {
-      const dataSourceName = item.name
-      const dataSource = item.environments.find(env => env.name === environment)
-
-      if (dataSource) {
-        dataSource.name = dataSourceName
-      }
-      return dataSource
-    })
-    .filter(dataSource => dataSource !== undefined) as DataSource[]
+  return dataSourcesConfigRepo.loadDataSourcesByEnvironment(environment)
 }
 
 export function loadDataSourceNames(): string[] {
-  return loadDbToolsConfig().dataSources.map(dataSource => dataSource.name)
+  return dataSourcesConfigRepo.loadDataSourceNames()
 }
