@@ -73,7 +73,7 @@ export default class DockerComposeConfigConstructor {
     })
 
     const dockerComposeConfigTmp = {
-      version: '3',
+      version: '3.8',
       services,
       networks: {
         default: {
