@@ -47,8 +47,8 @@ export default class Console extends DbToolsWrapper {
 
     try {
       await this
-        .dbTools(dryRun)
-        .console(options, dataSource, environment)
+        .dbTools(dryRun, environment)
+        .console(options, dataSource)
     } catch (e) {
       this.error(e.message, e)
     }

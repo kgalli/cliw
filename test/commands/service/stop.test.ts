@@ -3,7 +3,6 @@ import {expect, test} from '@oclif/test'
 import {
   env,
   expectedStdOutForCmd,
-  mainConfig,
   removeProjectsConfigDefault,
   writeProjectsConfigDefault
 } from '../../helper/test-helper'
@@ -15,8 +14,8 @@ describe('stop', () => {
   test
     .env(env)
     .stdout()
-    .command(['service:stop', 'api', '--dry-run'])
+    .command(['service:stop', 'api','-edevelopment' , '--dry-run'])
     .it('runs stop api', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('stop', mainConfig.compose.defaultEnvironment, ['api']))
+      expect(ctx.stdout).to.contain(expectedStdOutForCmd('stop', 'development', ['--timeout 10', 'api']))
     })
 })

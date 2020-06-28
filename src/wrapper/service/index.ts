@@ -1,24 +1,85 @@
+import {join} from 'path'
+
 import BaseCommand from '../../base-command'
 import {DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, defaultProject} from '../../config'
-import BashWrapper from '../bash'
+import ServiceWrapper from '../../types'
+import ServiceRuntimeConfigRepo from '../service/config/service-runtime-config-repo'
+import {shellCallback} from '../shell'
 
-import ServiceConfigHelper from './config'
-import ServiceWrapper from './service-wrapper'
+import DockerComposeConfigRepo from './config/docker-compose-config-repo'
+import ServiceImageOriginTypeConfigRepo from './config/service-image-origin-types-config-repo'
+import ServiceParameterConfigRepo from './config/service-parameter-config-repo'
+import DockerComposeWrapper from './docker-compose'
+import DockerComposeCmdConstructor from './docker-compose/cmd-constructer'
+import DockerComposeConfigConstructor from './docker-compose/config-constructor'
 
 export default abstract class extends BaseCommand {
-  service(dryRun = false): ServiceWrapper {
+  service(dryRun: boolean, environment: string): ServiceWrapper {
     const projectConfig = defaultProject
-    const serviceConfigHelper = new ServiceConfigHelper(
-      DEFAULT_CONFIG_PATH_ACTIVE_PROJECT,
-      projectConfig.mainConfigLocation
+
+    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, projectConfig.configDir)
+
+    const runtimeConfig = new ServiceRuntimeConfigRepo(projectConfig.configDir).load()
+
+    const parameterConfig = (
+      environment === runtimeConfig.defaultEnvironment
+      ? new ServiceParameterConfigRepo(projectConfig.configDir)
+      : new ServiceParameterConfigRepo(projectConfig.configDir, `service-parameters.${environment}.yaml`)
+    ).load()
+
+    const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.configDir).load()
+    const serviceImageOriginTypesConfig = new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT).load()
+
+    const serviceParametersPairs = parameterConfig.services
+    const serviceImageOriginPairs = runtimeConfig.services
+    const environmentServiceImageOriginTypes = serviceImageOriginTypesConfig
+      .environments
+      .find(env => env.name === environment)
+
+    const serviceImageOriginTypePairs = environmentServiceImageOriginTypes
+      ? environmentServiceImageOriginTypes.services
+      : []
+
+    const dockerComposeConfigConstructor = new DockerComposeConfigConstructor(
+      projectConfig.workDir,
+      `${defaultProject.name}_{{{service}}}_${environment}`,
+      `${defaultProject.name}_${environment}`,
+      serviceParametersPairs,
+      serviceImageOriginPairs,
+      serviceImageOriginTypePairs,
+      dockerComposeConfig
     )
 
-    return new ServiceWrapper(
-      projectConfig.name,
-      projectConfig.workDir,
-      serviceConfigHelper,
-      dryRun,
-      new BashWrapper({...BashWrapper.defaultOptions(), dryRun})
+    const dockerComposeProjectName = `${projectConfig.name}_${environment}`
+    const dockerComposeConfigFileName = `docker-compose.${defaultProject.name}.${environment}.yaml`
+    const dockerComposeConfigFileLocation = join(projectConfig.workDir, dockerComposeConfigFileName)
+    const dockerComposeCmdConstructor = new DockerComposeCmdConstructor(
+      dockerComposeProjectName, dockerComposeConfigFileLocation
     )
+
+    return new DockerComposeWrapper(
+      projectConfig.workDir,
+      dockerComposeConfigFileName,
+      dockerComposeCmdConstructor,
+      dockerComposeConfigConstructor,
+      shellCallback({dryRun, logger: this.log})
+    )
+  }
+
+  imageOriginConfig(): ServiceImageOriginTypeConfigRepo {
+    this.initializeImageOriginTypesConfig(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT, defaultProject.configDir)
+
+    return new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT)
+  }
+
+  private initializeImageOriginTypesConfig(configPathActiveProject: string, mainConfigPath: string) {
+    const serviceImageOriginTypesConfigRepo = new ServiceImageOriginTypeConfigRepo(configPathActiveProject)
+
+    if (!serviceImageOriginTypesConfigRepo.exists()) {
+      const runtimeConfig = new ServiceRuntimeConfigRepo(mainConfigPath).load()
+      serviceImageOriginTypesConfigRepo.init(
+        runtimeConfig.environments, runtimeConfig.services.map(service => service.name)
+      )
+    }
   }
 }

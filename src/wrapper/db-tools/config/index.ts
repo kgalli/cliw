@@ -1,46 +1,18 @@
-import FileUtils from '../../../utils/file-utils'
+import {defaultProject} from '../../../config'
+import {DataSource, DataSourcesConfig} from '../../../types/data-sources-config'
 
-export default interface DbToolsConfig {
-  environments: string[]
-  defaultEnvironment: string
-  dataSources: DataSource[]
+import DataSourceConfigRepo from './data-source-config-repo'
+
+const dataSourcesConfigRepo = new DataSourceConfigRepo(defaultProject.configDir, 'data-sources.yaml')
+
+export function loadDbToolsConfig(): DataSourcesConfig {
+  return dataSourcesConfigRepo.load()
 }
 
-export interface DataSource {
-  name: string
-  environments: {
-    [key: string]: DataSourceParams
-  }
+export function loadDataSourcesByEnvironment(environment: string): DataSource[] {
+  return dataSourcesConfigRepo.loadDataSourcesByEnvironment(environment)
 }
 
-interface SshParams {
-  beforeShellCmd?: string
-  jumpHost: string
-  localPort: number
-}
-
-export interface DataSourceParams {
-  host: string
-  port: number
-  user: string
-  password: string
-  passwordEncryption: string
-  database: string
-  engine: DbEngine
-  readonly: boolean
-  ssh?: SshParams
-}
-
-export const enum PasswordEncryption {
-  NONE = 'none', AWSKMS = 'amskms'
-}
-
-export enum DbEngine {
-  POSTGRES = 'postgresql', MYSQL = 'mysql'
-}
-
-export function loadDbToolsConfig(dbToolsConfigLocation: string): DbToolsConfig {
-  const mainConfig = FileUtils.load(dbToolsConfigLocation, 'DbToolsConfig')
-
-  return mainConfig.dbTools as DbToolsConfig
+export function loadDataSourceNames(): string[] {
+  return dataSourcesConfigRepo.loadDataSourceNames()
 }

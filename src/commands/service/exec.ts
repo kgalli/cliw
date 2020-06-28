@@ -1,17 +1,18 @@
-import {flags} from '@oclif/command'
+import {flags as flagsHelper} from '@oclif/command'
 
-import {dryRunFlag} from '../../flags'
-import ServiceCommand from '../../wrapper/service'
+import {ExecOptions} from '../../types'
+import BaseCommand from '../../wrapper/service'
 import {serviceArg} from '../../wrapper/service/args'
-import {environmentFlag} from '../../wrapper/service/flags'
+import {dryRunFlag, environmentFlag} from '../../wrapper/service/flags'
 
-export default class Exec extends ServiceCommand {
-  static description = 'execute a command in a running container'
+export default class Exec extends BaseCommand {
+  static description = 'Execute a command in a running service container.'
 
   static flags = {
     environment: environmentFlag,
     'dry-run': dryRunFlag,
-    help: flags.help({char: 'h'})
+    help: flagsHelper.help({char: 'h'}),
+    'no-tty': flagsHelper.boolean({default: false, description: 'Disable pseudo-tty allocation.'}),
   }
 
   static args = [
@@ -20,23 +21,25 @@ export default class Exec extends ServiceCommand {
       name: 'command',
       description: 'specify command to execute',
       required: true,
-    }
+    },
   ]
 
-  async run() {
-    const {flags, args, argv} = this.parse(Exec)
-    const service = args.service
-    const environment = flags.environment
-    const dryRun = flags['dry-run']
+  static strict = false
 
+  async run(): Promise<void> {
+    const {flags, args, argv} = this.parse(Exec)
+    const {service} = args
+    const {environment} = flags
+    const dryRun = flags['dry-run']
+    const options: ExecOptions = {noTty: flags['no-tty']}
     const cmd = argv.slice(1).join(' ')
 
     try {
       this
-        .service(dryRun)
-        .exec({}, service, environment, cmd)
-    } catch (e) {
-      this.error(`${e.message}\nSee more help with --help`, e)
+        .service(dryRun, environment)
+        .exec(options, service, cmd)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

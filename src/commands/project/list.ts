@@ -31,7 +31,7 @@ export default class ProjectList extends BaseCommand {
         minWidth: 7,
       },
       workDir: {},
-      mainConfigLocation: {},
+      configDir: {},
       default: {
         get: row => row.name === projectsConfig.default ? true : ''
       }

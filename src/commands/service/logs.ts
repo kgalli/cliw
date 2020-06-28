@@ -1,26 +1,25 @@
-import {flags} from '@oclif/command'
+import {flags as flagsHelper} from '@oclif/command'
 
-import {dryRunFlag} from '../../flags'
-import ServiceCommand from '../../wrapper/service'
+import BaseCommand from '../../wrapper/service'
 import {servicesArg} from '../../wrapper/service/args'
-import {environmentFlag} from '../../wrapper/service/flags'
+import {dryRunFlag, environmentFlag} from '../../wrapper/service/flags'
 
-export default class Logs extends ServiceCommand {
-  static description = 'show service logs'
+export default class Logs extends BaseCommand {
+  static description = 'Show service(s) logs.'
 
   static flags = {
     environment: environmentFlag,
     'dry-run': dryRunFlag,
-    help: flags.help({char: 'h'}),
-    follow: flags.boolean({
+    help: flagsHelper.help({char: 'h'}),
+    follow: flagsHelper.boolean({
       char: 'f',
       description: 'follow log output',
-      default: false
+      default: false,
     }),
-    timestamps: flags.boolean({
+    timestamps: flagsHelper.boolean({
       char: 't',
       description: 'show timestamps',
-      default: false
+      default: false,
     }),
   }
 
@@ -30,20 +29,20 @@ export default class Logs extends ServiceCommand {
     servicesArg,
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const {argv, flags} = this.parse(Logs)
     const services = argv
-    const environment = flags.environment
+    const {environment} = flags
     const dryRun = flags['dry-run']
     const options = {
       follow: flags.follow,
-      timestamps: flags.timestamps
+      timestamps: flags.timestamps,
     }
 
     try {
       this
-        .service(dryRun)
-        .logs(options, services, environment)
+        .service(dryRun, environment)
+        .log(options, services)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)
     }

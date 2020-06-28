@@ -2,8 +2,8 @@ import {address} from 'ip'
 import {isEmpty} from 'lodash'
 
 import AwsKmsClient from '../../aws-kms'
+import {DataSource, DbEngine} from '../../types/data-sources-config'
 
-import {DataSource, DataSourceParams, DbEngine} from './config'
 import ConnectionParams from './connection-params'
 import DbConsoleOptions from './db-console-options'
 import DbDumpOptions from './db-dump-options'
@@ -23,32 +23,32 @@ export default class DbToolsWrapper {
     this.shellWrapper = shellWrapper
   }
 
-  async console(options: DbConsoleOptions, dataSourceName: string, environment: string) {
-    return this.runDbCmd(dataSourceName, environment, 'console', options)
+  async console(options: DbConsoleOptions, dataSourceName: string) {
+    return this.runDbCmd(dataSourceName, 'console', options)
   }
 
-  async create(dataSourceName: string, environment: string) {
-    return this.runDbCmd(dataSourceName, environment, 'create', null)
+  async create(dataSourceName: string) {
+    return this.runDbCmd(dataSourceName, 'create', null)
   }
 
-  async drop(dataSourceName: string, environment: string) {
-    return this.runDbCmd(dataSourceName, environment, 'drop', null)
+  async drop(dataSourceName: string) {
+    return this.runDbCmd(dataSourceName, 'drop', null)
   }
 
-  async dump(options: DbDumpOptions, dataSourceName: string, environment: string) {
-    return this.runDbCmd(dataSourceName, environment, 'dump', options)
+  async dump(options: DbDumpOptions, dataSourceName: string) {
+    return this.runDbCmd(dataSourceName, 'dump', options)
   }
 
-  async restore(options: DbRestoreOptions, dataSourceName: string, environment: string) {
-    return this.runDbCmd(dataSourceName, environment, 'restore', options)
+  async restore(options: DbRestoreOptions, dataSourceName: string) {
+    return this.runDbCmd(dataSourceName, 'restore', options)
   }
 
   private dataSourceByName(name: string) {
-    return this.dataSources.find((c: DataSource) => c.name === name) as DataSource
+    return this.dataSources.find((dataSource: DataSource) => dataSource.name === name) as DataSource
   }
 
   private dataSourceNames(): string[] {
-    return this.dataSources.map(s => s.name)
+    return this.dataSources.map(dataSource => dataSource.name)
   }
 
   private validate(dataSourceName: string) {
@@ -61,41 +61,40 @@ export default class DbToolsWrapper {
     }
   }
 
-  private async runDbCmd(dataSourceName: string, environment: string, cmd: string, options: any) {
+  private async runDbCmd(dataSourceName: string, cmd: string, options: any) {
     this.validate(dataSourceName)
     const dataSource = this.dataSourceByName(dataSourceName)
-    const dataSourceParams = this.extractDataSourceParams(dataSource, environment)
 
     let sshCmdTemplate = ''
 
-    if (this.sshConnectionRequired(dataSourceParams)) {
-      const sshConnectionParams = dataSourceParams.ssh!
+    if (this.sshConnectionRequired(dataSource)) {
+      const sshConnectionParams = dataSource.ssh!
       const localHostIp = address()
       const localPort = sshConnectionParams.localPort
       const jumpHost = sshConnectionParams.jumpHost
-      const remoteHost = dataSourceParams.host
-      const remotePort = dataSourceParams.port
+      const remoteHost = dataSource.host
+      const remotePort = dataSource.port
 
-      dataSourceParams.host = localHostIp
-      dataSourceParams.port = localPort
+      dataSource.host = localHostIp
+      dataSource.port = localPort
 
       sshCmdTemplate = `ssh -l $USER ${jumpHost} -f -o ExitOnForwardFailure=yes -L ${localHostIp}:${localPort}:${remoteHost}:${remotePort} sleep 10; eval "@@"`
 
-      if (!isEmpty(dataSourceParams.ssh!.beforeShellCmd)) {
-        const beforeShellCmd = dataSourceParams.ssh!.beforeShellCmd
+      if (!isEmpty(dataSource.ssh!.beforeShellCmd)) {
+        const beforeShellCmd = dataSource.ssh!.beforeShellCmd
         sshCmdTemplate = `${beforeShellCmd} && ${sshCmdTemplate}`
       }
     }
 
-    if (this.passwordDecryptionRequired(dataSourceParams)) {
+    if (this.passwordDecryptionRequired(dataSource)) {
       const client = new AwsKmsClient({})
 
-      dataSourceParams.password = await client.decrypt(dataSourceParams.password) as string
+      dataSource.password = await client.decrypt(dataSource.password) as string
     }
 
-    const connectionParams = this.extractConnectionParams(dataSourceParams)
+    const connectionParams = this.extractConnectionParams(dataSource)
     const dockerOptions = {enabled: true, tty: Boolean(process.stdout.isTTY)} as DockerOptions
-    const dbWrapper = this.dbWrapper(dataSourceParams.engine, connectionParams, dockerOptions)
+    const dbWrapper = this.dbWrapper(dataSource.engine, connectionParams, dockerOptions)
 
     let shellCmdToExec
 
@@ -104,18 +103,18 @@ export default class DbToolsWrapper {
       shellCmdToExec = dbWrapper.dbConsole(options)
       break
     case 'create':
-      this.raiseReadOnlyErrorIfNeeded(dataSourceParams, cmd)
+      this.raiseReadOnlyErrorIfNeeded(dataSource, cmd)
       shellCmdToExec = dbWrapper.dbCreate()
       break
     case 'drop':
-      this.raiseReadOnlyErrorIfNeeded(dataSourceParams, cmd)
+      this.raiseReadOnlyErrorIfNeeded(dataSource, cmd)
       shellCmdToExec = dbWrapper.dbDrop()
       break
     case 'dump':
       shellCmdToExec = dbWrapper.dbDump(options)
       break
     case 'restore':
-      this.raiseReadOnlyErrorIfNeeded(dataSourceParams, cmd)
+      this.raiseReadOnlyErrorIfNeeded(dataSource, cmd)
       shellCmdToExec = dbWrapper.dbRestore(options)
       break
     default:
@@ -131,9 +130,9 @@ export default class DbToolsWrapper {
     this.shellWrapper.run(cmd)
   }
 
-  private raiseReadOnlyErrorIfNeeded(dataSourceParams: DataSourceParams, cmd: string) {
+  private raiseReadOnlyErrorIfNeeded(dataSource: DataSource, cmd: string) {
     // tslint:disable-next-line
-    if (dataSourceParams.readonly === undefined || dataSourceParams.readonly === null || dataSourceParams.readonly) {
+    if (dataSource.readonly === undefined || dataSource.readonly === null || dataSource.readonly) {
       throw new Error(`Command "${cmd}" is not supported in a readonly connection -- check your configuration`)
     }
   }
@@ -154,12 +153,12 @@ export default class DbToolsWrapper {
     return wrapper
   }
 
-  private extractConnectionParams(dataSourceParams: DataSourceParams): ConnectionParams {
-    let host = dataSourceParams.host as string
-    let port = dataSourceParams.port as number
-    const database = dataSourceParams.database as string
-    const user = dataSourceParams.user as string
-    const password = dataSourceParams.password as string
+  private extractConnectionParams(dataSource: DataSource): ConnectionParams {
+    let host = dataSource.host as string
+    let port = dataSource.port as number
+    const database = dataSource.database as string
+    const user = dataSource.user as string
+    const password = dataSource.password as string
 
     return { host,
       port,
@@ -169,29 +168,19 @@ export default class DbToolsWrapper {
     } as ConnectionParams
   }
 
-  private extractDataSourceParams(dataSource: DataSource, environment: string): DataSourceParams {
-    const dataSourceParams = dataSource.environments[environment]
-
-    if (isEmpty(dataSourceParams)) {
-      throw new Error(`Connection params for environment "${environment}" not set`)
-    }
-
-    return dataSourceParams
+  private sshConnectionRequired(dataSource: DataSource) {
+    return !isEmpty(dataSource.ssh)
   }
 
-  private sshConnectionRequired(dataSourceParams: DataSourceParams) {
-    return !isEmpty(dataSourceParams.ssh)
-  }
-
-  private passwordDecryptionRequired(dataSourceParams: DataSourceParams) {
-    if (!dataSourceParams.passwordEncryption || dataSourceParams.passwordEncryption === 'none') {
+  private passwordDecryptionRequired(dataSource: DataSource) {
+    if (!dataSource.passwordEncryption || dataSource.passwordEncryption === 'none') {
       return false
     }
 
-    if (dataSourceParams.passwordEncryption === 'awskms') {
+    if (dataSource.passwordEncryption === 'awskms') {
       return true
     }
 
-    throw new Error(`Unsupported password decryption for ${dataSourceParams.passwordEncryption} encryption type. Only AWS KMS ('awskms') is currently supported.`)
+    throw new Error(`Unsupported password decryption for ${dataSource.passwordEncryption} encryption type. Only AWS KMS ('awskms') is currently supported.`)
   }
 }

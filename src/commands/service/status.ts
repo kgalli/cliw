@@ -1,18 +1,18 @@
-import {flags} from '@oclif/command'
+import {flags as flagsHelper} from '@oclif/command'
 
-import {dryRunFlag} from '../../flags'
-import ServiceCommand from '../../wrapper/service'
+import {StatusOptions} from '../../types'
+import BaseCommand from '../../wrapper/service'
 import {servicesArg} from '../../wrapper/service/args'
-import {environmentFlag, servicesFlag} from '../../wrapper/service/flags'
+import {dryRunFlag, environmentFlag, servicesFlag} from '../../wrapper/service/flags'
 
-export default class Status extends ServiceCommand {
-  static description = 'show services run status'
+export default class Status extends BaseCommand {
+  static description = 'Show service(s) run status.'
 
   static flags = {
     services: servicesFlag,
     environment: environmentFlag,
     'dry-run': dryRunFlag,
-    help: flags.help({char: 'h'}),
+    help: flagsHelper.help({char: 'h'}),
   }
 
   static strict = false
@@ -21,16 +21,17 @@ export default class Status extends ServiceCommand {
     servicesArg,
   ]
 
-  async run() {
+  async run(): Promise<void> {
     const {argv, flags} = this.parse(Status)
     const services = argv
-    const environment = flags.environment
+    const {environment} = flags
     const dryRun = flags['dry-run']
+    const statusOptions: StatusOptions = {showAll: true}
 
     try {
       this
-        .service(dryRun)
-        .status({}, services, environment)
+        .service(dryRun, environment)
+        .status(statusOptions, services)
     } catch (e) {
       this.error(`${e.message}\nSee more help with --help`, e)
     }

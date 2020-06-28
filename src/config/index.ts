@@ -1,54 +1,51 @@
 import {isEmpty} from 'lodash'
 import {homedir} from 'os'
 
-import FileUtils from '../utils/file-utils'
+import {ProjectConfig, ProjectsConfig} from '../types/projects-config'
+import {mkdir} from '../utils/file-utils'
 
-import FileRepository from './file-repository'
-import ProjectsConfigHelper, {ProjectConfig, ProjectsConfig} from './projects-config/index'
+import ProjectsConfigRepo from './projects-config/index'
 
-export const DEFAULT_CONFIG_PATH = isEmpty(process.env.CLIW_DEFAULT_CONFIG_PATH)
+export const DEFAULT_CONFIG_PATH = isEmpty(process.env.CLIW_CONFIG_PATH)
   ? `${homedir()}/.config/cliw`
-  : process.env.CLIW_DEFAULT_CONFIG_PATH as string
+  : process.env.CLIW_CONFIG_PATH as string
 
-FileUtils.mkdir(DEFAULT_CONFIG_PATH)
+mkdir(DEFAULT_CONFIG_PATH)
 
-const DEFAULT_PROJECTS_CONFIG_FILENAME = 'projects.json'
-const projectsConfigLocation = `${DEFAULT_CONFIG_PATH}/${DEFAULT_PROJECTS_CONFIG_FILENAME}`
-const projectsConfigRepository = new FileRepository(projectsConfigLocation, 'ProjectsConfig')
-const projectsConfigHelper = new ProjectsConfigHelper(projectsConfigRepository)
+const projectsConfigRepo = new ProjectsConfigRepo(DEFAULT_CONFIG_PATH)
 
 // TODO revisit: the first time cliw is run projects config does not exist.
 // Maybe it is best to write empty file and do checks based on file content.
 export let defaultProject = {} as ProjectConfig
 export let DEFAULT_CONFIG_PATH_ACTIVE_PROJECT = ''
 
-if (projectsConfigHelper.exists()) {
-  defaultProject = projectsConfigHelper.loadDefaultProjectConfig()
+if (projectsConfigRepo.exists()) {
+  defaultProject = projectsConfigRepo.loadDefaultProjectConfig()
   DEFAULT_CONFIG_PATH_ACTIVE_PROJECT = `${DEFAULT_CONFIG_PATH}/${defaultProject.name}`
 
-  FileUtils.mkdir(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT)
+  mkdir(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT)
 }
 
-export function projectsConfigInitialize(project: string, mainConfigLocation: string, workDirLocation: string): ProjectsConfig {
-  return projectsConfigHelper.initialize(project, workDirLocation, mainConfigLocation)
+export function projectsConfigInitialize(project: string, configDir: string, workDir: string): ProjectsConfig {
+  return projectsConfigRepo.initialize(project, workDir, configDir)
 }
 
 export function projectsConfigLoad(): ProjectsConfig {
-  return projectsConfigHelper.load()
+  return projectsConfigRepo.load()
 }
 
 export function projectsConfigExists(): boolean {
-  return projectsConfigHelper.exists()
+  return projectsConfigRepo.exists()
 }
 
-export function projectsConfigAddProject(project: string, mainConfigLocation: string, workDirLocation: string): ProjectsConfig {
-  return projectsConfigHelper.addProject(project, workDirLocation, mainConfigLocation)
+export function projectsConfigAddProject(project: string, configDir: string, workDir: string): ProjectsConfig {
+  return projectsConfigRepo.addProject(project, workDir, configDir)
 }
 
 export function projectsConfigRemoveProject(project: string) {
-  return projectsConfigHelper.removeProject(project)
+  return projectsConfigRepo.removeProject(project)
 }
 
 export function projectsConfigSetDefault(project: string) {
-  projectsConfigHelper.setDefaultProject(project)
+  projectsConfigRepo.setDefaultProject(project)
 }

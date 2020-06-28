@@ -10,12 +10,12 @@ export default class ProjectAdd extends BaseCommand {
     config: flags.string({
       char: 'c',
       required: true,
-      description: 'location of the configuration file (*.json)'
+      description: 'absolute path to the configuration files directory'
     }),
     'working-directory': flags.string({
       char: 'w',
       required: true,
-      description: 'absolute location of the working directory'
+      description: 'absolute path to the working directory'
     }),
     help: flags.help({char: 'h'})
   }
