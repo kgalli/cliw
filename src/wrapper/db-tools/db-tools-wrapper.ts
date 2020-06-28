@@ -61,7 +61,7 @@ export default class DbToolsWrapper {
     }
   }
 
-  private async runDbCmd(dataSourceName: string, cmd: string, options: any) {
+  private async runDbCmd(dataSourceName: string, cmd: string, options: any): Promise<void> {
     this.validate(dataSourceName)
     const dataSource = this.dataSourceByName(dataSourceName)
 

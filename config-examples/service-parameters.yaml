@@ -11,11 +11,13 @@ services:
         value: 8080
       - name: DB_DATABASE
         value: "playground_dev"
+      - name: DB_PORT
+        value: 9999
 
   - name: db
     parameters:
       - name: DB_PORT
-        value: 7777
+        value: 9999
       - name: POSTGRES_PASSWORD
         value: "kgalli"
       - name: POSTGRES_USER
