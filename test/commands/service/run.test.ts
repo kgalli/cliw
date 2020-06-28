@@ -4,7 +4,7 @@ import {
   env,
   expectedStdOutForCmd,
   removeProjectsConfigDefault,
-  writeProjectsConfigDefault
+  writeProjectsConfigDefault,
 } from '../../helper/test-helper'
 
 describe('run', () => {
@@ -12,10 +12,10 @@ describe('run', () => {
   after(() => removeProjectsConfigDefault())
 
   test
-    .env(env)
-    .stdout()
-    .command(['service:run', '--dry-run', '-edevelopment', 'api', 'bin/bash'])
-    .it('runs "bin/bash" command inside api', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('run', 'development', ['api', 'bin/bash']))
-    })
+  .env(env)
+  .stdout()
+  .command(['service:run', '--dry-run', '-edevelopment', 'api', 'bin/bash'])
+  .it('runs "bin/bash" command inside api', ctx => {
+    expect(ctx.stdout).to.contain(expectedStdOutForCmd('run', 'development', ['api', 'bin/bash']))
+  })
 })

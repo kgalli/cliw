@@ -16,7 +16,7 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
 
     const projectsConfig = {
       default: project,
-      projects: [projectConfig]
+      projects: [projectConfig],
     } as ProjectsConfig
 
     this.write(projectsConfig)
@@ -66,9 +66,8 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
 
       if (projectsConfig.projects.length === 0) {
         return this.remove()
-      } else {
-        return this.write(projectsConfig)
       }
+      return this.write(projectsConfig)
     }
   }
 
@@ -91,7 +90,7 @@ export default class ProjectsConfigRepo extends YamlConfigFileRepo<ProjectsConfi
     return {
       name: project,
       workDir,
-      configDir
+      configDir,
     } as ProjectConfig
   }
 

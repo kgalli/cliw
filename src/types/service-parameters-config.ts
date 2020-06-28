@@ -1,14 +1,14 @@
 export interface ServiceParameterConfig {
-  version: string
-  services: ServiceParametersPair[]
+  version: string;
+  services: ServiceParametersPair[];
 }
 
 export interface ServiceParametersPair {
-  name: string
-  parameters: Parameter[]
+  name: string;
+  parameters: Parameter[];
 }
 
 interface Parameter {
-  name: string
-  value: string
+  name: string;
+  value: string;
 }

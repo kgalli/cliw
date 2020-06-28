@@ -14,7 +14,9 @@ import PostgreSql from './postgre-sql/postgre-sql'
 
 export default class DbToolsWrapper {
   shellWrapper: any
+
   dataSources: DataSource[]
+
   dryRun: boolean
 
   constructor(dataSources: DataSource[], dryRun: boolean, shellWrapper: any) {
@@ -154,17 +156,17 @@ export default class DbToolsWrapper {
   }
 
   private extractConnectionParams(dataSource: DataSource): ConnectionParams {
-    let host = dataSource.host as string
-    let port = dataSource.port as number
+    const host = dataSource.host as string
+    const port = dataSource.port as number
     const database = dataSource.database as string
     const user = dataSource.user as string
     const password = dataSource.password as string
 
-    return { host,
+    return {host,
       port,
       user,
       password,
-      database
+      database,
     } as ConnectionParams
   }
 

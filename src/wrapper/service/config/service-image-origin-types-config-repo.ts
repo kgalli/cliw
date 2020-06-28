@@ -11,13 +11,13 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
   init(environments: string[], services: string[]): void {
     const serviceImageOriginTypesConfig = {
       environments: environments
-        .map(environment => ({
-          name: environment,
-          services: services
-            .map(service => ({
-              name: service, imageOriginType: ImageOriginType.REGISTRY
-            }))
-        }))
+      .map(environment => ({
+        name: environment,
+        services: services
+        .map(service => ({
+          name: service, imageOriginType: ImageOriginType.REGISTRY,
+        })),
+      })),
     }
 
     this.write(serviceImageOriginTypesConfig)
@@ -31,14 +31,14 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
   updateImageOriginType(services: string[], environment: string, imageOriginType: ImageOriginType): void {
     const serviceImageOriginTypesConfig = this.load()
     const index = serviceImageOriginTypesConfig
-      .environments
-      .findIndex(env => env.name === environment) as number | undefined
+    .environments
+    .findIndex(env => env.name === environment) as number | undefined
 
     if (index === undefined) {
       serviceImageOriginTypesConfig.environments = []
       serviceImageOriginTypesConfig.environments.push({
         name: environment,
-        services: services.map(service => ({name: service, imageOriginType}))
+        services: services.map(service => ({name: service, imageOriginType})),
       })
     } else {
       const environmentServiceImageOriginTypesPairs = serviceImageOriginTypesConfig.environments[index]
@@ -54,6 +54,6 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
     }
 
     this
-      .write(serviceImageOriginTypesConfig)
+    .write(serviceImageOriginTypesConfig)
   }
 }

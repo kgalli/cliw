@@ -8,7 +8,7 @@ const defaultDockerOptions: DockerOptions = {
   enabled: true,
   volume: '/opt',
   tty: false,
-  interactive: false
+  interactive: false,
 }
 
 export default class MySql {
@@ -73,7 +73,7 @@ export default class MySql {
 
   static mysqlRestore(connectionParams: ConnectionParams, dbRestoreOptions: DbRestoreOptions, dockerOptions: DockerOptions) {
     const consoleOptions: DbConsoleOptions = {
-      file: dbRestoreOptions.restoreFileLocation
+      file: dbRestoreOptions.restoreFileLocation,
     }
 
     return MySql.console(connectionParams, consoleOptions, dockerOptions)
@@ -100,6 +100,7 @@ export default class MySql {
   }
 
   readonly connectionParams: ConnectionParams
+
   readonly dockerOptions: DockerOptions
 
   constructor(connectionParams: ConnectionParams, dockerOptions: DockerOptions) {

@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk'
 
 const defaultOptions = {
-  region: 'eu-central-1'
+  region: 'eu-central-1',
 }
 
 export default class AwsKmsClient {

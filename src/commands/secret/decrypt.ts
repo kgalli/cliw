@@ -18,8 +18,8 @@ export default class Decrypt extends Command {
       const decryptedValue = await client.decrypt(flags.secret) as string
 
       this.log(decryptedValue)
-    } catch (e) {
-      this.error(e.message, e)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

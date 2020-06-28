@@ -22,9 +22,9 @@ export default abstract class extends BaseCommand {
     const runtimeConfig = new ServiceRuntimeConfigRepo(projectConfig.configDir).load()
 
     const parameterConfig = (
-      environment === runtimeConfig.defaultEnvironment
-      ? new ServiceParameterConfigRepo(projectConfig.configDir)
-      : new ServiceParameterConfigRepo(projectConfig.configDir, `service-parameters.${environment}.yaml`)
+      environment === runtimeConfig.defaultEnvironment ?
+        new ServiceParameterConfigRepo(projectConfig.configDir) :
+        new ServiceParameterConfigRepo(projectConfig.configDir, `service-parameters.${environment}.yaml`)
     ).load()
 
     const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.configDir).load()
@@ -33,12 +33,12 @@ export default abstract class extends BaseCommand {
     const serviceParametersPairs = parameterConfig.services
     const serviceImageOriginPairs = runtimeConfig.services
     const environmentServiceImageOriginTypes = serviceImageOriginTypesConfig
-      .environments
-      .find(env => env.name === environment)
+    .environments
+    .find(env => env.name === environment)
 
-    const serviceImageOriginTypePairs = environmentServiceImageOriginTypes
-      ? environmentServiceImageOriginTypes.services
-      : []
+    const serviceImageOriginTypePairs = environmentServiceImageOriginTypes ?
+      environmentServiceImageOriginTypes.services :
+      []
 
     const dockerComposeConfigConstructor = new DockerComposeConfigConstructor(
       projectConfig.workDir,

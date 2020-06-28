@@ -1,31 +1,31 @@
 export interface DataSourcesConfig {
-  environments: string[]
-  defaultEnvironment: string
-  dataSources: NameWrapper[]
+  environments: string[];
+  defaultEnvironment: string;
+  dataSources: NameWrapper[];
 }
 
 interface NameWrapper {
-  name: string
-  environments: DataSource[]
+  name: string;
+  environments: DataSource[];
 }
 
 interface SshParams {
-  beforeShellCmd?: string
-  jumpHost: string
-  localPort: number
+  beforeShellCmd?: string;
+  jumpHost: string;
+  localPort: number;
 }
 
 export interface DataSource {
-  name: string
-  host: string
-  port: number
-  user: string
-  password: string
-  passwordEncryption: string
-  database: string
-  engine: DbEngine
-  readonly: boolean
-  ssh?: SshParams
+  name: string;
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  passwordEncryption: string;
+  database: string;
+  engine: DbEngine;
+  readonly: boolean;
+  ssh?: SshParams;
 }
 
 export const enum PasswordEncryption {

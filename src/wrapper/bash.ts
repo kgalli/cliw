@@ -2,9 +2,9 @@ import {execSync} from 'child_process'
 import {isEmpty} from 'lodash'
 
 interface ShellOptions {
-  dryRun: boolean,
-  print: boolean,
-  highlight: boolean
+  dryRun: boolean;
+  print: boolean;
+  highlight: boolean;
 }
 
 export default class Bash {
@@ -12,7 +12,7 @@ export default class Bash {
     return {
       dryRun: false,
       print: false,
-      highlight: true
+      highlight: true,
     }
   }
 
@@ -26,17 +26,18 @@ export default class Bash {
     const cmdOptions = isEmpty(options) ? '' : options
 
     if (this.options.print || this.options.dryRun) {
-      // tslint:disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.log(`${cmd} ${cmdOptions}`)
     }
 
     if (!this.options.dryRun) {
       try {
         return execSync(`${cmd} ${cmdOptions}`, {stdio: 'inherit'})
-        //tslint:disable no-unused
-      } catch (e) {
+        // tslint:disable no-unused
+      } catch (error) {
         // TODO append error to the error log
         // do nothing because wrapped command should already print error
+        // eslint-disable-next-line no-process-exit,unicorn/no-process-exit
         process.exit(1)
       }
     }

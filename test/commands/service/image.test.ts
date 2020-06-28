@@ -4,7 +4,7 @@ import {
   env,
   expectedStdOutForCmd,
   removeProjectsConfigDefault,
-  writeProjectsConfigDefault
+  writeProjectsConfigDefault,
 } from '../../helper/test-helper'
 
 describe('service:image', () => {

@@ -27,10 +27,10 @@ export default class Pull extends BaseCommand {
 
     try {
       this
-        .service(dryRun, environment)
-        .pull({quiet: false, includeDeps: false}, services)
-    } catch (e) {
-      this.error(`${e.message}\nSee more help with --help`, e)
+      .service(dryRun, environment)
+      .pull({quiet: false, includeDeps: false}, services)
+    } catch (error) {
+      this.error(`${error.message}\nSee more help with --help`, error)
     }
   }
 }

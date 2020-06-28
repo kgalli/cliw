@@ -20,7 +20,7 @@ export default class ProjectList extends BaseCommand {
   static description = 'list projects'
 
   static flags = {
-    ...cli.table.flags()
+    ...cli.table.flags(),
   }
 
   async run() {
@@ -33,8 +33,8 @@ export default class ProjectList extends BaseCommand {
       workDir: {},
       configDir: {},
       default: {
-        get: row => row.name === projectsConfig.default ? true : ''
-      }
+        get: row => row.name === projectsConfig.default ? true : '',
+      },
     }, {
       printLine: this.log,
       ...flags, // parsed flags

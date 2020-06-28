@@ -11,11 +11,11 @@ export default class Drop extends DbToolsWrapper {
   static flags = {
     environment: environmentFlag,
     'dry-run': dryRunFlag,
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   static args = [
-    dataSourceNameArg
+    dataSourceNameArg,
   ]
 
   async run() {
@@ -26,10 +26,10 @@ export default class Drop extends DbToolsWrapper {
 
     try {
       await this
-        .dbTools(dryRun, environment)
-        .drop(datasource)
-    } catch (e) {
-      this.error(e.message, e)
+      .dbTools(dryRun, environment)
+      .drop(datasource)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

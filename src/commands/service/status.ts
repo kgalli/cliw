@@ -30,10 +30,10 @@ export default class Status extends BaseCommand {
 
     try {
       this
-        .service(dryRun, environment)
-        .status(statusOptions, services)
-    } catch (e) {
-      this.error(`${e.message}\nSee more help with --help`, e)
+      .service(dryRun, environment)
+      .status(statusOptions, services)
+    } catch (error) {
+      this.error(`${error.message}\nSee more help with --help`, error)
     }
   }
 }

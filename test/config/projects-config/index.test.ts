@@ -29,8 +29,8 @@ describe('ProjectsConfigRepo', () => {
           projects: [{
             name: project,
             workDir,
-            configDir
-          }]
+            configDir,
+          }],
         }
 
         expect(subject.initialize(project, workDir, configDir)).to.eql(expectedProjectsConfig)
@@ -78,7 +78,7 @@ describe('ProjectsConfigRepo', () => {
         const configDir = TEST_CONFIG_DIR_PATH
 
         // TODO FIXME
-        //expect(subject.addProject(project, workDir, configDir)).to.eql(expectedProjectsConfig)
+        // expect(subject.addProject(project, workDir, configDir)).to.eql(expectedProjectsConfig)
       })
 
       it('throws validation error when called with non-existing workDir', () => {
@@ -105,8 +105,8 @@ describe('ProjectsConfigRepo', () => {
         const project = 'test'
 
         expect(() => subject.removeProject(project))
-          .to
-          .throw('Project is the only one defined and therefore can not be removed')
+        .to
+        .throw('Project is the only one defined and therefore can not be removed')
       })
     })
 
@@ -114,8 +114,8 @@ describe('ProjectsConfigRepo', () => {
       it('setDefaultProject from the project lists when called with valid parameters', () => {
         const project = 'test'
 
-        //TODO FIXME
-        //expect(subject.setDefaultProject(project)).to.eql(expectedProjectsConfig)
+        // TODO FIXME
+        // expect(subject.setDefaultProject(project)).to.eql(expectedProjectsConfig)
       })
 
       it('throws validation error when called with non-existing project', () => {

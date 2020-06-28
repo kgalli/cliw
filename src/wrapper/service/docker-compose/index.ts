@@ -15,16 +15,20 @@ import DockerComposeConfigConstructor from './config-constructor'
 
 export default class DockerComposeWrapper implements ServiceWrapper {
   workDir: string
+
   dockerComposeConfigName: string
+
   shellCallback: ShellCallback
+
   dockerComposeConfigConstructor: DockerComposeConfigConstructor
+
   dockerComposeCmdConstructor: DockerComposeCmdConstructor
 
   constructor(workDir: string,
-              dockerComposeConfigName: string,
-              dockerComposeCmdConstructor: DockerComposeCmdConstructor,
-              dockerComposeConfigConstructor: DockerComposeConfigConstructor,
-              shellCallback: ShellCallback,
+    dockerComposeConfigName: string,
+    dockerComposeCmdConstructor: DockerComposeCmdConstructor,
+    dockerComposeConfigConstructor: DockerComposeConfigConstructor,
+    shellCallback: ShellCallback,
   ) {
     this.workDir = workDir
     this.dockerComposeConfigName = dockerComposeConfigName

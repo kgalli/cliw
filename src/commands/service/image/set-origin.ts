@@ -20,7 +20,7 @@ export default class SetOrigin extends BaseCommand {
       name: 'origin',
       required: true,
       description: 'origin of the container image',
-      options: [ImageOriginType.REGISTRY, ImageOriginType.SOURCE]
+      options: [ImageOriginType.REGISTRY, ImageOriginType.SOURCE],
     },
   ]
 
@@ -33,8 +33,8 @@ export default class SetOrigin extends BaseCommand {
     try {
       if (imageOrigin) {
         this
-          .imageOriginConfig()
-          .updateImageOriginType([service], environment, imageOrigin)
+        .imageOriginConfig()
+        .updateImageOriginType([service], environment, imageOrigin)
       }
     } catch (error) {
       this.error(error.message, error)

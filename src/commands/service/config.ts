@@ -46,8 +46,8 @@ export default class Config extends BaseCommand {
     try {
       if (imageOrigin) {
         this
-          .imageOriginConfig()
-          .updateImageOriginType(services, environment, imageOrigin)
+        .imageOriginConfig()
+        .updateImageOriginType(services, environment, imageOrigin)
       }
     } catch (error) {
       this.error(error.message, error)

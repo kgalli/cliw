@@ -4,7 +4,7 @@ import {
   env,
   expectedStdOutForCmd,
   removeProjectsConfigDefault,
-  writeProjectsConfigDefault
+  writeProjectsConfigDefault,
 } from '../../helper/test-helper'
 
 describe('exec', () => {
@@ -12,10 +12,10 @@ describe('exec', () => {
   after(() => removeProjectsConfigDefault())
 
   test
-    .env(env)
-    .stdout()
-    .command(['service:exec', '--dry-run', '-edevelopment', 'api', 'bin/bash'])
-    .it('invokes exec with known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('exec', 'development', ['api', 'bin/bash']))
-    })
+  .env(env)
+  .stdout()
+  .command(['service:exec', '--dry-run', '-edevelopment', 'api', 'bin/bash'])
+  .it('invokes exec with known service', ctx => {
+    expect(ctx.stdout).to.contain(expectedStdOutForCmd('exec', 'development', ['api', 'bin/bash']))
+  })
 })

@@ -2,9 +2,9 @@ import {defaultProject} from '../../config'
 
 import DockerComposeConfigRepo from './config/docker-compose-config-repo'
 
-const services = defaultProject.configDir
-  ? Object.keys(new DockerComposeConfigRepo(defaultProject.configDir).load().services)
-  : []
+const services = defaultProject.configDir ?
+  Object.keys(new DockerComposeConfigRepo(defaultProject.configDir).load().services) :
+  []
 
 export const servicesArg = {
   name: 'services',

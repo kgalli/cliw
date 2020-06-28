@@ -4,7 +4,7 @@ import {
   env,
   expectedStdOutForCmd,
   removeProjectsConfigDefault,
-  writeProjectsConfigDefault
+  writeProjectsConfigDefault,
 } from '../../helper/test-helper'
 
 describe('start', () => {
@@ -12,18 +12,18 @@ describe('start', () => {
   after(() => removeProjectsConfigDefault())
 
   test
-    .env(env)
-    //.stdout({print: true})
-    .stdout()
-    .command(['service:start', 'api', '-edevelopment', '--dry-run'])
-    .it('invokes start with known service', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('start', 'development', ['api']))
-    })
+  .env(env)
+  // .stdout({print: true})
+  .stdout()
+  .command(['service:start', 'api', '-edevelopment', '--dry-run'])
+  .it('invokes start with known service', ctx => {
+    expect(ctx.stdout).to.contain(expectedStdOutForCmd('start', 'development', ['api']))
+  })
 
   test
-    .env(env)
-    .stdout()
-    .command(['service:start', 'demoTest', '-edevelopment', '--dry-run'])
-    .catch(err => expect(err.message).to.contain('Expected demoTest to be one of:'))
-    .it('does not invoke start with unknown service', () => {})
+  .env(env)
+  .stdout()
+  .command(['service:start', 'demoTest', '-edevelopment', '--dry-run'])
+  .catch(err => expect(err.message).to.contain('Expected demoTest to be one of:'))
+  .it('does not invoke start with unknown service', () => {})
 })

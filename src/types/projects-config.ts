@@ -1,10 +1,10 @@
 export interface ProjectsConfig {
-  default: string,
-  projects: ProjectConfig[]
+  default: string;
+  projects: ProjectConfig[];
 }
 
 export interface ProjectConfig {
-  name: string
-  workDir: string
-  configDir: string
+  name: string;
+  workDir: string;
+  configDir: string;
 }

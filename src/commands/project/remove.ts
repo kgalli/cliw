@@ -7,14 +7,15 @@ export default class ProjectRemove extends BaseCommand {
   static description = 'remove project'
 
   static flags = {
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
+
   static args = [
     {
       name: 'project',
       required: true,
-      description: 'project specified by name'
-    }
+      description: 'project specified by name',
+    },
   ]
 
   async run() {
@@ -23,8 +24,8 @@ export default class ProjectRemove extends BaseCommand {
 
     try {
       projectsConfigRemoveProject(projectToRemove)
-    } catch (e) {
-      this.error(e.message, e)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

@@ -3,7 +3,8 @@ function isArray(arr: any): boolean {
 }
 
 function isObject(o: any): boolean {
-  return o === Object(o) && !isArray(o) && typeof o !== 'function'
+  // eslint-disable-next-line no-new-object
+  return o === new Object(o) && !isArray(o) && typeof o !== 'function'
 }
 
 function snakeCaseToCamelCase(value: string) {
@@ -25,16 +26,18 @@ function transformKeys(o: any, transformFunc: TransFormFunc, keysToSkipForCaseTr
     const n: any = {}
 
     Object.keys(o)
-      .forEach(key => {
-        if (keysToSkipForCaseTransformation.has(key)) {
-          n[key] = o[key]
-        } else {
-          n[transformFunc(key)] = transformKeys(o[key], transformFunc, keysToSkipForCaseTransformation)
-        }
-      })
+    .forEach(key => {
+      if (keysToSkipForCaseTransformation.has(key)) {
+        n[key] = o[key]
+      } else {
+        n[transformFunc(key)] = transformKeys(o[key], transformFunc, keysToSkipForCaseTransformation)
+      }
+    })
 
     return n
-  } else if (isArray(o)) {
+  }
+
+  if (isArray(o)) {
     return o.map((item: any) => transformKeys(item, transformFunc, keysToSkipForCaseTransformation))
   }
 

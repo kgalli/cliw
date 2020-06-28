@@ -1,11 +1,11 @@
 type ShellCallback = (cmd: string) => void
 
 export interface SimpleShellOptions {
-  dryRun: boolean
-  currentWorkingDirectory?: string
-  print?: boolean
-  highlight?: boolean
-  logger(message: string): void
+  dryRun: boolean;
+  currentWorkingDirectory?: string;
+  print?: boolean;
+  highlight?: boolean;
+  logger(message: string): void;
 }
 
 const defaultOptions = (): SimpleShellOptions => ({

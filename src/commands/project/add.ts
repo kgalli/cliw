@@ -10,22 +10,22 @@ export default class ProjectAdd extends BaseCommand {
     config: flags.string({
       char: 'c',
       required: true,
-      description: 'absolute path to the configuration files directory'
+      description: 'absolute path to the configuration files directory',
     }),
     'working-directory': flags.string({
       char: 'w',
       required: true,
-      description: 'absolute path to the working directory'
+      description: 'absolute path to the working directory',
     }),
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   static args = [
     {
       name: 'project',
       required: true,
-      description: 'project specified by name'
-    }
+      description: 'project specified by name',
+    },
   ]
 
   async run() {
@@ -36,8 +36,8 @@ export default class ProjectAdd extends BaseCommand {
 
     try {
       projectsConfigAddProject(projectName, mainConfigLocation, workDir)
-    } catch (e) {
-      this.error(e.message, e)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

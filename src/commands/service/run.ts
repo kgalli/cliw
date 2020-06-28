@@ -40,10 +40,10 @@ export default class Run extends BaseCommand {
 
     try {
       this
-        .service(dryRun, environment)
-        .run(options, service, cmd)
-    } catch (e) {
-      this.error(`${e.message}\nSee more help with --help`, e)
+      .service(dryRun, environment)
+      .run(options, service, cmd)
+    } catch (error) {
+      this.error(`${error.message}\nSee more help with --help`, error)
     }
   }
 }

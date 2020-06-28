@@ -19,20 +19,21 @@ to gather the information needed directly from the prompt.
 
 Data in stored in projects-config.json at: ~/.config/ (default).
   `
+
   static flags = {
     name: flags.string({
       char: 'n',
-      description: 'project unique identifier (name)'
+      description: 'project unique identifier (name)',
     }),
     'config-directory': flags.string({
       char: 'c',
-      description: 'absolute location of the configuration directory'
+      description: 'absolute location of the configuration directory',
     }),
     'working-directory': flags.string({
       char: 'w',
-      description: 'absolute location of the working directory'
+      description: 'absolute location of the working directory',
     }),
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   async run() {
@@ -43,22 +44,22 @@ Data in stored in projects-config.json at: ~/.config/ (default).
       return
     }
 
-    const projectName = isEmpty(flags.name)
-      ? await cli.prompt('Please enter the project name')
-      : flags.name
+    const projectName = isEmpty(flags.name) ?
+      await cli.prompt('Please enter the project name') :
+      flags.name
 
-    const configDir = isEmpty(flags['config-directory'])
-      ? await cli.prompt('Please enter the absolute path to your configuration directory')
-      : flags['config-directory']
+    const configDir = isEmpty(flags['config-directory']) ?
+      await cli.prompt('Please enter the absolute path to your configuration directory') :
+      flags['config-directory']
 
-    const workDir = isEmpty(flags['working-directory'])
-      ? await cli.prompt('Please enter the absolute path to your working directory')
-      : flags['working-directory']
+    const workDir = isEmpty(flags['working-directory']) ?
+      await cli.prompt('Please enter the absolute path to your working directory') :
+      flags['working-directory']
 
     try {
       projectsConfigInitialize(projectName, configDir, workDir)
-    } catch (e) {
-      this.error(e.message, e)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

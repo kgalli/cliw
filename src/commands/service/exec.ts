@@ -36,8 +36,8 @@ export default class Exec extends BaseCommand {
 
     try {
       this
-        .service(dryRun, environment)
-        .exec(options, service, cmd)
+      .service(dryRun, environment)
+      .exec(options, service, cmd)
     } catch (error) {
       this.error(error.message, error)
     }

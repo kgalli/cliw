@@ -4,29 +4,35 @@ import {ServiceParametersPair} from '../../../types/service-parameters-config'
 import {ImageOrigin, ServiceImageOriginPair} from '../../../types/service-runtime-config'
 
 interface ServiceImageOriginMap {
-  [service: string]: ImageOrigin
+  [service: string]: ImageOrigin;
 }
 
 interface ServiceImageOriginTypeMap {
-  [service: string]: ImageOriginType
+  [service: string]: ImageOriginType;
 }
 
 export default class DockerComposeConfigConstructor {
   workDir: string
+
   network: string
+
   containerNameTemplate: string
+
   serviceParametersPairs: ServiceParametersPair[]
+
   serviceImageOriginPairs: ServiceImageOriginPair[]
+
   serviceImageOriginTypePairs: ServiceImageOriginTypePair[]
+
   dockerComposeConfig: DockerComposeConfig
 
   constructor(workDir: string, // needed later for setup of image build via source
-              containerNameTemplate: string,
-              network: string,
-              serviceParametersPairs: ServiceParametersPair[],
-              serviceImageOriginPairs: ServiceImageOriginPair[],
-              serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
-              dockerComposeConfig: DockerComposeConfig) {
+    containerNameTemplate: string,
+    network: string,
+    serviceParametersPairs: ServiceParametersPair[],
+    serviceImageOriginPairs: ServiceImageOriginPair[],
+    serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
+    dockerComposeConfig: DockerComposeConfig) {
     this.workDir = workDir
     this.network = network
     this.containerNameTemplate = containerNameTemplate
@@ -62,7 +68,7 @@ export default class DockerComposeConfigConstructor {
           services[service] = {
             ...services[service],
             ...serviceBuildProperties,
-            ...serviceImageOrigin.source.mergeProperties
+            ...serviceImageOrigin.source.mergeProperties,
           }
         } else {
           services[service].image = serviceImageOrigin.registry.image
@@ -78,10 +84,10 @@ export default class DockerComposeConfigConstructor {
       networks: {
         default: {
           external: {
-            name: this.network
-          }
-        }
-      }
+            name: this.network,
+          },
+        },
+      },
     }
 
     return this.replaceParameters(dockerComposeConfigTmp)

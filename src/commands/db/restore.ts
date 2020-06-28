@@ -16,13 +16,13 @@ export default class Restore extends DbToolsWrapper {
       char: 'r',
       description: 'restore file location (relative to current directory)',
       multiple: false,
-      required: true
+      required: true,
     }),
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   static args = [
-    dataSourceNameArg
+    dataSourceNameArg,
   ]
 
   async run() {
@@ -32,15 +32,15 @@ export default class Restore extends DbToolsWrapper {
     const restoreFileLocation = flags['restore-file']
     const dryRun = flags['dry-run']
     const options: DbRestoreOptions = {
-      restoreFileLocation
+      restoreFileLocation,
     }
 
     try {
       await this
-        .dbTools(dryRun, environment)
-        .restore(options, dataSource)
-    } catch (e) {
-      this.error(e.message, e)
+      .dbTools(dryRun, environment)
+      .restore(options, dataSource)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

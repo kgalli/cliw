@@ -15,16 +15,16 @@ export default class DataSourceConfigRepo extends YamlConfigFileRepo<DataSources
 
   loadDataSourcesByEnvironment(environment: string): DataSource[] {
     return this.load().dataSources
-      .map(item => {
-        const dataSourceName = item.name
-        const dataSource = item.environments.find(env => env.name === environment)
+    .map(item => {
+      const dataSourceName = item.name
+      const dataSource = item.environments.find(env => env.name === environment)
 
-        if (dataSource) {
-          dataSource.name = dataSourceName
-        }
-        return dataSource
-      })
-      .filter(dataSource => dataSource !== undefined) as DataSource[]
+      if (dataSource) {
+        dataSource.name = dataSourceName
+      }
+      return dataSource
+    })
+    .filter(dataSource => dataSource !== undefined) as DataSource[]
   }
 
   loadDataSourceNames(): string[] {

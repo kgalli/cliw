@@ -1,26 +1,26 @@
 export interface ServiceRuntimeConfig {
-  version: string
-  environments: string[]
-  defaultEnvironment: string
-  services: ServiceImageOriginPair[]
+  version: string;
+  environments: string[];
+  defaultEnvironment: string;
+  services: ServiceImageOriginPair[];
 }
 
 export interface ServiceImageOriginPair {
-  name: string
-  imageOrigin: ImageOrigin
+  name: string;
+  imageOrigin: ImageOrigin;
 }
 
 export interface ImageOrigin {
   registry: {
-    image: string
-  },
+    image: string;
+  };
   source: {
     build: {
-      context: string
-      dockerfile: string
-    },
+      context: string;
+      dockerfile: string;
+    };
     mergeProperties: {
-      [key: string]: any
-    }
-  }
+      [key: string]: any;
+    };
+  };
 }

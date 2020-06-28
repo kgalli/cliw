@@ -7,15 +7,15 @@ export default class ProjectSetDefault extends BaseCommand {
   static description = 'set default project'
 
   static flags = {
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   static args = [
     {
       name: 'project',
       required: true,
-      description: 'project specified by name'
-    }
+      description: 'project specified by name',
+    },
   ]
 
   async run() {
@@ -24,8 +24,8 @@ export default class ProjectSetDefault extends BaseCommand {
 
     try {
       projectsConfigSetDefault(project)
-    } catch (e) {
-      this.error(e.message, e)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }
