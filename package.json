@@ -38,7 +38,7 @@
     "mocha": "^8.0.1",
     "nyc": "^15.1.0",
     "sinon": "^8.1.1",
-    "ts-node": "^7.0.1",
+    "ts-node": "^8.10.2",
     "tslint": "^5.20.1",
     "typescript": "^3.9.5"
   },
@@ -86,7 +86,7 @@
     "postpack": "rm -f oclif.manifest.json tsconfig.tsbuildinfo",
     "posttest": "tslint -p test -t stylish",
     "prepack": "rm -rf lib tsconfig.tsbuildinfo && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "test": "nyc --extension .ts mocha --require ts-node/register \"test/**/*.test.ts\"",
+    "test": "nyc --extension .ts mocha --recursive --reporter spec --timeout 25000 --require ts-node/register \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "compile": "tsc"
   },
