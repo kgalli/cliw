@@ -4,7 +4,9 @@ import {defaultProject} from '../../config'
 
 import ServiceRuntimeConfigRepo from './config/service-runtime-config-repo'
 
-const runtimeConfig = new ServiceRuntimeConfigRepo(defaultProject.configDir).load()
+const runtimeConfig = defaultProject.configDir
+  ? new ServiceRuntimeConfigRepo(defaultProject.configDir).load()
+  : {environments: [], defaultEnvironment: 'development'}
 
 function environments(): string[] {
   return runtimeConfig.environments
