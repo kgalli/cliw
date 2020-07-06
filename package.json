@@ -84,6 +84,7 @@
   },
   "repository": "kgalli/cliw",
   "scripts": {
+    "lint": "eslint . --ext .ts --config .eslintrc --fix",
     "postpack": "rm -f oclif.manifest.json tsconfig.tsbuildinfo",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib tsconfig.tsbuildinfo && tsc -b && oclif-dev manifest && oclif-dev readme",
