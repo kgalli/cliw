@@ -21,7 +21,7 @@ describe('db:drop', () => {
     .env(env)
     .stdout()
     .command(['db:drop', 'api', '--environment', 'production', '--dry-run'])
-    .catch(err => expect(err.message).to.match(/Command "drop" is not supported in a readonly connection/))
+    .catch(error => expect(error.message).to.match(/Command "drop" is not supported in a readonly connection/))
     .it('raises an error due to readonly data source')
   })
 
@@ -40,7 +40,7 @@ describe('db:drop', () => {
     .env(env)
     .stdout()
     .command(['db:drop', 'api-mysql', '-eproduction', '--dry-run'])
-    .catch(err => expect(err.message).to.match(/Command "drop" is not supported in a readonly connection/))
+    .catch(error => expect(error.message).to.match(/Command "drop" is not supported in a readonly connection/))
     .it('raises an error due to readonly data source')
   })
 })

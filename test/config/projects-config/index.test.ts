@@ -73,9 +73,9 @@ describe('ProjectsConfigRepo', () => {
 
     context('.addProject', () => {
       it('adds project to the project lists when called with valid parameters', () => {
-        const project = 'test'
-        const workDir = TEST_WORK_DIR_PATH
-        const configDir = TEST_CONFIG_DIR_PATH
+        // const project = 'test'
+        // const workDir = TEST_WORK_DIR_PATH
+        // const configDir = TEST_CONFIG_DIR_PATH
 
         // TODO FIXME
         // expect(subject.addProject(project, workDir, configDir)).to.eql(expectedProjectsConfig)
@@ -112,7 +112,7 @@ describe('ProjectsConfigRepo', () => {
 
     context('.setDefaultProject', () => {
       it('setDefaultProject from the project lists when called with valid parameters', () => {
-        const project = 'test'
+        // const project = 'test'
 
         // TODO FIXME
         // expect(subject.setDefaultProject(project)).to.eql(expectedProjectsConfig)

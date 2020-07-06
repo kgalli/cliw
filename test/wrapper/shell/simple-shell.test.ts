@@ -10,8 +10,12 @@ describe('Shell', () => {
   let loggerSpy: SinonSpy
 
   beforeEach(() => {
-    const shellCallback = (): void => {}
-    const logger = (): void => {}
+    const shellCallback = (): void => {
+      // do nothing.
+    }
+    const logger = (): void => {
+      // do nothing.
+    }
 
     shellCallbackSpy = sandbox.spy(shellCallback)
     loggerSpy = sandbox.spy(logger)

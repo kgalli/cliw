@@ -24,6 +24,6 @@ describe('start', () => {
   .env(env)
   .stdout()
   .command(['service:start', 'demoTest', '-edevelopment', '--dry-run'])
-  .catch(err => expect(err.message).to.contain('Expected demoTest to be one of:'))
-  .it('does not invoke start with unknown service', () => {})
+  .catch(error => expect(error.message).to.contain('Expected demoTest to be one of:'))
+  .it('does not invoke start with unknown service')
 })

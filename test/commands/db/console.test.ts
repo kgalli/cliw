@@ -45,7 +45,7 @@ describe('db:console', () => {
     .env(env)
     .stdout()
     .command(['db:console', 'api', '-c', 'SELECT * FROM users LIMIT 1;', '-f', 'db/inserts.sql', '--dry-run'])
-    .catch(err => expect(err.message).to.eql('--file= cannot also be provided when using --command='))
+    .catch(error => expect(error.message).to.eql('--file= cannot also be provided when using --command='))
     .it('does not allow to use --command option together with --file option')
   })
 
@@ -88,7 +88,7 @@ describe('db:console', () => {
     .env(env)
     .stdout()
     .command(['db:console', 'api-mysql', '-c', 'SELECT * FROM users LIMIT 1;', '-f', 'db/inserts.sql', '--dry-run'])
-    .catch(err => expect(err.message).to.eql('--file= cannot also be provided when using --command='))
+    .catch(error => expect(error.message).to.eql('--file= cannot also be provided when using --command='))
     .it('does not allow to use --command option together with --file option')
   })
 })

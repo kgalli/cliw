@@ -8,10 +8,10 @@ import {
 } from '../../../types'
 
 interface CmdWrapper {
-  subCmd: string
-  options: string[]
-  services: string[]
-  serviceCmd?: string
+  subCmd: string;
+  options: string[];
+  services: string[];
+  serviceCmd?: string;
 }
 
 export default class DockerComposeCmdConstructor {

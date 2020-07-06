@@ -31,7 +31,9 @@ export default class List extends BaseCommand {
     const serviceImageOrigins = imageOrigins ? imageOrigins.services : []
 
     serviceImageOrigins
-    .forEach(service => serviceImageOriginMap[service.name] = service.imageOriginType)
+    .forEach(service => {
+      serviceImageOriginMap[service.name] = service.imageOriginType
+    })
 
     const data = [] as any
     Object.keys(serviceImageOriginMap).forEach(serviceName => {

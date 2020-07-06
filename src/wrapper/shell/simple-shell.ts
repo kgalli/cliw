@@ -9,7 +9,9 @@ export interface SimpleShellOptions {
 }
 
 const defaultOptions = (): SimpleShellOptions => ({
-  logger: (): void => {},
+  logger: (): void => {
+    // do nothing.
+  },
   dryRun: false,
   print: false,
   highlight: true,

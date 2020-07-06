@@ -4,11 +4,11 @@ import {ServiceParametersPair} from '../../../types/service-parameters-config'
 import {ImageOrigin, ServiceImageOriginPair} from '../../../types/service-runtime-config'
 
 interface ServiceImageOriginMap {
-  [service: string]: ImageOrigin
+  [service: string]: ImageOrigin;
 }
 
 interface ServiceImageOriginTypeMap {
-  [service: string]: ImageOriginType
+  [service: string]: ImageOriginType;
 }
 
 export default class DockerComposeConfigConstructor {
@@ -27,12 +27,12 @@ export default class DockerComposeConfigConstructor {
   dockerComposeConfig: DockerComposeConfig
 
   constructor(workDir: string, // needed later for setup of image build via source
-              containerNameTemplate: string,
-              network: string,
-              serviceParametersPairs: ServiceParametersPair[],
-              serviceImageOriginPairs: ServiceImageOriginPair[],
-              serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
-              dockerComposeConfig: DockerComposeConfig) {
+    containerNameTemplate: string,
+    network: string,
+    serviceParametersPairs: ServiceParametersPair[],
+    serviceImageOriginPairs: ServiceImageOriginPair[],
+    serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
+    dockerComposeConfig: DockerComposeConfig) {
     this.workDir = workDir
     this.network = network
     this.containerNameTemplate = containerNameTemplate

@@ -91,6 +91,7 @@ export default class DbToolsWrapper {
     if (this.passwordDecryptionRequired(dataSource)) {
       const client = new AwsKmsClient({})
 
+      // eslint-disable-next-line require-atomic-updates
       dataSource.password = await client.decrypt(dataSource.password) as string
     }
 

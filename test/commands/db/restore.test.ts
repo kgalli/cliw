@@ -21,7 +21,7 @@ describe('db:restore', () => {
     .env(env)
     .stdout()
     .command(['db:restore', 'api', '--environment', 'production', '-r', 'kgalli-development.dump', '--dry-run'])
-    .catch(err => expect(err.message).to.match(/Command "restore" is not supported in a readonly connection/))
+    .catch(error => expect(error.message).to.match(/Command "restore" is not supported in a readonly connection/))
     .it('raises an error due to readonly data source')
   })
 
@@ -40,7 +40,7 @@ describe('db:restore', () => {
     .env(env)
     .stdout()
     .command(['db:restore', 'api-mysql', '--environment', 'production', '-r', 'kgalli-development.dump', '--dry-run'])
-    .catch(err => expect(err.message).to.match(/Command "restore" is not supported in a readonly connection/))
+    .catch(error => expect(error.message).to.match(/Command "restore" is not supported in a readonly connection/))
     .it('raises an error due to readonly data source')
   })
 })
