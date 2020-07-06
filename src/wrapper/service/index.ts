@@ -47,14 +47,14 @@ export default abstract class extends BaseCommand {
       serviceParametersPairs,
       serviceImageOriginPairs,
       serviceImageOriginTypePairs,
-      dockerComposeConfig
+      dockerComposeConfig,
     )
 
     const dockerComposeProjectName = `${projectConfig.name}_${environment}`
     const dockerComposeConfigFileName = `docker-compose.${defaultProject.name}.${environment}.yaml`
     const dockerComposeConfigFileLocation = join(projectConfig.workDir, dockerComposeConfigFileName)
     const dockerComposeCmdConstructor = new DockerComposeCmdConstructor(
-      dockerComposeProjectName, dockerComposeConfigFileLocation
+      dockerComposeProjectName, dockerComposeConfigFileLocation,
     )
 
     return new DockerComposeWrapper(
@@ -62,7 +62,7 @@ export default abstract class extends BaseCommand {
       dockerComposeConfigFileName,
       dockerComposeCmdConstructor,
       dockerComposeConfigConstructor,
-      shellCallback({dryRun, logger: this.log})
+      shellCallback({dryRun, logger: this.log}),
     )
   }
 
@@ -78,7 +78,7 @@ export default abstract class extends BaseCommand {
     if (!serviceImageOriginTypesConfigRepo.exists()) {
       const runtimeConfig = new ServiceRuntimeConfigRepo(mainConfigPath).load()
       serviceImageOriginTypesConfigRepo.init(
-        runtimeConfig.environments, runtimeConfig.services.map(service => service.name)
+        runtimeConfig.environments, runtimeConfig.services.map(service => service.name),
       )
     }
   }

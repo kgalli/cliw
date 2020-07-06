@@ -39,7 +39,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   exec(options: ExecOptions, service: string, cmd: string): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.exec(
-      options, service, cmd
+      options, service, cmd,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -47,7 +47,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   log(options: LogOptions, services: string[]): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.log(
-      options, services
+      options, services,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -55,7 +55,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   run(options: RunOptions, service: string, cmd: string): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.run(
-      options, service, cmd
+      options, service, cmd,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -63,7 +63,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   start(options: StartOptions, services: string[]): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.start(
-      options, services
+      options, services,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -71,7 +71,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   stop(options: StopOptions, services: string[]): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.stop(
-      options, services
+      options, services,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -79,7 +79,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   status(options: StatusOptions, services: string[]): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.status(
-      options, services
+      options, services,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -87,7 +87,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   pull(options: PullOptions, services: string[]): void {
     const dockerComposeCmd = this.dockerComposeCmdConstructor.pull(
-      options, services
+      options, services,
     )
 
     return this.execDockerCompose(dockerComposeCmd)
@@ -102,7 +102,7 @@ export default class DockerComposeWrapper implements ServiceWrapper {
 
   private writeDockerComposeConfig(dockerComposeConfig: DockerComposeConfig): void {
     const dockerComposeConfigRepo = new DockerComposeConfigRepo(
-      this.workDir, this.dockerComposeConfigName
+      this.workDir, this.dockerComposeConfigName,
     )
 
     return dockerComposeConfigRepo.write(dockerComposeConfig)
