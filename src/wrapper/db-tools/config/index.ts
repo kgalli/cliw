@@ -3,9 +3,9 @@ import {DataSource, DataSourcesConfig} from '../../../types/data-sources-config'
 
 import DataSourceConfigRepo from './data-source-config-repo'
 
-const dataSourcesConfigRepo = defaultProject.configDir
-  ? new DataSourceConfigRepo(defaultProject.configDir, 'data-sources.yaml')
-  : undefined
+const dataSourcesConfigRepo = defaultProject.configDir ?
+  new DataSourceConfigRepo(defaultProject.configDir, 'data-sources.yaml') :
+  undefined
 
 export function loadDbToolsConfig(): DataSourcesConfig {
   if (!dataSourcesConfigRepo) {

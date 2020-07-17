@@ -31,8 +31,8 @@ export default class Start extends BaseCommand {
 
     try {
       this
-        .service(dryRun, environment)
-        .start(startOptions, services)
+      .service(dryRun, environment)
+      .start(startOptions, services)
     } catch (error) {
       this.error(error.message, error)
     }

@@ -34,8 +34,8 @@ export default class Stop extends BaseCommand {
 
     try {
       this
-        .service(dryRun, environment)
-        .stop(stopOptions, services)
+      .service(dryRun, environment)
+      .stop(stopOptions, services)
     } catch (error) {
       this.error(error.message, error)
     }

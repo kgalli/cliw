@@ -1,15 +1,15 @@
 export interface ServiceImageOriginTypesConfig {
-  environments: EnvironmentServiceImageOriginTypesPair[]
+  environments: EnvironmentServiceImageOriginTypesPair[];
 }
 
 interface EnvironmentServiceImageOriginTypesPair {
-  name: string
-  services: ServiceImageOriginTypePair[]
+  name: string;
+  services: ServiceImageOriginTypePair[];
 }
 
 export interface ServiceImageOriginTypePair {
-  name: string
-  imageOriginType: ImageOriginType
+  name: string;
+  imageOriginType: ImageOriginType;
 }
 
 export const enum ImageOriginType {

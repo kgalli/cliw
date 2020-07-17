@@ -1,4 +1,4 @@
 export default interface DbDumpOptions {
-  target: string
-  schemaOnly: boolean
+  target: string;
+  schemaOnly: boolean;
 }

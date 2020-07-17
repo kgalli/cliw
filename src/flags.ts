@@ -6,26 +6,22 @@ function projects() {
   if (projectsConfigExists()) {
     return projectsConfigLoad().projects.map(p => p.name)
   }
-
-  return
 }
 
 function defaultProject(): string | undefined {
   if (projectsConfigExists()) {
     return projectsConfigLoad().default
   }
-
-  return
 }
 
 export const dryRunFlag = flags.boolean({
   description: 'print shell commands without executing',
-  default: false
+  default: false,
 })
 
 export const projectFlag = flags.string({
   char: 'p',
   required: true,
   options: projects(),
-  default: defaultProject()
+  default: defaultProject(),
 })

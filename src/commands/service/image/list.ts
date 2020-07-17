@@ -6,7 +6,7 @@ import {servicesArg} from '../../../wrapper/service/args'
 import {environmentFlag} from '../../../wrapper/service/flags'
 
 interface ServiceImageOriginMap {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export default class List extends BaseCommand {
@@ -18,7 +18,7 @@ export default class List extends BaseCommand {
   }
 
   static args = [
-    servicesArg
+    servicesArg,
   ]
 
   async run() {
@@ -31,7 +31,9 @@ export default class List extends BaseCommand {
     const serviceImageOrigins = imageOrigins ? imageOrigins.services : []
 
     serviceImageOrigins
-      .forEach(service => serviceImageOriginMap[service.name] = service.imageOriginType)
+    .forEach(service => {
+      serviceImageOriginMap[service.name] = service.imageOriginType
+    })
 
     const data = [] as any
     Object.keys(serviceImageOriginMap).forEach(serviceName => {
@@ -43,7 +45,7 @@ export default class List extends BaseCommand {
     })
 
     cli.table(data, {name: {header: 'Service', minWidth: 7}, imageOrigin: {header: 'ImageOrigin'}}, {
-      printLine: this.log
+      printLine: this.log,
     })
   }
 }

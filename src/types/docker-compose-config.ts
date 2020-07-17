@@ -1,7 +1,7 @@
 export interface DockerComposeConfig {
-  version: string
+  version: string;
   services: {
-    [key: string]: any
-  }
-  networks?: any
+    [key: string]: any;
+  };
+  networks?: any;
 }

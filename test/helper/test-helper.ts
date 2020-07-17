@@ -43,6 +43,7 @@ function removeConfigFile(filePath: string, fileName: string): void {
   }
 }
 
+// eslint-disable-next-line no-console
 console.log(`Running tests using '${TEST_CONFIG_DIR_PATH}' as config dir.`)
 
 export {

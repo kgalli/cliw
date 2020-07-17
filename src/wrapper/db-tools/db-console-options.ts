@@ -1,4 +1,4 @@
 export default interface DbConsoleOptions {
-  command?: string
-  file?: string
+  command?: string;
+  file?: string;
 }

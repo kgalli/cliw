@@ -1,8 +1,8 @@
 import {execSync, ExecSyncOptionsWithStringEncoding} from 'child_process'
 
 export interface ShellOptions {
-  dryRun: boolean
-  logger(message: string): void
+  dryRun: boolean;
+  logger(message: string): void;
 }
 export const shellCallback = (shellOptions: ShellOptions) => {
   if (shellOptions.dryRun) {
@@ -12,7 +12,7 @@ export const shellCallback = (shellOptions: ShellOptions) => {
   return (cmd: string): void => {
     const execSyncOptions: ExecSyncOptionsWithStringEncoding = {
       stdio: 'inherit',
-      //stdio: 'ignore',
+      // stdio: 'ignore',
       encoding: 'utf8',
     }
 

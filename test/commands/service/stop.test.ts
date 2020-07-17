@@ -4,7 +4,7 @@ import {
   env,
   expectedStdOutForCmd,
   removeProjectsConfigDefault,
-  writeProjectsConfigDefault
+  writeProjectsConfigDefault,
 } from '../../helper/test-helper'
 
 describe('stop', () => {
@@ -12,10 +12,10 @@ describe('stop', () => {
   after(() => removeProjectsConfigDefault())
 
   test
-    .env(env)
-    .stdout()
-    .command(['service:stop', 'api','-edevelopment' , '--dry-run'])
-    .it('runs stop api', ctx => {
-      expect(ctx.stdout).to.contain(expectedStdOutForCmd('stop', 'development', ['--timeout 10', 'api']))
-    })
+  .env(env)
+  .stdout()
+  .command(['service:stop', 'api', '-edevelopment', '--dry-run'])
+  .it('runs stop api', ctx => {
+    expect(ctx.stdout).to.contain(expectedStdOutForCmd('stop', 'development', ['--timeout 10', 'api']))
+  })
 })

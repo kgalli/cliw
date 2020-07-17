@@ -8,7 +8,7 @@ const defaultDockerOptions: DockerOptions = {
   enabled: true,
   volume: '/opt',
   tty: false,
-  interactive: false
+  interactive: false,
 }
 
 function stripEnclosingDoubleQuotes(value: string): string {
@@ -122,6 +122,7 @@ export default class PostgreSql {
   }
 
   readonly connectionParams: ConnectionParams
+
   readonly dockerOptions: DockerOptions
 
   constructor(connectionParams: ConnectionParams, dockerOptions: DockerOptions) {

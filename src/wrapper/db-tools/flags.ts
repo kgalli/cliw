@@ -16,13 +16,11 @@ function defaultEnvironment(): string | undefined {
   if (projectsConfigExists()) {
     return loadDbToolsConfig().defaultEnvironment
   }
-
-  return
 }
 
 export const environmentFlag = flags.string({
   char: 'e',
   required: true,
   options: environments(),
-  default: defaultEnvironment()
+  default: defaultEnvironment(),
 })

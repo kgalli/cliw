@@ -15,19 +15,19 @@ export default class Dump extends DbToolsWrapper {
     'schema-only': flags.boolean({
       char: 'o',
       description: 'dump schema without data',
-      default: false
+      default: false,
     }),
     target: flags.string({
       char: 't',
       description: 'dump file location (relative to current directory)',
       multiple: false,
-      required: true
+      required: true,
     }),
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   static args = [
-    dataSourceNameArg
+    dataSourceNameArg,
   ]
 
   async run() {
@@ -37,15 +37,15 @@ export default class Dump extends DbToolsWrapper {
     const dryRun = flags['dry-run']
     const options: DbDumpOptions = {
       target: flags.target,
-      schemaOnly: flags['schema-only']
+      schemaOnly: flags['schema-only'],
     }
 
     try {
       await this
-        .dbTools(dryRun, environment)
-        .dump(options, dataSource)
-    } catch (e) {
-      this.error(e.message, e)
+      .dbTools(dryRun, environment)
+      .dump(options, dataSource)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

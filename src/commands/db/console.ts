@@ -16,21 +16,21 @@ export default class Console extends DbToolsWrapper {
       description: 'run only single command (SQL or internal) and exit',
       multiple: false,
       required: false,
-      exclusive: ['file']
+      exclusive: ['file'],
     }),
     file: flags.string({
       char: 'f',
       description: 'execute commands from file, then exit',
       multiple: false,
       required: false,
-      exclusive: ['command']
+      exclusive: ['command'],
     }),
     'dry-run': dryRunFlag,
-    help: flags.help({char: 'h'})
+    help: flags.help({char: 'h'}),
   }
 
   static args = [
-    dataSourceNameArg
+    dataSourceNameArg,
   ]
 
   async run() {
@@ -42,15 +42,15 @@ export default class Console extends DbToolsWrapper {
     const file = flags.file
     const options: DbConsoleOptions = {
       command,
-      file
+      file,
     }
 
     try {
       await this
-        .dbTools(dryRun, environment)
-        .console(options, dataSource)
-    } catch (e) {
-      this.error(e.message, e)
+      .dbTools(dryRun, environment)
+      .console(options, dataSource)
+    } catch (error) {
+      this.error(error.message, error)
     }
   }
 }

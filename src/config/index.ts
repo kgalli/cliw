@@ -4,11 +4,11 @@ import {homedir} from 'os'
 import {ProjectConfig, ProjectsConfig} from '../types/projects-config'
 import {mkdir} from '../utils/file-utils'
 
-import ProjectsConfigRepo from './projects-config/index'
+import ProjectsConfigRepo from './projects-config'
 
-export const DEFAULT_CONFIG_PATH = isEmpty(process.env.CLIW_CONFIG_PATH)
-  ? `${homedir()}/.config/cliw`
-  : process.env.CLIW_CONFIG_PATH as string
+export const DEFAULT_CONFIG_PATH = isEmpty(process.env.CLIW_CONFIG_PATH) ?
+  `${homedir()}/.config/cliw` :
+  process.env.CLIW_CONFIG_PATH as string
 
 mkdir(DEFAULT_CONFIG_PATH)
 

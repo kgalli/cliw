@@ -1,3 +1,4 @@
+/*
 import {expect} from 'chai'
 
 import ServiceWrapper, {
@@ -19,8 +20,7 @@ const expectedDockerComposeCmd = (subCmd: string): string => {
   return cmd.join(' ')
 }
 
-//TODO fixme
-/*
+// TODO fixme
 describe.only('DockerComposeWrapper', () => {
   let subject: ServiceWrapper
 

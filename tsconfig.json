@@ -6,8 +6,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "strict": true,
-    "target": "ES2017",
-    "composite": true,
+    "target": "es2017",
     "sourceMap": true
   },
   "include": [

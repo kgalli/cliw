@@ -11,7 +11,7 @@ export default abstract class extends BaseCommand {
     return new DbToolsWrapper(
       dataSources,
       dryRun,
-      new BashWrapper({...BashWrapper.defaultOptions(), dryRun})
+      new BashWrapper({...BashWrapper.defaultOptions(), dryRun}),
     )
   }
 }

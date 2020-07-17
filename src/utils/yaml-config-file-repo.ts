@@ -6,7 +6,9 @@ import {toCamelCase, toSnakeCase} from './object-key-utils'
 
 export default class YamlConfigFileRepo<T> {
   configFilePath: string
+
   configFileName: string
+
   keysToSkipForCaseTransformation: Set<string>
 
   constructor(configFilePath: string, configName: string, keysToSkipForCaseTransformation: Set<string> = new Set<string>()) {
@@ -22,7 +24,7 @@ export default class YamlConfigFileRepo<T> {
       return toCamelCase(yamlObject, this.keysToSkipForCaseTransformation)
     }
 
-    throw Error(`${this.configFileName} at '${this.configFilePath}' could not be found`)
+    throw new Error(`${this.configFileName} at '${this.configFilePath}' could not be found`)
   }
 
   remove() {
@@ -30,7 +32,7 @@ export default class YamlConfigFileRepo<T> {
       return this.delete()
     }
 
-    throw Error(`File '${this.configFileLocation()}' to delete could not be found`)
+    throw new Error(`File '${this.configFileLocation()}' to delete could not be found`)
   }
 
   write(data: T): void {
