@@ -86,7 +86,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts --config .eslintrc --fix",
     "postpack": "rm -f oclif.manifest.json tsconfig.tsbuildinfo",
-    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "posttest": "eslint . --ext .ts --config test/.eslintrc",
     "prepack": "rm -rf lib tsconfig.tsbuildinfo && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha --recursive --reporter spec --timeout 25000 --require ts-node/register \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
