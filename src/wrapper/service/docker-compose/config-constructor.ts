@@ -26,7 +26,7 @@ export default class DockerComposeConfigConstructor {
 
   dockerComposeConfig: DockerComposeConfig
 
-  constructor(workDir: string, // needed later for setup of image build via source
+  constructor(workDir: string,
     containerNameTemplate: string,
     network: string,
     serviceParametersPairs: ServiceParametersPair[],
