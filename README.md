@@ -39,16 +39,29 @@ USAGE
 
 ## `cliw init`
 
-The `init` sub command is used to create the initial projects config file. This is needed because `cliw` supports
-the management of several services and databases under a project context. This way multiple `cliw` configurations
-can be maintained at the same time while `cliw` supports switching between those when needed. This functionality
-comes in very handy when work has to be done for several clients or to keep private and business projects separated.
+The `init` sub command is used to create the initial `projects.yaml` file. `cliw` supports the management of several
+services and databases under a project context. By doing so multiple `cliw` project configurations can be maintained
+at the same time while `cliw` supports switching between those when needed. This functionality comes in very handy
+when work has to be done for several clients or to keep private and business projects separated.
 
-The location of the projects config file is `$HOME/.config/cliw` and can be overwritten via an environment variable
-`CLIW_DEFAULT_CONFIG_PATH`. An example for the actual configuration file
-which has to be passed to the `init` sub command can be found here:
+The default location of the `projects.yaml` file is `$HOME/.config/cliw` and can be overwritten via an environment
+variable `CLIW_CONFIG_PATH`.
+  
+The `init` sub command also requires two parameters to finish its work:
+ 
+* The location (absolute path) of the so called working directory. `cliw` uses this location to be able to utilize the
+`service` sub command which is used to manage service containers (e.g.: start, stop, exec ...).
+ 
+* The location of the configuration files. To properly work `cliw` expects the existence of the following files:
 
-_config: [config-examples/main-config.yaml](https://github.com/kgalli/cliw/blob/master/config-examples/main-config.yaml)_
+  * `docker-compose.yaml`
+  * `service-metadata.yaml`
+  * `service-parameters.yaml`
+  * `service-runtime.yaml`
+  * `data-sources.yaml`
+
+  Examples for each of those configuration files can be found
+  _[here](https://github.com/kgalli/cliw/blob/master/config-examples)._
 
 ## `cliw project`
 
@@ -58,12 +71,12 @@ and switch between them when needed.
 ## `cliw db`
 
 The `db` command is a wrapper for several database command line tools e.g. `psql`, `pg_dump`
-`pg_restore` to expose those via a streamlined simplified interface. Furthermore it is using one centralized
-configuration file to be able to connect to different data sources incl. support of data sources which can only
-be accessed via `SSH TUNNEL`. To remove the pain of installing all those tools locally official `docker`
-`docker` images are used.
+`pg_restore` to expose those via a streamlined simplified interface. Furthermore, it is using one centralized
+configuration file (`data-sources.yaml`) to be able to connect to different data sources incl. support of data sources
+which can only be accessed via `SSH TUNNEL`. To remove the pain of installing all those tools locally official `docker`
+images are used.
 
-Currently only `Postgres` is supported but `MySQL` is already in development.
+Currently `Postgres` and `MySQL` are supported.
 
 ## `cliw secret`
 
@@ -72,10 +85,10 @@ tokens e.g. passwords.
 
 ## `cliw service`
 
-The `service` command is a wrapper of `docker-compose`. The benefit of using this wrapper
-is that you can easily manage e.g. start, stop services in different environments defined using one centralized
-configuration. The switch between running a service container from an image of a registry or build the image from
-source is supported via `cliw` commands directly. No change of configuration files is necessary.
+The `service` command is a wrapper of `docker-compose`. The benefit of using this wrapper is that you can easily manage
+e.g. start, stop services in different environments defined using one centralized configuration. The switch between
+running a service container from an image of a registry or build the image from source is supported via `cliw` commands
+directly. No change of configuration files is necessary.
 
 
 # Command Reference
