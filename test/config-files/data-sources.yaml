@@ -16,6 +16,7 @@ dataSources:
         passwordEncryptionType: "none"
         engine: "postgresql"
         readonly: false
+
       - name: "production"
         description:
         host: "127.0.0.1"
@@ -26,6 +27,7 @@ dataSources:
         passwordEncryptionType: "none"
         engine: "postgresql"
         readonly: true
+
   - name: api-mysql
     environments:
       - name: "development"
@@ -38,6 +40,7 @@ dataSources:
         passwordEncryptionType: "none"
         engine: "mysql"
         readonly: false
+
       - name: "production"
         description:
         host: "127.0.0.1"
