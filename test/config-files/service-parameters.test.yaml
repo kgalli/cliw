@@ -1,4 +1,4 @@
-# Services default parameter - equivalent to service-parameters.yml.
+# Services test parameter - equivalent to service-parameters.yml.
 services:
   - name: web
     parameters:
