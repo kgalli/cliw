@@ -1,5 +1,7 @@
 export interface ServiceMetadataConfig {
   version: string;
+  environments: string[];
+  defaultEnvironment: string;
   services: ServiceMetadata[];
 }
 

@@ -2,18 +2,18 @@ import {flags} from '@oclif/command'
 
 import {defaultProject} from '../../config'
 
-import ServiceRuntimeConfigRepo from './config/service-runtime-config-repo'
+import ServiceMetadataRepo from './config/service-meta-config-repo'
 
-const runtimeConfig = defaultProject.configDir ?
-  new ServiceRuntimeConfigRepo(defaultProject.configDir).load() :
+const serviceMetadataConfig = defaultProject.configDir ?
+  new ServiceMetadataRepo(defaultProject.configDir).load() :
   {environments: [], defaultEnvironment: 'development'}
 
 function environments(): string[] {
-  return runtimeConfig.environments
+  return serviceMetadataConfig.environments
 }
 
 function defaultEnvironment(): string {
-  return runtimeConfig.defaultEnvironment
+  return serviceMetadataConfig.defaultEnvironment
 }
 
 export const servicesFlag = flags.string({

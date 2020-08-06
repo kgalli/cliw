@@ -9,7 +9,7 @@ const services = defaultProject.configDir ?
 export const servicesArg = {
   name: 'services',
   required: false,
-  description: 'Service name(s) defined in service-runtime.yaml [default: ALL...].',
+  description: 'Service name(s) defined in docker-compose.yaml [default: ALL...].',
   options: services,
 }
 
