@@ -1,4 +1,8 @@
 # Services metadata - equivalent to service-metadata.yml.
+environments:
+  - "development"
+  - "test"
+default_environment: "development"
 services:
   - name: web
     description: Web-Client

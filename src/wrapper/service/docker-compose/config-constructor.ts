@@ -1,10 +1,13 @@
 import {DockerComposeConfig} from '../../../types/docker-compose-config'
 import {ImageOriginType, ServiceImageOriginTypePair} from '../../../types/service-image-origin-types-config'
 import {ServiceParametersPair} from '../../../types/service-parameters-config'
-import {ImageOrigin, ServiceImageOriginPair} from '../../../types/service-runtime-config'
+import {ServiceBuildConfig} from '../../../types/service-overrides-config'
 
-interface ServiceImageOriginMap {
-  [service: string]: ImageOrigin;
+interface ServiceImageOriginPairs {
+  [service: string]: {
+    build: ServiceBuildConfig;
+    image: string;
+  };
 }
 
 interface ServiceImageOriginTypeMap {
@@ -20,7 +23,7 @@ export default class DockerComposeConfigConstructor {
 
   serviceParametersPairs: ServiceParametersPair[]
 
-  serviceImageOriginPairs: ServiceImageOriginPair[]
+  serviceImageOriginPairs: ServiceImageOriginPairs
 
   serviceImageOriginTypePairs: ServiceImageOriginTypePair[]
 
@@ -30,7 +33,7 @@ export default class DockerComposeConfigConstructor {
     containerNameTemplate: string,
     network: string,
     serviceParametersPairs: ServiceParametersPair[],
-    serviceImageOriginPairs: ServiceImageOriginPair[],
+    serviceImageOriginPairs: ServiceImageOriginPairs,
     serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
     dockerComposeConfig: DockerComposeConfig) {
     this.workDir = workDir
@@ -44,12 +47,7 @@ export default class DockerComposeConfigConstructor {
 
   constructDockerComposeConfig(): DockerComposeConfig {
     const services = {...this.dockerComposeConfig.services}
-    const serviceImageOriginMap = {} as ServiceImageOriginMap
     const serviceImageOriginTypeMap = {} as ServiceImageOriginTypeMap
-
-    this.serviceImageOriginPairs.forEach(service => {
-      serviceImageOriginMap[service.name] = service.imageOrigin
-    })
 
     this.serviceImageOriginTypePairs.forEach(pair => {
       serviceImageOriginTypeMap[pair.name] = pair.imageOriginType
@@ -57,21 +55,21 @@ export default class DockerComposeConfigConstructor {
 
     Object.keys(services).forEach(service => {
       const imageOriginType = serviceImageOriginTypeMap[service] || ImageOriginType.REGISTRY
-      const serviceImageOrigin = serviceImageOriginMap[service]
+      const serviceImageOrigin = this.serviceImageOriginPairs[service]
 
       if (serviceImageOrigin) {
         if (imageOriginType === ImageOriginType.SOURCE) {
-          const serviceBuildProperties = {...serviceImageOrigin.source}
-
-          delete serviceBuildProperties.mergeProperties
+          const serviceBuildProperties = {...serviceImageOrigin}
 
           services[service] = {
             ...services[service],
             ...serviceBuildProperties,
-            ...serviceImageOrigin.source.mergeProperties,
           }
+
+          services[service].image = this.constructContainerName(service)
         } else {
-          services[service].image = serviceImageOrigin.registry.image
+          delete services[service].build
+          services[service].image = serviceImageOrigin.image
         }
       }
 

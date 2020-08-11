@@ -1,0 +1,11 @@
+services:
+  web:
+    build:
+      context: ../cliw-web
+      dockerfile: Dockerfile
+
+  api:
+    build:
+      context: ../javalin-playground
+      dockerfile: Dockerfile
+    command: "java -jar /usr/src/app/app.jar"

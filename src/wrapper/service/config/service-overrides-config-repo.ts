@@ -1,9 +1,9 @@
-import {ServiceRuntimeConfig} from '../../../types/service-runtime-config'
+import {ServiceOverridesConfig} from '../../../types/service-overrides-config'
 import YamlConfigFileRepo from '../../../utils/yaml-config-file-repo'
 
-const CONFIG_FILE_NAME = 'service-runtime.yaml'
+const CONFIG_FILE_NAME = 'service-overrides.yaml'
 
-export default class ServiceRuntimeConfigRepo extends YamlConfigFileRepo<ServiceRuntimeConfig> {
+export default class ServiceOverridesConfigRepo extends YamlConfigFileRepo<ServiceOverridesConfig> {
   constructor(configLocation: string, configFileName: string = CONFIG_FILE_NAME) {
     super(configLocation, configFileName)
   }
