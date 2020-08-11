@@ -57,7 +57,7 @@ The `init` sub command also requires two parameters to finish its work:
   * `docker-compose.yaml`
   * `service-metadata.yaml`
   * `service-parameters.yaml`
-  * `service-runtime.yaml`
+  * `service-overrides.yaml` (optional as `cliw` will use fallback strategy)
   * `data-sources.yaml`
 
   Examples for each of those configuration files can be found
