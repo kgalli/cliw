@@ -1,14 +1,7 @@
 import {DockerComposeConfig} from '../../../types/docker-compose-config'
 import {ImageOriginType, ServiceImageOriginTypePair} from '../../../types/service-image-origin-types-config'
 import {ServiceParametersPair} from '../../../types/service-parameters-config'
-import {ServiceBuildConfig} from '../../../types/service-overrides-config'
-
-interface ServiceImageOriginPairs {
-  [service: string]: {
-    build: ServiceBuildConfig;
-    image: string;
-  };
-}
+import {ServiceOverrides} from '../../../types/service-overrides-config'
 
 interface ServiceImageOriginTypeMap {
   [service: string]: ImageOriginType;
@@ -23,7 +16,7 @@ export default class DockerComposeConfigConstructor {
 
   serviceParametersPairs: ServiceParametersPair[]
 
-  serviceImageOriginPairs: ServiceImageOriginPairs
+  serviceOverrides: ServiceOverrides
 
   serviceImageOriginTypePairs: ServiceImageOriginTypePair[]
 
@@ -33,16 +26,17 @@ export default class DockerComposeConfigConstructor {
     containerNameTemplate: string,
     network: string,
     serviceParametersPairs: ServiceParametersPair[],
-    serviceImageOriginPairs: ServiceImageOriginPairs,
+    dockerComposeConfig: DockerComposeConfig,
+    serviceOverrides: ServiceOverrides,
     serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
-    dockerComposeConfig: DockerComposeConfig) {
+  ) {
     this.workDir = workDir
     this.network = network
     this.containerNameTemplate = containerNameTemplate
     this.serviceParametersPairs = serviceParametersPairs
-    this.serviceImageOriginPairs = serviceImageOriginPairs
-    this.serviceImageOriginTypePairs = serviceImageOriginTypePairs
+    this.serviceOverrides = serviceOverrides
     this.dockerComposeConfig = dockerComposeConfig
+    this.serviceImageOriginTypePairs = serviceImageOriginTypePairs
   }
 
   constructDockerComposeConfig(): DockerComposeConfig {
@@ -55,22 +49,18 @@ export default class DockerComposeConfigConstructor {
 
     Object.keys(services).forEach(service => {
       const imageOriginType = serviceImageOriginTypeMap[service] || ImageOriginType.REGISTRY
-      const serviceImageOrigin = this.serviceImageOriginPairs[service]
+      const serviceOverride = this.serviceOverrides[service]
 
-      if (serviceImageOrigin) {
-        if (imageOriginType === ImageOriginType.SOURCE) {
-          const serviceBuildProperties = {...serviceImageOrigin}
-
-          services[service] = {
-            ...services[service],
-            ...serviceBuildProperties,
-          }
-
-          services[service].image = this.constructContainerName(service)
-        } else {
-          delete services[service].build
-          services[service].image = serviceImageOrigin.image
+      if (serviceOverride && imageOriginType === ImageOriginType.SOURCE) {
+        services[service] = {
+          ...services[service],
+          ...serviceOverride,
         }
+
+        services[service].image = this.constructContainerName(service)
+      } else {
+        delete services[service].build
+        services[service].image = this.dockerComposeConfig.services[service].image
       }
 
       services[service].container_name = this.constructContainerName(service)

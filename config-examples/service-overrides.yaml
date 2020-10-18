@@ -1,11 +1,9 @@
 services:
-  web:
-    build:
-      context: ../cliw-web
-      dockerfile: Dockerfile
-
   api:
     build:
-      context: ../javalin-playground
+      context: ./expressjs-playground
       dockerfile: Dockerfile
-    command: "java -jar /usr/src/app/app.jar"
+      target: builder
+    volumes:
+      - ./expressjs-playground/src:/usr/src/app/src
+      - ./expressjs-playground/test:/usr/src/app/test
