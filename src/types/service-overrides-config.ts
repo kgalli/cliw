@@ -1,9 +1,15 @@
 export interface ServiceOverridesConfig {
   version: string;
-  services: {
-    build: ServiceBuildConfig;
-    [mergeProperties: string]: any;
-  };
+  services: ServiceOverrides;
+}
+
+export interface ServiceOverrides {
+  [service: string]: ServiceOverride;
+}
+
+export interface ServiceOverride {
+  build: ServiceBuildConfig;
+  [override: string]: any;
 }
 
 export interface ServiceBuildConfig {

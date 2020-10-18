@@ -13,7 +13,6 @@ import DockerComposeWrapper from './docker-compose'
 import DockerComposeCmdConstructor from './docker-compose/cmd-constructer'
 import DockerComposeConfigConstructor from './docker-compose/config-constructor'
 import ServiceMetaConfigRepo from './config/service-meta-config-repo'
-import {ServiceBuildConfig} from '../../types/service-overrides-config'
 
 export default abstract class extends BaseCommand {
   service(dryRun: boolean, environment: string): ServiceWrapper {
@@ -30,22 +29,10 @@ export default abstract class extends BaseCommand {
     ).load()
 
     const dockerComposeConfig = new DockerComposeConfigRepo(projectConfig.configDir).load()
-    const serviceOverrides = new ServiceOverridesConfigRepo(projectConfig.configDir).load()
+    const serviceOverridesConfig = new ServiceOverridesConfigRepo(projectConfig.configDir).load()
     const serviceImageOriginTypesConfig = new ServiceImageOriginTypeConfigRepo(DEFAULT_CONFIG_PATH_ACTIVE_PROJECT).load()
 
     const serviceParametersPairs = parameterConfig.services
-    const serviceImageOriginPairs = {} as { [service: string]: { image: string; build: ServiceBuildConfig}}
-
-    Object.keys(dockerComposeConfig.services)
-    .forEach((service: string) => {
-      serviceImageOriginPairs[service] = {} as { image: string; build: ServiceBuildConfig}
-      serviceImageOriginPairs[service].image = dockerComposeConfig.services[service].image
-
-      if (serviceOverrides.services[service]) {
-        serviceImageOriginPairs[service].build = serviceOverrides.services[service].build
-      }
-    })
-
     const environmentServiceImageOriginTypes = serviceImageOriginTypesConfig
     .environments
     .find(env => env.name === environment)
@@ -59,9 +46,9 @@ export default abstract class extends BaseCommand {
       `${defaultProject.name}_{{{service}}}_${environment}`,
       `${defaultProject.name}_${environment}`,
       serviceParametersPairs,
-      serviceImageOriginPairs,
-      serviceImageOriginTypePairs,
       dockerComposeConfig,
+      serviceOverridesConfig.services,
+      serviceImageOriginTypePairs,
     )
 
     const dockerComposeProjectName = `${projectConfig.name}_${environment}`
