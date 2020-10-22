@@ -7,12 +7,13 @@ export interface ServiceMetadataConfig {
 
 export interface ServiceMetadata {
   name: string;
-  repositoryUrl?: string;
+  repositoryUrl: string;
+  directory: string;
   source: SourceOrigin;
 }
 
 // type SourceOrigin = 'internal' | 'external'
 
-const enum SourceOrigin {
+export const enum SourceOrigin {
   INTERNAL = 'internal', EXTERNAL = 'external'
 }

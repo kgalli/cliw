@@ -15,3 +15,7 @@ export interface ServiceImageOriginTypePair {
 export const enum ImageOriginType {
   SOURCE = 'source', REGISTRY = 'registry'
 }
+
+export interface ServiceImageOriginTypes {
+  [service: string]: ImageOriginType;
+}

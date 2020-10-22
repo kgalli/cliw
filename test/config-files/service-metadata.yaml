@@ -4,14 +4,9 @@ environments:
   - "test"
 default_environment: "development"
 services:
-  - name: web
-    description: Web-Client
-    repository_url: "github.com/kgalli/javalin-playground"
-    source: "internal"
-
   - name: api
     description: API service
-    repository_url: "github.com/kgalli/javalin-playground"
+    repository_url: "github.com/kgalli/expressjs-playground"
     source: "internal"
 
   - name: db

@@ -3,6 +3,7 @@ import {safeDump, safeLoad} from 'js-yaml'
 import {join} from 'path'
 
 import {toCamelCase, toSnakeCase} from './object-key-utils'
+import FileNotFoundError from './file-not-found-error'
 
 export default class YamlConfigFileRepo<T> {
   configFilePath: string
@@ -24,7 +25,7 @@ export default class YamlConfigFileRepo<T> {
       return toCamelCase(yamlObject, this.keysToSkipForCaseTransformation)
     }
 
-    throw new Error(`${this.configFileName} at '${this.configFilePath}' could not be found`)
+    throw new FileNotFoundError(`${this.configFileName} at '${this.configFilePath}' could not be found`)
   }
 
   remove() {
@@ -32,7 +33,7 @@ export default class YamlConfigFileRepo<T> {
       return this.delete()
     }
 
-    throw new Error(`File '${this.configFileLocation()}' to delete could not be found`)
+    throw new FileNotFoundError(`File '${this.configFileLocation()}' to delete could not be found`)
   }
 
   write(data: T): void {

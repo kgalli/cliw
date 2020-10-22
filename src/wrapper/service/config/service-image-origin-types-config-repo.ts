@@ -3,6 +3,10 @@ import YamlConfigFileRepo from '../../../utils/yaml-config-file-repo'
 
 const CONFIG_FILE_NAME = 'image-origins.yaml'
 
+interface ServiceImageOriginTypeMap {
+  [service: string]: ImageOriginType;
+}
+
 export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRepo<ServiceImageOriginTypesConfig> {
   constructor(configLocation: string, configFileName: string = CONFIG_FILE_NAME) {
     super(configLocation, configFileName)
@@ -26,6 +30,23 @@ export default class ServiceImageOriginTypesConfigRepo extends YamlConfigFileRep
   // TODO implement validation logic and return errors if needed
   validate() {
     return true
+  }
+
+  load_by_environment(environment: string): ServiceImageOriginTypeMap {
+    const serviceImageOriginTypes = super
+    .load()
+    .environments
+    .filter(env => env.name === environment)
+    .map(env => env.services)
+    .pop() || []
+
+    const serviceImageOriginTypeMap = {} as ServiceImageOriginTypeMap
+
+    serviceImageOriginTypes.forEach(pair => {
+      serviceImageOriginTypeMap[pair.name] = pair.imageOriginType
+    })
+
+    return serviceImageOriginTypeMap
   }
 
   updateImageOriginType(services: string[], environment: string, imageOriginType: ImageOriginType): void {
