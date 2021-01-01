@@ -1,21 +1,18 @@
 # Services default parameter - equivalent to service-parameters.yml.
 services:
-  - name: web
-    parameters:
-      - name: HOST_PORT
-        value: 8080
-
   - name: api
     parameters:
       - name: HOST_PORT
-        value: 8080
+        value: 7777
       - name: DB_DATABASE
-        value: "playground_dev"
+        value: "api_development"
+      - name: DB_PORT
+        value: 9999
 
   - name: db
     parameters:
       - name: DB_PORT
-        value: 7777
+        value: 9999
       - name: POSTGRES_PASSWORD
         value: "kgalli"
       - name: POSTGRES_USER

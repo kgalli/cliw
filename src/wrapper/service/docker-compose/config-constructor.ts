@@ -1,11 +1,7 @@
 import {DockerComposeConfig} from '../../../types/docker-compose-config'
-import {ImageOriginType, ServiceImageOriginTypePair} from '../../../types/service-image-origin-types-config'
+import {ImageOriginType, ServiceImageOriginTypes} from '../../../types/service-image-origin-types-config'
 import {ServiceParametersPair} from '../../../types/service-parameters-config'
 import {ServiceOverrides} from '../../../types/service-overrides-config'
-
-interface ServiceImageOriginTypeMap {
-  [service: string]: ImageOriginType;
-}
 
 export default class DockerComposeConfigConstructor {
   workDir: string
@@ -18,7 +14,7 @@ export default class DockerComposeConfigConstructor {
 
   serviceOverrides: ServiceOverrides
 
-  serviceImageOriginTypePairs: ServiceImageOriginTypePair[]
+  serviceImageOriginTypes: ServiceImageOriginTypes
 
   dockerComposeConfig: DockerComposeConfig
 
@@ -28,7 +24,7 @@ export default class DockerComposeConfigConstructor {
     serviceParametersPairs: ServiceParametersPair[],
     dockerComposeConfig: DockerComposeConfig,
     serviceOverrides: ServiceOverrides,
-    serviceImageOriginTypePairs: ServiceImageOriginTypePair[],
+    serviceImageOriginTypes: ServiceImageOriginTypes,
   ) {
     this.workDir = workDir
     this.network = network
@@ -36,22 +32,18 @@ export default class DockerComposeConfigConstructor {
     this.serviceParametersPairs = serviceParametersPairs
     this.serviceOverrides = serviceOverrides
     this.dockerComposeConfig = dockerComposeConfig
-    this.serviceImageOriginTypePairs = serviceImageOriginTypePairs
+    this.serviceImageOriginTypes = serviceImageOriginTypes
   }
 
   constructDockerComposeConfig(): DockerComposeConfig {
     const services = {...this.dockerComposeConfig.services}
-    const serviceImageOriginTypeMap = {} as ServiceImageOriginTypeMap
-
-    this.serviceImageOriginTypePairs.forEach(pair => {
-      serviceImageOriginTypeMap[pair.name] = pair.imageOriginType
-    })
 
     Object.keys(services).forEach(service => {
-      const imageOriginType = serviceImageOriginTypeMap[service] || ImageOriginType.REGISTRY
-      const serviceOverride = this.serviceOverrides[service]
+      const imageOriginType = this.serviceImageOriginTypes[service] || ImageOriginType.REGISTRY
 
-      if (serviceOverride && imageOriginType === ImageOriginType.SOURCE) {
+      if (imageOriginType === ImageOriginType.SOURCE) {
+        const serviceOverride = this.serviceOverrides[service]
+
         services[service] = {
           ...services[service],
           ...serviceOverride,

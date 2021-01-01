@@ -13,8 +13,8 @@ describe('service:image', () => {
 
   context(':list', () => {
     const expectedOutPut = 'Service ImageOrigin \n' +
-      'web     REGISTRY    \n' +
-      'api     REGISTRY    '
+      'api     REGISTRY    \n' +
+      'db      REGISTRY'
 
     test
     .env(env)
