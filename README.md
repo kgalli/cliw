@@ -112,6 +112,7 @@ directly. No change of configuration files is necessary.
 * [`cliw service:image:list [SERVICES]`](#cliw-serviceimagelist-services)
 * [`cliw service:image:pull [SERVICES]`](#cliw-serviceimagepull-services)
 * [`cliw service:image:set-origin SERVICE ORIGIN`](#cliw-serviceimageset-origin-service-origin)
+* [`cliw service:list`](#cliw-servicelist)
 * [`cliw service:logs [SERVICES]`](#cliw-servicelogs-services)
 * [`cliw service:run SERVICE COMMAND`](#cliw-servicerun-service-command)
 * [`cliw service:start [SERVICES]`](#cliw-servicestart-services)
@@ -137,7 +138,7 @@ OPTIONS
   --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/console.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/db/console.ts)_
+_See code: [src/commands/db/console.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/db/console.ts)_
 
 ## `cliw db:create DATASOURCE`
 
@@ -156,7 +157,7 @@ OPTIONS
   --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/create.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/db/create.ts)_
+_See code: [src/commands/db/create.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/db/create.ts)_
 
 ## `cliw db:drop DATASOURCE`
 
@@ -175,7 +176,7 @@ OPTIONS
   --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/drop.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/db/drop.ts)_
+_See code: [src/commands/db/drop.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/db/drop.ts)_
 
 ## `cliw db:dump DATASOURCE`
 
@@ -196,7 +197,7 @@ OPTIONS
   --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/dump.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/db/dump.ts)_
+_See code: [src/commands/db/dump.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/db/dump.ts)_
 
 ## `cliw db:restore DATASOURCE`
 
@@ -216,7 +217,7 @@ OPTIONS
   --dry-run                           print shell commands without executing
 ```
 
-_See code: [src/commands/db/restore.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/db/restore.ts)_
+_See code: [src/commands/db/restore.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/db/restore.ts)_
 
 ## `cliw help [COMMAND]`
 
@@ -263,7 +264,7 @@ DESCRIPTION
   Data in stored in projects-config.json at: ~/.config/ (default).
 ```
 
-_See code: [src/commands/init.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/init.ts)_
 
 ## `cliw project:add PROJECT`
 
@@ -282,7 +283,7 @@ OPTIONS
   -w, --working-directory=working-directory  (required) absolute path to the working directory
 ```
 
-_See code: [src/commands/project/add.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/project/add.ts)_
+_See code: [src/commands/project/add.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/project/add.ts)_
 
 ## `cliw project:list`
 
@@ -303,7 +304,7 @@ OPTIONS
   --sort=sort             property to sort by (prepend '-' for descending)
 ```
 
-_See code: [src/commands/project/list.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/project/list.ts)_
+_See code: [src/commands/project/list.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/project/list.ts)_
 
 ## `cliw project:remove PROJECT`
 
@@ -320,7 +321,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/project/remove.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/project/remove.ts)_
+_See code: [src/commands/project/remove.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/project/remove.ts)_
 
 ## `cliw project:set-default PROJECT`
 
@@ -337,7 +338,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/project/set-default.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/project/set-default.ts)_
+_See code: [src/commands/project/set-default.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/project/set-default.ts)_
 
 ## `cliw secret:decrypt`
 
@@ -352,7 +353,7 @@ OPTIONS
   -s, --secret=secret  (required) Secret to decrypt
 ```
 
-_See code: [src/commands/secret/decrypt.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/secret/decrypt.ts)_
+_See code: [src/commands/secret/decrypt.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/secret/decrypt.ts)_
 
 ## `cliw secret:encrypt`
 
@@ -368,7 +369,7 @@ OPTIONS
   -v, --value=value  (required) Value to encrypt
 ```
 
-_See code: [src/commands/secret/encrypt.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/secret/encrypt.ts)_
+_See code: [src/commands/secret/encrypt.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/secret/encrypt.ts)_
 
 ## `cliw service:checkout [SERVICES]`
 
@@ -379,7 +380,7 @@ USAGE
   $ cliw service:checkout [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -388,7 +389,7 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/checkout.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/checkout.ts)_
+_See code: [src/commands/service/checkout.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/checkout.ts)_
 
 ## `cliw service:config [SERVICES]`
 
@@ -399,7 +400,7 @@ USAGE
   $ cliw service:config [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -409,7 +410,7 @@ OPTIONS
   --validate                          Validate service(s) configuration.
 ```
 
-_See code: [src/commands/service/config.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/config.ts)_
+_See code: [src/commands/service/config.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/config.ts)_
 
 ## `cliw service:exec SERVICE COMMAND`
 
@@ -420,7 +421,7 @@ USAGE
   $ cliw service:exec SERVICE COMMAND
 
 ARGUMENTS
-  SERVICE  (web|api|db) service name
+  SERVICE  (api|db) service name
   COMMAND  specify command to execute
 
 OPTIONS
@@ -430,7 +431,7 @@ OPTIONS
   --no-tty                            Disable pseudo-tty allocation.
 ```
 
-_See code: [src/commands/service/exec.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/exec.ts)_
+_See code: [src/commands/service/exec.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/exec.ts)_
 
 ## `cliw service:image:list [SERVICES]`
 
@@ -441,14 +442,14 @@ USAGE
   $ cliw service:image:list [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
   -h, --help                          show CLI help
 ```
 
-_See code: [src/commands/service/image/list.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/image/list.ts)_
+_See code: [src/commands/service/image/list.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/image/list.ts)_
 
 ## `cliw service:image:pull [SERVICES]`
 
@@ -459,7 +460,7 @@ USAGE
   $ cliw service:image:pull [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -467,7 +468,7 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/image/pull.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/image/pull.ts)_
+_See code: [src/commands/service/image/pull.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/image/pull.ts)_
 
 ## `cliw service:image:set-origin SERVICE ORIGIN`
 
@@ -478,7 +479,7 @@ USAGE
   $ cliw service:image:set-origin SERVICE ORIGIN
 
 ARGUMENTS
-  SERVICE  (web|api|db) service name
+  SERVICE  (api|db) service name
   ORIGIN   (registry|source) origin of the container image
 
 OPTIONS
@@ -487,7 +488,29 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/image/set-origin.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/image/set-origin.ts)_
+_See code: [src/commands/service/image/set-origin.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/image/set-origin.ts)_
+
+## `cliw service:list`
+
+List service(s) metadata.
+
+```
+USAGE
+  $ cliw service:list
+
+OPTIONS
+  -h, --help              show CLI help
+  -x, --extended          show extra columns
+  --columns=columns       only show provided columns (comma-separated)
+  --csv                   output is csv format [alias: --output=csv]
+  --filter=filter         filter property by partial string matching, ex: name=foo
+  --no-header             hide table header from output
+  --no-truncate           do not truncate output to fit screen
+  --output=csv|json|yaml  output in a more machine friendly format
+  --sort=sort             property to sort by (prepend '-' for descending)
+```
+
+_See code: [src/commands/service/list.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/list.ts)_
 
 ## `cliw service:logs [SERVICES]`
 
@@ -498,7 +521,7 @@ USAGE
   $ cliw service:logs [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -508,7 +531,7 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/logs.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/logs.ts)_
+_See code: [src/commands/service/logs.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/logs.ts)_
 
 ## `cliw service:run SERVICE COMMAND`
 
@@ -519,7 +542,7 @@ USAGE
   $ cliw service:run SERVICE COMMAND
 
 ARGUMENTS
-  SERVICE  (web|api|db) service name
+  SERVICE  (api|db) service name
   COMMAND  specify command to execute
 
 OPTIONS
@@ -530,7 +553,7 @@ OPTIONS
   --no--tty                           Disable pseudo-tty allocation.
 ```
 
-_See code: [src/commands/service/run.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/run.ts)_
+_See code: [src/commands/service/run.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/run.ts)_
 
 ## `cliw service:start [SERVICES]`
 
@@ -541,7 +564,7 @@ USAGE
   $ cliw service:start [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -550,7 +573,7 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/start.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/start.ts)_
+_See code: [src/commands/service/start.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/start.ts)_
 
 ## `cliw service:status [SERVICES]`
 
@@ -561,7 +584,7 @@ USAGE
   $ cliw service:status [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -570,7 +593,7 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/status.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/status.ts)_
+_See code: [src/commands/service/status.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/status.ts)_
 
 ## `cliw service:stop [SERVICES]`
 
@@ -581,7 +604,7 @@ USAGE
   $ cliw service:stop [SERVICES]
 
 ARGUMENTS
-  SERVICES  (web|api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
+  SERVICES  (api|db) Service name(s) defined in docker-compose.yaml [default: ALL...].
 
 OPTIONS
   -e, --environment=development|test  (required) [default: development]
@@ -590,5 +613,5 @@ OPTIONS
   --dry-run                           Print command(s) to STDOUT without actually executing.
 ```
 
-_See code: [src/commands/service/stop.ts](https://github.com/kgalli/cliw/blob/v0.13.0/src/commands/service/stop.ts)_
+_See code: [src/commands/service/stop.ts](https://github.com/kgalli/cliw/blob/v0.14.0/src/commands/service/stop.ts)_
 <!-- commandsstop -->
