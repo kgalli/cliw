@@ -16,7 +16,7 @@ import ServiceMetaConfigRepo from './config/service-meta-config-repo'
 import {ServiceImageOriginTypes} from '../../types/service-image-origin-types-config'
 import FileNotFoundError from '../../utils/file-not-found-error'
 import {ServiceOverrides} from '../../types/service-overrides-config'
-import {ServiceMetadataConfig} from '../../types/service-metadata-config'
+import {ServiceMetadata, ServiceMetadataConfig} from '../../types/service-metadata-config'
 
 export default abstract class extends BaseCommand {
   service(dryRun: boolean, environment: string): ServiceWrapper {
@@ -62,6 +62,12 @@ export default abstract class extends BaseCommand {
       dockerComposeConfigConstructor,
       shellCallback({dryRun, logger: this.log}),
     )
+  }
+
+  servicesMetadata(): ServiceMetadata[] {
+    const projectConfig = defaultProject
+
+    return this.loadServiceMetaConfig(projectConfig.configDir).services
   }
 
   imageOriginConfig(): ServiceImageOriginTypeConfigRepo {

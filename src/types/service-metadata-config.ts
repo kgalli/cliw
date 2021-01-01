@@ -8,6 +8,7 @@ export interface ServiceMetadataConfig {
 export interface ServiceMetadata {
   name: string;
   repositoryUrl: string;
+  description: string;
   directory: string;
   source: SourceOrigin;
 }
