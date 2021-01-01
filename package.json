@@ -1,7 +1,7 @@
 {
   "name": "cliw",
   "description": "A cliw[rapper] to ease day to day command line tasks!",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "author": "kgalli @kgalli",
   "bin": {
     "cliw": "./bin/run"
